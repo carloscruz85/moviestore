@@ -2,14 +2,15 @@ import React from 'react';
 import './index.scss';
 import {connect} from 'react-redux';
 import {login} from '../../actionCreators';
-
+import Overlay from '../../components/overlayer'
 
 
 class Login extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-
+      showOverlay: true,
+      overlayMsg: 'msg'
     }
   }
 
@@ -18,8 +19,10 @@ class Login extends React.Component {
   }
 
   render(){
+    const {showOverlay, overlayMsg} = this.state
     return (
       <div className="login">
+        { showOverlay ? <Overlay msg={overlayMsg}/> : null}
         login
       </div>
     )
