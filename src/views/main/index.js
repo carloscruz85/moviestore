@@ -1,6 +1,7 @@
 import React from 'react';
 import './index.scss';
-import Button from '../../components/button'
+import PinkButton from '../../components/buttons/pinkButton'
+
 
 class Main extends React.Component{
   constructor(props){
@@ -21,7 +22,7 @@ class Main extends React.Component{
       return(
         <div className="main-container">
           <div className="header">
-            <Button text="Login" customClickEvent={this.goToLogin.bind(this)} />
+            <PinkButton text="Login" customClickEvent={this.goToLogin.bind(this)} />
           </div>
         </div>
       )
