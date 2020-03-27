@@ -3,27 +3,89 @@ import './index.scss';
 import {connect} from 'react-redux';
 import {login} from '../../actionCreators';
 import Overlay from '../../components/overlayer'
-
+import cookie from 'react-cookies'
+import axios from 'axios';
 
 class Login extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      showOverlay: true,
-      overlayMsg: 'msg'
+      loginUrl: 'wp-json/jwt-auth/v1/token',
+      showOverlay: false,
+      overlayMsg: 'msg',
+      username: 'admin',
+      password: 'ILoveApplaudo'
     }
+    this.handleChange = this.handleChange.bind(this)
+    this.handlePassword = this.handlePassword.bind(this)
+    this.login = this.login.bind(this)
+
   }
 
   login(){
+    this.setState({
+      overlayMsg: 'Cargando datos espere por favor',
+      showOverlay: true,
+      userMsg: ''
+    })
+    const thisuser = {
+      username: this.state.username,
+      password: this.state.password
+    };
+    const mineHeaders = new Headers({'Content-Type': 'application/json'});
 
+    axios.post(this.props.host+this.state.loginUrl, thisuser,{headers: mineHeaders})
+    .then(res => {
+      if(res.status === 200){
+        // this.props.login(res.data)
+        cookie.save('user', res.data, { path: '/' })
+        console.log(res)
+        this.setState({
+          msg: '',
+          showOverLayer: false
+        })
+
+        if(this.state.username === 'webmaster'){
+          this.props.history.push("/admin")
+        }else{
+          this.props.history.push("/dashboard")
+        }
+      }
+    })
+    .catch(error => {
+      // console.log('Error', error)
+      this.setState({
+        userMsg: 'Error en los accesos pruebe nuevamente',
+        showOverLayer: false
+      })
+    })
+  }
+
+  handleChange( e ){
+    const {value, name} = e.target
+    this.setState({
+      [name]: value,
+    })
+  }
+
+  handlePassword( e ){
+    const {value, name} = e.target
+    this.setState({
+      [name]: value
+    })
   }
 
   render(){
     const {showOverlay, overlayMsg} = this.state
     return (
-      <div className="login">
+      <div className="login-container">
         { showOverlay ? <Overlay msg={overlayMsg}/> : null}
-        login
+        <div className="form-container">
+        <input type="text" name="username" value={this.state.username} onChange={this.handleChange} />
+        <input type="password" name="password" value={this.state.password} onChange={this.handlePassword} />
+        <button onClick={this.login}>Login</button>
+        <div className="">{this.state.userMsg}</div>
+        </div>
       </div>
     )
   }
