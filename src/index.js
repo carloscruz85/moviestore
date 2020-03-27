@@ -6,8 +6,10 @@ import {Provider} from 'react-redux';
 import Main from './views/main';
 import Login from './views/login';
 import { BrowserRouter as Router, Route } from 'react-router-dom'
+// import cookie from 'react-cookies'
 
 export default class MyIndex extends Component {
+
   render() {
     return (
     	<Provider store={store} className="App" basename="/">
