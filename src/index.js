@@ -4,12 +4,17 @@ import * as serviceWorker from './serviceWorker';
 import store from './store';
 import {Provider} from 'react-redux';
 import Main from './views/main';
+import Login from './views/login';
+import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 export default class MyIndex extends Component {
   render() {
     return (
     	<Provider store={store} className="App" basename="/">
-         <Main />
+        <Router>
+          <Route exact path="/" component={Main} />
+          <Route exact path="/login" component={Login} />
+        </Router>
     	</Provider>
     );
   }
