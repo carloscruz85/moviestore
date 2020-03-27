@@ -51,8 +51,8 @@ class Header extends React.Component{
                 <PinkButton text="Login" customClickEvent={this.goToLogin.bind(this)} />
                 : 
                 <div>
-                    <PinkButton text="LogOut" customClickEvent={this.goToLogOut.bind(this)} />
                     <PinkButton text="Admin" customClickEvent={this.goToLogDashboard.bind(this)} />
+                    <PinkButton text="LogOut" customClickEvent={this.goToLogOut.bind(this)} />
                 </div>
 
             }

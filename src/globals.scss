@@ -22,7 +22,7 @@ body{
 @mixin button(){
   background-color: $soft-dark;
   border: none;
-  padding: 1rem;
+  padding: 0.5rem;
   color: white;
   border-radius: 0.5rem;
 }
