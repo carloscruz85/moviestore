@@ -12,7 +12,12 @@ class Header extends React.Component{
     }
     this.goToLogin = this.goToLogin.bind(this);
     this.goToLogOut = this.goToLogOut.bind(this);
+    this.goToLogDashboard = this.goToLogDashboard.bind(this);
 
+  }
+
+  goToLogDashboard(){
+    this.props.history.push("/dashboard")
   }
 
   goToLogin(){
@@ -45,7 +50,10 @@ class Header extends React.Component{
                 !isLogin ? 
                 <PinkButton text="Login" customClickEvent={this.goToLogin.bind(this)} />
                 : 
-                <PinkButton text="LogOut" customClickEvent={this.goToLogOut.bind(this)} />
+                <div>
+                    <PinkButton text="LogOut" customClickEvent={this.goToLogOut.bind(this)} />
+                    <PinkButton text="Admin" customClickEvent={this.goToLogDashboard.bind(this)} />
+                </div>
 
             }
         </div>
