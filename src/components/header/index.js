@@ -2,6 +2,7 @@ import React from 'react';
 import './index.scss';
 import cookie from 'react-cookies'
 import PinkButton from '../buttons/pinkButton'
+import { FiLogIn, FiLogOut, FiSettings } from "react-icons/fi";
 
 
 class Header extends React.Component{
@@ -48,11 +49,11 @@ class Header extends React.Component{
         <div className="header-container">
             {
                 !isLogin ? 
-                <PinkButton text="Login" customClickEvent={this.goToLogin.bind(this)} />
+                <FiLogIn onClick={this.goToLogin.bind(this)} />
                 : 
                 <div>
-                    <PinkButton text="Admin" customClickEvent={this.goToLogDashboard.bind(this)} />
-                    <PinkButton text="LogOut" customClickEvent={this.goToLogOut.bind(this)} />
+                    <FiSettings onClick={this.goToLogDashboard.bind(this)}/>
+                    <FiLogIn onClick={this.goToLogOut.bind(this)}/>
                 </div>
 
             }
