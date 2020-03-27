@@ -1,0 +1,11 @@
+@import '../../globals.scss';
+
+.overlayer{
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  background-color: rgba(255,255,255,0.9);
+  padding: 20%;
+  @include center-center();
+  @include full-full();
+}

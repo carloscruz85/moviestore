@@ -1,8 +1,7 @@
 import React from 'react';
-import Button from '../button'
 import './index.scss';
 
-class PinkButton extends React.Component{
+class Button extends React.Component{
 
   render(){
       return(
@@ -11,4 +10,4 @@ class PinkButton extends React.Component{
     }
 }
 
-export default PinkButton;
+export default Button;

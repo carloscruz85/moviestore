@@ -1,9 +1,5 @@
 @import '../../../globals.scss';
 
 button{
-    background-color: $soft-dark;
-    border: none;
-    padding: 1rem;
-    color: white;
-    border-radius: 0.5rem;
+    @include button;
 }

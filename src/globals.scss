@@ -19,6 +19,14 @@ body{
   padding: 1rem;
 }
 
+@mixin button(){
+  background-color: $soft-dark;
+  border: none;
+  padding: 1rem;
+  color: white;
+  border-radius: 0.5rem;
+}
+
 @mixin center-center(){
   display: flex;
   flex-flow: column nowrap;
