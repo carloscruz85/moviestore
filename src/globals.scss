@@ -1,10 +1,22 @@
+$dark : rgba(17, 20, 34, 100);
+$soft-dark : rgba(27, 30, 47, 100);
+$light-dark : rgba(44,49,72, 100);
+$blue : rgba(67, 86, 255, 100);
+$pink : rgba(253, 110, 138, 100);
+
+@font-face {
+  font-family: 'regular';
+  src: url('./assets/fonts/OpenSans-Regular.ttf');
+}
 * {
   box-sizing: border-box;
 }
 
 body{
-  margin: 0;
-  padding: 0;
+  font-family: regular;
+  background-color: $dark;
+  color: white;
+  padding: 1rem;
 }
 
 @mixin center-center(){
