@@ -13,7 +13,7 @@ class Main extends React.Component{
   render(){
       return(
         <div className="main-container">
-          <Header />
+          <Header history={this.props.history}/>
           <div className="header">
           </div>
         </div>

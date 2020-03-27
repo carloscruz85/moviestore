@@ -15,8 +15,9 @@ class Header extends React.Component{
 
   }
 
-  goToLogin(){    
-    this.props.history.push("/login/")
+  goToLogin(){
+    // console.log('login', this.props);
+    this.props.history.push("/login")
   }
 
   goToLogOut(){    
