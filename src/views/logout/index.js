@@ -1,24 +1,15 @@
-import React from 'react';
-import cookie from 'react-cookies'
+import React from "react";
+import cookie from "react-cookies";
 
-class LogOut extends React.Component{
-  constructor(props){
-    super(props);
-    this.state = {
-
-    }
+class LogOut extends React.Component {
+  componentDidMount() {
+    cookie.remove("user", { path: "/" });
+    this.props.history.push("/");
   }
 
-  componentDidMount(){
-    cookie.remove('user', { path: '/' })
-    this.props.history.push("/")
-  }
-
-  render(){
-    return(
-      <div>LogOut</div>
-    )
+  render() {
+    return <div>LogOut</div>;
   }
 }
 
-export default LogOut
+export default LogOut;

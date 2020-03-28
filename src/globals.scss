@@ -12,6 +12,12 @@ $pink : rgba(253, 110, 138, 100);
   box-sizing: border-box;
 }
 
+.icon-button{
+  color: $pink;
+  font-size: 1.25rem;
+  // box-shadow: $blue 1px 1px 5px;
+}
+
 body{
   font-family: regular;
   background-color: $dark;
@@ -22,7 +28,7 @@ body{
 @mixin button(){
   background-color: $soft-dark;
   border: none;
-  padding: 1rem;
+  padding: 0.5rem;
   color: white;
   border-radius: 0.5rem;
 }

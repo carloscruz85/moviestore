@@ -14,8 +14,6 @@ class Main extends React.Component{
       return(
         <div className="main-container">
           <Header history={this.props.history}/>
-          <div className="header">
-          </div>
         </div>
       )
     }
