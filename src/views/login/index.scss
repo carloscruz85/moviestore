@@ -1,40 +1,7 @@
-@import '../../globals.scss';
-@import '../../globals.scss';
+@import "../../globals.scss";
+@import "../../globals.scss";
 
-
-.login-container{
+.login-container {
   height: 100vh;
   @include center-center;
-  .form-container{
-    @include multi(width, 100%, 80%, 60%, 50%);
-    input, button{
-      background-color: $light-dark;
-      border-radius: .4rem;
-      text-align: center;
-      padding: 1rem 0;
-      border: none;
-      color : white;
-      width: 100%;
-      margin-top: .5rem;
-      font-size: 1rem;
-      letter-spacing: .2rem;
-    }
-    button{
-      background-color: $pink;
-      color: #fff!important;
-      border: none;
-      text-transform: uppercase;
-      cursor: pointer;
-      border-radius: 10px;
-      text-align: center;
-      display: block;
-      font-size: 1.5em;
-      margin-block-start: 0.67em;
-      margin-block-end: 0.67em;
-      margin-inline-start: 0px;
-      margin-inline-end: 0px;
-      font-weight: bold;
-    }
-  }
-
 }

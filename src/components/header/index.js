@@ -37,19 +37,22 @@ class Header extends React.Component {
     if (user === undefined) {
       this.props.sendLoginDataInner({
         isAdmin: false,
-        isLogin: false
+        isLogin: false,
+        currentUser: user
       });
       this.goToLogDashboard();
     } else {
       if (user.user_role[0] === "administrator") {
         this.props.sendLoginDataInner({
           isAdmin: true,
-          isLogin: true
+          isLogin: true,
+          currentUser: user
         });
       } else {
         this.props.sendLoginDataInner({
           isAdmin: false,
-          isLogin: true
+          isLogin: true,
+          currentUser: user
         });
       }
     }

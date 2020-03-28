@@ -1,31 +1,45 @@
-$dark : rgba(17, 20, 34, 100);
-$soft-dark : rgba(27, 30, 47, 100);
-$light-dark : rgba(44,49,72, 100);
-$blue : rgba(67, 86, 255, 100);
-$pink : rgba(253, 110, 138, 100);
+$dark: rgba(17, 20, 34, 100);
+$soft-dark: rgba(27, 30, 47, 100);
+$light-dark: rgba(44, 49, 72, 100);
+$blue: rgba(67, 86, 255, 100);
+$pink: rgba(253, 110, 138, 100);
+
+.color-blue {
+  color: $blue;
+  font-size: 1.25rem;
+}
+
+.color-pink {
+  color: $pink;
+  font-size: 1.25rem;
+}
+
+.full {
+  width: 100% !important;
+}
 
 @font-face {
-  font-family: 'regular';
-  src: url('./assets/fonts/OpenSans-Regular.ttf');
+  font-family: "regular";
+  src: url("./assets/fonts/OpenSans-Regular.ttf");
 }
 * {
   box-sizing: border-box;
 }
 
-.icon-button{
+.icon-button {
   color: $pink;
   font-size: 1.25rem;
   // box-shadow: $blue 1px 1px 5px;
 }
 
-body{
+body {
   font-family: regular;
   background-color: $dark;
   color: white;
   padding: 1rem;
 }
 
-@mixin button(){
+@mixin button() {
   background-color: $soft-dark;
   border: none;
   padding: 0.5rem;
@@ -33,7 +47,7 @@ body{
   border-radius: 0.5rem;
 }
 
-@mixin center-center(){
+@mixin center-center() {
   display: flex;
   flex-flow: column nowrap;
   justify-content: center;
@@ -41,25 +55,27 @@ body{
   text-align: center;
 }
 
-@mixin full-full{
+@mixin full-full {
   width: 100vw;
   height: 100vh;
 }
 
-
 $breakpoints: (
-  'cel':     ( min-width:  640px ),
-  'tablet':  ( min-width:  765px ),
-  'pc':      ( min-width: 1024px ),
-  'xl':      ( min-width: 1500px )
+  "cel": (
+    min-width: 640px
+  ),
+  "tablet": (
+    min-width: 765px
+  ),
+  "pc": (
+    min-width: 1024px
+  ),
+  "xl": (
+    min-width: 1500px
+  )
 ) !default;
 
-
-$breakaux: (
-'tablet',
-'pc',
-'lg'
-) !default;
+$breakaux: ("tablet", "pc", "lg") !default;
 
 @mixin respond-to($breakpoint) {
   // If the key exists in the map
@@ -77,16 +93,44 @@ $breakaux: (
   }
 }
 
-@mixin multi($property, $cel, $tablet, $pc ,$xl){
+@mixin multi($property, $cel, $tablet, $pc, $xl) {
   #{$property}: $cel;
-  @include respond-to('tablet'){
+  @include respond-to("tablet") {
     #{$property}: $tablet;
   }
-  @include respond-to('pc'){
+  @include respond-to("pc") {
     #{$property}: $pc;
   }
-  @include respond-to('xl'){
+  @include respond-to("xl") {
     #{$property}: $xl;
   }
+}
 
+.form-container {
+  margin: 0.5rem 0;
+  @include multi(width, 100%, 80%, 60%, 50%);
+  input,
+  button {
+    background-color: $light-dark;
+    border-radius: 0.4rem;
+    text-align: center;
+    padding: 0.5rem 0;
+    border: none;
+    color: white;
+    width: 100%;
+    margin-top: 0.5rem;
+    font-size: 1rem;
+    letter-spacing: 0.2rem;
+  }
+  button {
+    background-color: $pink;
+    color: #fff !important;
+    border: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+    font-size: 1rem;
+    font-weight: bold;
+  }
 }
