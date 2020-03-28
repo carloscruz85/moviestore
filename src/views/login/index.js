@@ -4,6 +4,7 @@ import {connect} from 'react-redux';
 import Overlay from '../../components/overlayer'
 import cookie from 'react-cookies'
 import axios from 'axios';
+import {sendLoginData } from '../../actionCreators';
 
 class Login extends React.Component {
   constructor(props){
@@ -45,6 +46,17 @@ class Login extends React.Component {
           msg: '',
           showOverlay: false
         })
+        if(res.data.user_role[0] === 'administrator'){
+          this.props.sendLoginDataInner({
+            isAdmin: true,
+            isLogin: true
+          })
+        }else{
+          this.props.sendLoginDataInner({
+            isAdmin: false,
+            isLogin: true
+          })
+        }
         this.props.history.push("/dashboard")
       }
     })
@@ -100,4 +112,12 @@ const mapStateToProps = state => {
 		}
 }
 
-export default connect(mapStateToProps)(Login);
+
+const mapDispatchToProps = (dispatch) =>{
+	return {
+		sendLoginDataInner(data){
+			dispatch(sendLoginData(data));
+		}
+	}
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Login);

@@ -34,26 +34,8 @@ class Header extends React.Component{
   componentDidMount(){
     let user = cookie.load('user')
 
-    if(user === undefined){
-      this.props.sendLoginDataInner({
-        isAdmin: false,
-        isLogin: false
-      })
-
-    }else{
-        if(user.user_role[0] === 'administrator'){
-          this.props.sendLoginDataInner({
-            isAdmin: true,
-            isLogin: true
-          })
-        }else{
-          this.props.sendLoginDataInner({
-            isAdmin: false,
-            isLogin: true
-          })
-        }
-
-    }    
+    if(user === undefined)
+      this.goToLogOut()  
   }
 
   sendLoginDataInner(data){    
