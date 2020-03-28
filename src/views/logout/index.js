@@ -4,9 +4,6 @@ import cookie from 'react-cookies'
 class LogOut extends React.Component{
   constructor(props){
     super(props);
-    this.state = {
-
-    }
   }
 
   componentDidMount(){

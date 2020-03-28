@@ -9,10 +9,6 @@ import {sendLoginData } from '../../actionCreators';
 class Header extends React.Component{
   constructor(props){
     super(props);
-    this.state = {
-        isLogin: false,
-        isAdmin: false
-    }
     this.goToLogin = this.goToLogin.bind(this);
     this.goToLogOut = this.goToLogOut.bind(this);
     this.goToLogDashboard = this.goToLogDashboard.bind(this);
@@ -23,7 +19,6 @@ class Header extends React.Component{
   }
 
   goToLogin(){
-    // console.log('login', this.props);
     this.props.history.push("/login")
   }
 
@@ -34,8 +29,25 @@ class Header extends React.Component{
   componentDidMount(){
     let user = cookie.load('user')
 
-    if(user === undefined)
-      this.goToLogOut()  
+    if(user === undefined){
+      this.props.sendLoginDataInner({
+        isAdmin: false,
+        isLogin: false
+      })
+      this.goToLogDashboard()
+    }else{
+        if(user.user_role[0] === 'administrator'){
+          this.props.sendLoginDataInner({
+            isAdmin: true,
+            isLogin: true
+          })
+        }else{
+          this.props.sendLoginDataInner({
+            isAdmin: false,
+            isLogin: true
+          })
+        }
+    }    
   }
 
   sendLoginDataInner(data){    
@@ -43,7 +55,7 @@ class Header extends React.Component{
   }
 
   render(){
-      const {isLogin} = this.state
+      const {isLogin} = this.props
       return(
         <div className="header-container">
             {
