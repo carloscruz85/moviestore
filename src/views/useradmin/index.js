@@ -28,13 +28,16 @@ class UserAdmin extends React.Component {
     axios
       .get(url)
       .then(function(response) {
-        console.log("data received", response);
+        //console.log("data received", response);
         self.setState({
           users: response.data
         });
       })
       .catch(function(error) {
-        // handle error
+        self.setState({
+          showOverlay: false,
+          userMsg: "Error " + error + "Please contact to carloscruz85@gmail.com"
+        });
       })
       .then(function() {
         self.setState({
