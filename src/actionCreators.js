@@ -1,9 +1,8 @@
- const sendLoginData = (data) => {
-    console.log(data, 'in action creators');
- 	return{
- 		type : 'SENDLOGINDATA',
- 		data : data
- 	}
- };
+const sendLoginData = data => {
+  return {
+    type: "SENDLOGINDATA",
+    data: data
+  };
+};
 
- export { sendLoginData };
+export { sendLoginData };

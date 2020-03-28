@@ -1,123 +1,132 @@
-import React from 'react';
-import './index.scss';
-import {connect} from 'react-redux';
-import Overlay from '../../components/overlayer'
-import cookie from 'react-cookies'
-import axios from 'axios';
-import {sendLoginData } from '../../actionCreators';
+import React from "react";
+import "./index.scss";
+import { connect } from "react-redux";
+import Overlay from "../../components/overlayer";
+import cookie from "react-cookies";
+import axios from "axios";
+import { sendLoginData } from "../../actionCreators";
 
 class Login extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      loginUrl: 'wp-json/jwt-auth/v1/token',
+      loginUrl: "wp-json/jwt-auth/v1/token",
       showOverlay: false,
-      overlayMsg: 'msg',
-      username: 'admin',
-      password: 'ILoveApplaudo',
-      userMsg: ''
-    }
-    this.handleChange = this.handleChange.bind(this)
-    this.handlePassword = this.handlePassword.bind(this)
-    this.login = this.login.bind(this)
-
+      overlayMsg: "msg",
+      username: "admin",
+      password: "ILoveApplaudo",
+      userMsg: ""
+    };
+    this.handleChange = this.handleChange.bind(this);
+    this.handlePassword = this.handlePassword.bind(this);
+    this.login = this.login.bind(this);
   }
 
-  login(){
+  login() {
     this.setState({
-      overlayMsg: 'Please wait',
+      overlayMsg: "Please wait",
       showOverlay: true,
-      userMsg: ''
-    })
+      userMsg: ""
+    });
     const thisuser = {
       username: this.state.username,
       password: this.state.password
     };
-    const mineHeaders = new Headers({'Content-Type': 'application/json'});
+    const mineHeaders = new Headers({ "Content-Type": "application/json" });
     const self = this;
-    axios.post(this.props.host+this.state.loginUrl, thisuser,{headers: mineHeaders})
-    .then(res => {
-      if(res.status === 200){
-        // this.props.login(res.data)
-        // console.clear();
-        cookie.save('user', res.data, { path: '/' })
-        // console.log(res)
-        self.setState({
-          msg: '',
-          showOverlay: false
-        })
-        if(res.data.user_role[0] === 'administrator'){
-          this.props.sendLoginDataInner({
-            isAdmin: true,
-            isLogin: true
-          })
-        }else{
-          this.props.sendLoginDataInner({
-            isAdmin: false,
-            isLogin: true
-          })
-        }
-        this.props.history.push("/dashboard")
-      }
-    })
-    .catch(error => {
-      self.setState({
-        userMsg: 'Error en los accesos pruebe nuevamente',
-        showOverlay: false
+    axios
+      .post(this.props.host + this.state.loginUrl, thisuser, {
+        headers: mineHeaders
       })
-      console.log('Error', error)
- 
-    })
-    .then(function () {
-      // self.setState({
-      //   showOverlay: false
-      // })
+      .then(res => {
+        if (res.status === 200) {
+          // this.props.login(res.data)
+          // console.clear();
+          cookie.save("user", res.data, { path: "/" });
+          // console.log(res)
+          self.setState({
+            msg: "",
+            showOverlay: false
+          });
+          if (res.data.user_role[0] === "administrator") {
+            this.props.sendLoginDataInner({
+              isAdmin: true,
+              isLogin: true
+            });
+          } else {
+            this.props.sendLoginDataInner({
+              isAdmin: false,
+              isLogin: true
+            });
+          }
+          this.props.history.push("/dashboard");
+        }
+      })
+      .catch(error => {
+        self.setState({
+          userMsg: "Error en los accesos pruebe nuevamente",
+          showOverlay: false
+        });
+        console.log("Error", error);
+      })
+      .then(function() {
+        // self.setState({
+        //   showOverlay: false
+        // })
+      });
+  }
+
+  handleChange(e) {
+    const { value, name } = e.target;
+    this.setState({
+      [name]: value
     });
   }
 
-  handleChange( e ){
-    const {value, name} = e.target
-    this.setState({
-      [name]: value,
-    })
-  }
-
-  handlePassword( e ){
-    const {value, name} = e.target
+  handlePassword(e) {
+    const { value, name } = e.target;
     this.setState({
       [name]: value
-    })
+    });
   }
 
-  render(){
-    const {showOverlay, overlayMsg} = this.state
+  render() {
+    const { showOverlay, overlayMsg } = this.state;
     return (
       <div className="login-container">
-        { showOverlay ? <Overlay msg={overlayMsg}/> : null}
+        {showOverlay ? <Overlay msg={overlayMsg} /> : null}
         <div className="form-container">
-        <input type="text" name="username" value={this.state.username} onChange={this.handleChange} />
-        <input type="password" name="password" value={this.state.password} onChange={this.handlePassword} />
-        <button onClick={this.login}>Login</button>
-        <div className="">{this.state.userMsg}</div>
+          <input
+            type="text"
+            name="username"
+            value={this.state.username}
+            onChange={this.handleChange}
+          />
+          <input
+            type="password"
+            name="password"
+            value={this.state.password}
+            onChange={this.handlePassword}
+          />
+          <button onClick={this.login}>Login</button>
+          <div className="">{this.state.userMsg}</div>
         </div>
       </div>
-    )
+    );
   }
 }
 
-
 const mapStateToProps = state => {
-	return {
-			host: state.host
-		}
-}
+  return {
+    host: state.host
+  };
+};
 
-
-const mapDispatchToProps = (dispatch) =>{
-	return {
-		sendLoginDataInner(data){
-			dispatch(sendLoginData(data));
-		}
-	}
-}
+const mapDispatchToProps = dispatch => {
+  return {
+    sendLoginDataInner(data) {
+      dispatch(sendLoginData(data));
+    }
+  };
+};
 export default connect(mapStateToProps, mapDispatchToProps)(Login);
