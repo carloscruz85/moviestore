@@ -1,11 +1,12 @@
 import {createStore} from 'redux';
+
 const reducer = (state, action) => {
 	switch(action.type){
-	case "LOGIN":
+	case 'SENDLOGINDATA':
 		return{
 		...state,
-		user: action.data,
-		login: true
+		isLogin: action.data.isLogin,
+		isAdmin: action.data.isAdmin
 	}
 	default :
 		return state
@@ -13,5 +14,7 @@ const reducer = (state, action) => {
 }
 
 export default createStore(reducer, {
-	host: 'http://carloscruz85.com/movies/'
-})
+	host: 'http://carloscruz85.com/movies/',
+	isLogin: false,
+	isAdmin: false
+}, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());

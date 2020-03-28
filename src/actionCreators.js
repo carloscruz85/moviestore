@@ -1,10 +1,9 @@
-//EXAMPLE CODE
-// const login = (data) => {
-// 	// console.log(data);
-// 	return{
-// 		type : "LOGIN",
-// 		  data: data
-// 	}
-// };
+ const sendLoginData = (data) => {
+    console.log(data, 'in action creators');
+ 	return{
+ 		type : 'SENDLOGINDATA',
+ 		data : data
+ 	}
+ };
 
-// export { login };
+ export { sendLoginData };

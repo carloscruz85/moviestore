@@ -1,20 +1,21 @@
 import React from 'react';
 import './index.scss';
 import cookie from 'react-cookies'
-import PinkButton from '../buttons/pinkButton'
 import { FiLogIn, FiLogOut, FiSettings } from "react-icons/fi";
+import {connect} from 'react-redux';
+import {sendLoginData } from '../../actionCreators';
 
 
 class Header extends React.Component{
   constructor(props){
     super(props);
     this.state = {
-        isLogin: false
+        isLogin: false,
+        isAdmin: false
     }
     this.goToLogin = this.goToLogin.bind(this);
     this.goToLogOut = this.goToLogOut.bind(this);
     this.goToLogDashboard = this.goToLogDashboard.bind(this);
-
   }
 
   goToLogDashboard(){
@@ -32,15 +33,31 @@ class Header extends React.Component{
 
   componentDidMount(){
     let user = cookie.load('user')
+
     if(user === undefined){
-        this.setState({
-            isLogin: false
-        })
+      this.props.sendLoginDataInner({
+        isAdmin: false,
+        isLogin: false
+      })
+
     }else{
-        this.setState({
+        if(user.user_role[0] === 'administrator'){
+          this.props.sendLoginDataInner({
+            isAdmin: true,
             isLogin: true
-        })
+          })
+        }else{
+          this.props.sendLoginDataInner({
+            isAdmin: false,
+            isLogin: true
+          })
+        }
+
     }    
+  }
+
+  sendLoginDataInner(data){    
+    return sendLoginData(data)
   }
 
   render(){
@@ -49,11 +66,11 @@ class Header extends React.Component{
         <div className="header-container">
             {
                 !isLogin ? 
-                <FiLogIn onClick={this.goToLogin.bind(this)} />
+                <FiLogIn className="icon-button" onClick={this.goToLogin.bind(this)} />
                 : 
                 <div>
-                    <FiSettings onClick={this.goToLogDashboard.bind(this)}/>
-                    <FiLogIn onClick={this.goToLogOut.bind(this)}/>
+                    <FiSettings className="icon-button" onClick={this.goToLogDashboard.bind(this)}/>
+                    <FiLogOut className="icon-button" onClick={this.goToLogOut.bind(this)}/>
                 </div>
 
             }
@@ -63,4 +80,20 @@ class Header extends React.Component{
 }
 
 
-export default Header
+const mapStateToProps = state => {
+	return {
+      isLogin: state.isLogin,
+      isAdmin: state.isAdmin
+		}
+}
+
+const mapDispatchToProps = (dispatch) =>{
+	return {
+		sendLoginDataInner(data){
+			dispatch(sendLoginData(data));
+		}
+	}
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(Header);
+

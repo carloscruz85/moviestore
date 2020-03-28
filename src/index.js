@@ -6,6 +6,7 @@ import {Provider} from 'react-redux';
 import Main from './views/main';
 import Login from './views/login';
 import LogOut from './views/logout';
+import Dashboard from './views/dashboard'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 // import cookie from 'react-cookies'
 
@@ -18,6 +19,7 @@ export default class MyIndex extends Component {
           <Route exact path="/" component={Main} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/logout" component={LogOut} />
+          <Route exact path="/dashboard" component={Dashboard} />
         </Router>
     	</Provider>
     );

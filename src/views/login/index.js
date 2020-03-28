@@ -1,7 +1,6 @@
 import React from 'react';
 import './index.scss';
 import {connect} from 'react-redux';
-import {login} from '../../actionCreators';
 import Overlay from '../../components/overlayer'
 import cookie from 'react-cookies'
 import axios from 'axios';
@@ -14,7 +13,8 @@ class Login extends React.Component {
       showOverlay: false,
       overlayMsg: 'msg',
       username: 'admin',
-      password: 'ILoveApplaudo'
+      password: 'ILoveApplaudo',
+      userMsg: ''
     }
     this.handleChange = this.handleChange.bind(this)
     this.handlePassword = this.handlePassword.bind(this)
@@ -24,7 +24,7 @@ class Login extends React.Component {
 
   login(){
     this.setState({
-      overlayMsg: 'Cargando datos espere por favor',
+      overlayMsg: 'Please wait',
       showOverlay: true,
       userMsg: ''
     })
@@ -33,32 +33,34 @@ class Login extends React.Component {
       password: this.state.password
     };
     const mineHeaders = new Headers({'Content-Type': 'application/json'});
-
+    const self = this;
     axios.post(this.props.host+this.state.loginUrl, thisuser,{headers: mineHeaders})
     .then(res => {
       if(res.status === 200){
         // this.props.login(res.data)
+        // console.clear();
         cookie.save('user', res.data, { path: '/' })
-        console.log(res)
-        this.setState({
+        // console.log(res)
+        self.setState({
           msg: '',
-          showOverLayer: false
+          showOverlay: false
         })
-
-        if(this.state.username === 'webmaster'){
-          this.props.history.push("/admin")
-        }else{
-          this.props.history.push("/dashboard")
-        }
+        this.props.history.push("/dashboard")
       }
     })
     .catch(error => {
-      // console.log('Error', error)
-      this.setState({
+      self.setState({
         userMsg: 'Error en los accesos pruebe nuevamente',
-        showOverLayer: false
+        showOverlay: false
       })
+      console.log('Error', error)
+ 
     })
+    .then(function () {
+      // self.setState({
+      //   showOverlay: false
+      // })
+    });
   }
 
   handleChange( e ){
@@ -98,12 +100,4 @@ const mapStateToProps = state => {
 		}
 }
 
-const mapDispatchToProps = (dispatch) =>{
-	return {
-		login(data){
-			dispatch(login(data));
-		}
-	}
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(Login);
+export default connect(mapStateToProps)(Login);
