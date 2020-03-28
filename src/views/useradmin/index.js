@@ -7,6 +7,7 @@ import { sendLoginData } from "../../store/actionCreators";
 import Overlay from "../../components/overlayer";
 import cookie from "react-cookies";
 import { FiUserPlus, FiUserMinus } from "react-icons/fi";
+import PinkButton from "../../components/buttons/pinkButton";
 import Button from "../../components/buttons/button";
 
 class UserAdmin extends React.Component {
@@ -14,6 +15,7 @@ class UserAdmin extends React.Component {
     super(props);
     this.state = {
       url: "wp-json/wp/v2/users?per_page=100",
+      urlDelete: "wp-json/wp/v2/users",
       users: [],
       showOverlay: false,
       overlayMsg: "",
@@ -30,6 +32,72 @@ class UserAdmin extends React.Component {
     this.loadUsers = this.loadUsers.bind(this);
     this.changeCredentials = this.changeCredentials.bind(this);
     this.showForm = this.showForm.bind(this);
+    this.deleteUser = this.deleteUser.bind(this);
+    this.changeRol = this.changeRol.bind(this);
+  }
+
+  changeRol(id, newRol) {
+    const { urlDelete } = this.state;
+    var self = this;
+    let host = this.props.host + urlDelete + "/" + id;
+    this.setState({
+      showOverlay: true,
+      overlayMsg: "Wait..."
+    });
+    let user = cookie.load("user");
+    const myHeaders = { Authorization: "Bearer " + user.token };
+    let realData = {
+      roles: [newRol]
+    };
+    axios
+      .post(host, realData, { headers: myHeaders })
+      .then(function(response) {
+        self.loadUsers();
+        // self.showForm();
+      })
+      .catch(function(error) {
+        self.setState({
+          showOverlay: false,
+          userMsg: "Error " + error + "Please contact to carloscruz85@gmail.com"
+        });
+      })
+      .then(function() {
+        self.setState({
+          showOverlay: false,
+          overlayMsg: ""
+        });
+      });
+  }
+
+  deleteUser(id) {
+    const { urlDelete } = this.state;
+    var self = this;
+    let host = this.props.host + urlDelete + "/" + id;
+    this.setState({
+      showOverlay: true,
+      overlayMsg: "Wait..."
+    });
+    let user = cookie.load("user");
+    const myHeaders = { Authorization: "Bearer " + user.token };
+    let realData = {};
+    axios
+      .delete(host, realData, { headers: myHeaders })
+      .then(function(response) {
+        self.loadUsers();
+        // self.showForm();
+      })
+      .catch(function(error) {
+        self.setState({
+          showOverlay: false,
+          userMsg: "Error " + error + "Please contact to carloscruz85@gmail.com"
+        });
+      })
+      .then(function() {
+        self.setState({
+          showOverlay: false,
+          overlayMsg: ""
+        });
+      });
   }
 
   showForm() {
@@ -49,7 +117,7 @@ class UserAdmin extends React.Component {
     axios
       .get(url)
       .then(function(response) {
-        //console.log("data received", response);
+        // console.log("data received", response);
         self.setState({
           users: response.data
         });
@@ -174,7 +242,29 @@ class UserAdmin extends React.Component {
           if (this.props.currentUser.id !== user.id)
             return (
               <div key={iuser} className="item-list">
-                <FiUserMinus className="square-icon color-pink" /> {user.name}
+                {/* <FiUserMinus
+                  className="square-icon color-pink"
+                  onClick={() => {
+                    this.deleteUser(user.id);
+                  }}
+                /> */}
+                <div>{user.name}</div>
+                {user.roles[0] === "editor" ? (
+                  <PinkButton
+                    text="                    Make Admin
+                    "
+                    customClickEvent={() => {
+                      this.changeRol(user.id, "administrator");
+                    }}
+                  />
+                ) : (
+                  <Button
+                    text="Make User"
+                    customClickEvent={() => {
+                      this.changeRol(user.id, "editor");
+                    }}
+                  />
+                )}
               </div>
             );
           else return null;
