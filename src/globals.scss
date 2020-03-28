@@ -5,6 +5,17 @@ $blue: rgba(67, 86, 255, 100);
 $pink: rgba(253, 110, 138, 100);
 $green: rgba(89, 204, 128, 100);
 
+.card-list {
+  background-color: $soft-dark;
+  margin: 1.5rem 0;
+  border-radius: 0.6rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .color-blue {
   color: $blue;
 }
@@ -63,7 +74,7 @@ body {
 }
 
 @mixin button() {
-  background-color: $soft-dark;
+  background-color: $light-dark;
   border: none;
   padding: 0.5rem;
   color: white;

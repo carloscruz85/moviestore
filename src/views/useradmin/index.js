@@ -6,7 +6,7 @@ import axios from "axios";
 import { sendLoginData } from "../../store/actionCreators";
 import Overlay from "../../components/overlayer";
 import cookie from "react-cookies";
-import { FiUserPlus, FiUserMinus } from "react-icons/fi";
+import { FiUserPlus, FiUser } from "react-icons/fi";
 import PinkButton from "../../components/buttons/pinkButton";
 import Button from "../../components/buttons/button";
 
@@ -228,7 +228,7 @@ class UserAdmin extends React.Component {
           </div>
         ) : (
           <div
-            className="item-list-green color-green"
+            className="item-list-green card-list"
             onClick={() => {
               this.showForm();
             }}
@@ -241,14 +241,16 @@ class UserAdmin extends React.Component {
         {users.map((user, iuser) => {
           if (this.props.currentUser.id !== user.id)
             return (
-              <div key={iuser} className="item-list">
+              <div key={iuser} className="card-list">
                 {/* <FiUserMinus
                   className="square-icon color-pink"
                   onClick={() => {
                     this.deleteUser(user.id);
                   }}
                 /> */}
-                <div>{user.name}</div>
+                <div>
+                  <FiUser /> {user.name}
+                </div>
                 {user.roles[0] === "editor" ? (
                   <PinkButton
                     text="                    Make Admin
