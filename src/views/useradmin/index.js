@@ -6,14 +6,14 @@ import axios from "axios";
 import { sendLoginData } from "../../store/actionCreators";
 import Overlay from "../../components/overlayer";
 import cookie from "react-cookies";
-import { FiUserPlus } from "react-icons/fi";
+import { FiUserPlus, FiUserMinus } from "react-icons/fi";
 import Button from "../../components/buttons/button";
 
 class UserAdmin extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      url: "wp-json/wp/v2/users",
+      url: "wp-json/wp/v2/users?per_page=100",
       users: [],
       showOverlay: false,
       overlayMsg: "",
@@ -159,20 +159,24 @@ class UserAdmin extends React.Component {
             <div className="">{this.state.userMsg}</div>
           </div>
         ) : (
-          <b
-            className="color-pink"
+          <div
+            className="item-list-green color-green"
             onClick={() => {
               this.showForm();
             }}
           >
-            Add User <FiUserPlus className="icon-button" />
-          </b>
+            <FiUserPlus className="square-icon-green color-green" /> Add User
+          </div>
         )}
 
         {userMsg}
         {users.map((user, iuser) => {
           if (this.props.currentUser.id !== user.id)
-            return <div key={iuser}>{user.name}</div>;
+            return (
+              <div key={iuser} className="item-list">
+                <FiUserMinus className="square-icon color-pink" /> {user.name}
+              </div>
+            );
           else return null;
         })}
       </div>

@@ -3,19 +3,41 @@ $soft-dark: rgba(27, 30, 47, 100);
 $light-dark: rgba(44, 49, 72, 100);
 $blue: rgba(67, 86, 255, 100);
 $pink: rgba(253, 110, 138, 100);
+$green: rgba(89, 204, 128, 100);
 
 .color-blue {
   color: $blue;
-  font-size: 1.25rem;
+}
+
+.color-green {
+  color: $green;
 }
 
 .color-pink {
   color: $pink;
-  font-size: 1.25rem;
 }
 
 .full {
   width: 100% !important;
+}
+
+.square-icon,
+.square-icon-blue,
+.square-icon-green {
+  border: 1px solid $pink;
+  padding: 0.2rem;
+  font-size: 2rem;
+  border-radius: 0.5rem;
+}
+
+.square-icon-blue {
+  color: $blue;
+  border: 1px solid $blue;
+}
+
+.square-icon-green {
+  color: $green;
+  border: 1px solid $green;
 }
 
 @font-face {
