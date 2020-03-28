@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import Overlay from "../../components/overlayer";
 import cookie from "react-cookies";
 import axios from "axios";
-import { sendLoginData } from "../../actionCreators";
+import { sendLoginData } from "../../store/actionCreators";
 
 class Login extends React.Component {
   constructor(props) {
