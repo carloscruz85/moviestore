@@ -4,6 +4,7 @@ import cookie from "react-cookies";
 import { FiLogIn, FiLogOut, FiSettings } from "react-icons/fi";
 import { connect } from "react-redux";
 import { sendLoginData } from "../../store/actionCreators";
+import PropTypes from "prop-types";
 
 class Header extends React.Component {
   constructor(props) {
@@ -92,6 +93,10 @@ const mapDispatchToProps = dispatch => {
       dispatch(sendLoginData(data));
     }
   };
+};
+
+Header.propTypes = {
+  history: PropTypes.object.isRequired
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Header);
