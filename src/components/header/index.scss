@@ -1,11 +1,13 @@
-@import '../../globals.scss';
+@import "../../globals.scss";
 
-.header-container{
-    width: 100%;
-    display: flex;
-    flex-flow: column nowrap;
-    align-items: flex-end;
-    *{
-        margin-left: 1rem;
+.header-container {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  section {
+    * {
+      margin-left: 1rem;
     }
+  }
 }
