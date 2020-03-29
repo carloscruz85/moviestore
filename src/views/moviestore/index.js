@@ -5,14 +5,15 @@ import { connect } from "react-redux";
 import axios from "axios";
 import { FiFilm, FiMoreHorizontal } from "react-icons/fi";
 import cookie from "react-cookies";
-
+import Overlay from "../../components/overlayer";
 class VideoStore extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       url: "wp-json/wp/v2/video?per_page=100",
       urlPost: "wp-json/wp/v2/video",
-
+      showOverlay: false,
+      overlayMsg: "",
       movies: [],
       showForm: true,
       title: "title from app",
@@ -128,6 +129,8 @@ class VideoStore extends React.Component {
 
   render() {
     const {
+      showOverlay,
+      overlayMsg,
       movies,
       showForm,
       title,
@@ -140,6 +143,7 @@ class VideoStore extends React.Component {
     return (
       <div className="video-store-container">
         <Header history={this.props.history} />
+        {showOverlay ? <Overlay msg={overlayMsg} /> : null}
         {showForm ? (
           <div className="form-container">
             <label>
