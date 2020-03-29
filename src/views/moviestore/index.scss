@@ -3,15 +3,16 @@
 .video-store-container {
   .movie-container {
     display: grid;
-    @include multi(grid-column-gap, 4%, 4%, 4%, 4%);
+    @include multi(grid-column-gap, 5%, 4%, 4%, 4%);
     @include multi(
       grid-template-columns,
-      21% 21% 21% 21%,
+      29% 29% 29%,
       25% 25% 25% 25%,
       25% 25% 25% 25%,
       25% 25% 25% 25%
     );
     .movie-card {
+      background-color: red;
       @include backimage();
       @include multi(height, 20vh, 20vh, 20vh, 20vh);
       margin: 5px;

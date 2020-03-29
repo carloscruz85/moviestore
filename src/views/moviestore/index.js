@@ -4,15 +4,18 @@ import Header from "../../components/header";
 import { connect } from "react-redux";
 import axios from "axios";
 import { FiFilm, FiMoreHorizontal } from "react-icons/fi";
+import cookie from "react-cookies";
 
 class VideoStore extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       url: "wp-json/wp/v2/video?per_page=100",
+      urlPost: "wp-json/wp/v2/video",
+
       movies: [],
       showForm: true,
-      title: "title",
+      title: "title from app",
       description: "description",
       stock: "stock",
       rentalPrice: "10",
@@ -22,6 +25,64 @@ class VideoStore extends React.Component {
 
     this.loadVideos = this.loadVideos.bind(this);
     this.handleChange = this.handleChange.bind(this);
+    this.createMovie = this.createMovie.bind(this);
+    this.showForm = this.showForm.bind(this);
+  }
+
+  showForm() {
+    let showForm = !this.state.showForm;
+    this.setState({
+      showForm: showForm
+    });
+  }
+
+  createMovie() {
+    const {
+      title,
+      description,
+      stock,
+      rentalPrice,
+      salePrice,
+      availability,
+      urlPost
+    } = this.state;
+    var self = this;
+    let host = this.props.host + urlPost;
+    this.setState({
+      showOverlay: true,
+      overlayMsg: "Wait creating movie..."
+    });
+    let user = cookie.load("user");
+    const myHeaders = { Authorization: "Bearer " + user.token };
+    let realData = {
+      title: title,
+      description: description,
+      stock: stock,
+      rentalPrice: rentalPrice,
+      salePrice: salePrice,
+      availability: availability,
+      status: "publish"
+    };
+    axios
+      .post(host, realData, { headers: myHeaders })
+      .then(function(response) {
+        console.log(response);
+
+        self.loadVideos();
+        // self.showForm();
+      })
+      .catch(function(error) {
+        self.setState({
+          showOverlay: false,
+          userMsg: "Error " + error + "Please contact to carloscruz85@gmail.com"
+        });
+      })
+      .then(function() {
+        self.setState({
+          showOverlay: false,
+          overlayMsg: ""
+        });
+      });
   }
 
   loadVideos() {
@@ -148,6 +209,7 @@ class VideoStore extends React.Component {
                 className="movie-card"
                 style={{ backgroundImage: `url(${movie.fimg_url})` }}
               >
+                {movie.title.rendered}
                 {/* <FiUserMinus
                   className="square-icon color-pink"
                   onClick={() => {

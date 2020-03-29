@@ -149,7 +149,7 @@ $breakaux: ("tablet", "pc", "lg") !default;
 }
 
 .form-container {
-  margin: 0.5rem 0;
+  margin: 2rem 0;
   @include multi(width, 100%, 80%, 60%, 50%);
   input,
   button {
