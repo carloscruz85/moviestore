@@ -1,7 +1,7 @@
 import React from "react";
 import "./index.scss";
 import cookie from "react-cookies";
-import { FiLogIn, FiLogOut, FiSettings, FiUser } from "react-icons/fi";
+import { FiLogIn, FiLogOut, FiSettings, FiUser, FiFilm } from "react-icons/fi";
 import { connect } from "react-redux";
 import { sendLoginData } from "../../store/actionCreators";
 import PropTypes from "prop-types";
@@ -13,6 +13,11 @@ class Header extends React.Component {
     this.goToLogOut = this.goToLogOut.bind(this);
     this.goToLogDashboard = this.goToLogDashboard.bind(this);
     this.goToLogUserAdmin = this.goToLogUserAdmin.bind(this);
+    this.goToVideoStore = this.goToVideoStore.bind(this);
+  }
+
+  goToVideoStore() {
+    this.props.history.push("/videostore");
   }
 
   goToLogUserAdmin() {
@@ -71,6 +76,10 @@ class Header extends React.Component {
             <FiUser
               className="icon-button"
               onClick={this.goToLogUserAdmin.bind(this)}
+            />
+            <FiFilm
+              className="icon-button"
+              onClick={this.goToVideoStore.bind(this)}
             />
           </section>
         ) : null}
