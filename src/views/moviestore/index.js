@@ -19,10 +19,10 @@ class VideoStore extends React.Component {
       showForm: false,
       title: "title from app",
       description: "description",
-      stock: "stock",
-      rentalPrice: "10",
-      salePrice: "100",
-      availability: "5"
+      stock: 0,
+      rentalPrice: 0,
+      salePrice: 0,
+      availability: 0
     };
 
     this.loadVideos = this.loadVideos.bind(this);
@@ -302,7 +302,7 @@ class VideoStore extends React.Component {
             <label>
               Stock:
               <input
-                type="text"
+                type="number"
                 name="stock"
                 value={stock}
                 onChange={this.handleChange}
@@ -311,7 +311,7 @@ class VideoStore extends React.Component {
             <label>
               Rental Price:
               <input
-                type="text"
+                type="number"
                 name="rentalPrice"
                 value={rentalPrice}
                 onChange={this.handleChange}
@@ -320,7 +320,7 @@ class VideoStore extends React.Component {
             <label>
               Sale Price:
               <input
-                type="text"
+                type="number"
                 name="salePrice"
                 value={salePrice}
                 onChange={this.handleChange}
@@ -329,7 +329,7 @@ class VideoStore extends React.Component {
             <label>
               Availability:
               <input
-                type="text"
+                type="number"
                 name="availability"
                 value={availability}
                 onChange={this.handleChange}
