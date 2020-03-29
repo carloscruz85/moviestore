@@ -13,11 +13,11 @@ class Header extends React.Component {
     this.goToLogOut = this.goToLogOut.bind(this);
     this.goToLogDashboard = this.goToLogDashboard.bind(this);
     this.goToLogUserAdmin = this.goToLogUserAdmin.bind(this);
-    this.goToVideoStore = this.goToVideoStore.bind(this);
+    this.goToMovieStore = this.goToMovieStore.bind(this);
   }
 
-  goToVideoStore() {
-    this.props.history.push("/videostore");
+  goToMovieStore() {
+    this.props.history.push("/moviestore");
   }
 
   goToLogUserAdmin() {
@@ -79,7 +79,7 @@ class Header extends React.Component {
             />
             <FiFilm
               className="icon-button"
-              onClick={this.goToVideoStore.bind(this)}
+              onClick={this.goToMovieStore.bind(this)}
             />
           </section>
         ) : null}
