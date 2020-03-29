@@ -1,7 +1,7 @@
 import React from "react";
 import "./index.scss";
 import cookie from "react-cookies";
-import { FiLogIn, FiLogOut, FiSettings } from "react-icons/fi";
+import { FiLogIn, FiLogOut, FiSettings, FiUser } from "react-icons/fi";
 import { connect } from "react-redux";
 import { sendLoginData } from "../../store/actionCreators";
 import PropTypes from "prop-types";
@@ -12,6 +12,11 @@ class Header extends React.Component {
     this.goToLogin = this.goToLogin.bind(this);
     this.goToLogOut = this.goToLogOut.bind(this);
     this.goToLogDashboard = this.goToLogDashboard.bind(this);
+    this.goToLogUserAdmin = this.goToLogUserAdmin.bind(this);
+  }
+
+  goToLogUserAdmin() {
+    this.props.history.push("/useradmin");
   }
 
   goToLogDashboard() {
@@ -32,19 +37,22 @@ class Header extends React.Component {
     if (user === undefined) {
       this.props.sendLoginDataInner({
         isAdmin: false,
-        isLogin: false
+        isLogin: false,
+        currentUser: user
       });
       this.goToLogDashboard();
     } else {
       if (user.user_role[0] === "administrator") {
         this.props.sendLoginDataInner({
           isAdmin: true,
-          isLogin: true
+          isLogin: true,
+          currentUser: user
         });
       } else {
         this.props.sendLoginDataInner({
           isAdmin: false,
-          isLogin: true
+          isLogin: true,
+          currentUser: user
         });
       }
     }
@@ -55,16 +63,24 @@ class Header extends React.Component {
   }
 
   render() {
-    const { isLogin } = this.props;
+    const { isLogin, isAdmin } = this.props;
     return (
       <div className="header-container">
+        {isAdmin ? (
+          <section>
+            <FiUser
+              className="icon-button"
+              onClick={this.goToLogUserAdmin.bind(this)}
+            />
+          </section>
+        ) : null}
         {!isLogin ? (
           <FiLogIn
             className="icon-button"
             onClick={this.goToLogin.bind(this)}
           />
         ) : (
-          <div>
+          <section>
             <FiSettings
               className="icon-button"
               onClick={this.goToLogDashboard.bind(this)}
@@ -73,7 +89,7 @@ class Header extends React.Component {
               className="icon-button"
               onClick={this.goToLogOut.bind(this)}
             />
-          </div>
+          </section>
         )}
       </div>
     );

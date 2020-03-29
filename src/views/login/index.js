@@ -51,12 +51,14 @@ class Login extends React.Component {
           if (res.data.user_role[0] === "administrator") {
             this.props.sendLoginDataInner({
               isAdmin: true,
-              isLogin: true
+              isLogin: true,
+              currentUser: res.data
             });
           } else {
             this.props.sendLoginDataInner({
               isAdmin: false,
-              isLogin: true
+              isLogin: true,
+              currentUser: res.data
             });
           }
           this.props.history.push("/dashboard");
