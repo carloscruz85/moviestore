@@ -3,13 +3,15 @@ import "./index.scss";
 import Header from "../../components/header";
 import { connect } from "react-redux";
 import axios from "axios";
+import { FiFilm, FiMoreHorizontal } from "react-icons/fi";
 
 class VideoStore extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       url: "wp-json/wp/v2/video?per_page=100",
-      movies: []
+      movies: [],
+      showForm: true
     };
 
     this.loadVideos = this.loadVideos.bind(this);
@@ -50,23 +52,35 @@ class VideoStore extends React.Component {
   }
 
   render() {
-    let { movies } = this.state;
+    let { movies, showForm } = this.state;
     return (
       <div className="video-store-container">
         <Header history={this.props.history} />
-        {movies.map((movie, imovie) => {
-          return (
-            <div key={imovie} className="card-list">
-              {/* <FiUserMinus
+        <div className="movie-container">
+          {movies.map((movie, imovie) => {
+            // console.log(movie.fimg_url);
+
+            return (
+              <div
+                key={imovie}
+                className="movie-card"
+                style={{ backgroundImage: `url(${movie.fimg_url})` }}
+              >
+                {/* <FiUserMinus
                   className="square-icon color-pink"
                   onClick={() => {
                     this.deleteUser(user.id);
                   }}
                 /> */}
-              <div>{movie.title.rendered}</div>
-            </div>
-          );
-        })}
+                <div>
+                  {!movie.show ? (
+                    <div className="movie-description">Description</div>
+                  ) : null}
+                </div>
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }
