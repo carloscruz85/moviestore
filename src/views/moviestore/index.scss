@@ -12,7 +12,8 @@
       25% 25% 25% 25%
     );
     .movie-card {
-      background-color: red;
+      background-color: $light-dark;
+      color: $dark;
       @include backimage();
       @include multi(height, 20vh, 20vh, 20vh, 20vh);
       margin: 5px;
