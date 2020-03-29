@@ -531,9 +531,15 @@ class VideoStore extends React.Component {
                                 />
                               )}
                             </div>
-                            <p>Description: {movie.description}</p>
-                            <p>Rental Price: ${movie.rental_price}</p>
-                            <p>Sale Price: ${movie.sale_price}</p>
+                            <p className="card-list">
+                              Description: {movie.description}
+                            </p>
+                            <p className="card-list">
+                              Rental Price: ${movie.rental_price}
+                            </p>
+                            <p className="card-list">
+                              Sale Price: ${movie.sale_price}
+                            </p>
                           </div>
                         )}
 
