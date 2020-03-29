@@ -11,10 +11,17 @@ class VideoStore extends React.Component {
     this.state = {
       url: "wp-json/wp/v2/video?per_page=100",
       movies: [],
-      showForm: true
+      showForm: true,
+      title: "title",
+      description: "description",
+      stock: "stock",
+      rentalPrice: "10",
+      salePrice: "100",
+      availability: "5"
     };
 
     this.loadVideos = this.loadVideos.bind(this);
+    this.handleChange = this.handleChange.bind(this);
   }
 
   loadVideos() {
@@ -51,11 +58,86 @@ class VideoStore extends React.Component {
     this.loadVideos();
   }
 
+  handleChange(e) {
+    const { value, name } = e.target;
+    this.setState({
+      [name]: value
+    });
+  }
+
   render() {
-    let { movies, showForm } = this.state;
+    const {
+      movies,
+      showForm,
+      title,
+      description,
+      stock,
+      rentalPrice,
+      salePrice,
+      availability
+    } = this.state;
     return (
       <div className="video-store-container">
         <Header history={this.props.history} />
+        {showForm ? (
+          <div className="form-container">
+            <label>
+              Title:
+              <input
+                type="text"
+                name="title"
+                value={this.state.title}
+                onChange={this.handleChange}
+              />
+            </label>
+            <label>
+              Description:
+              <input
+                type="text"
+                name="description"
+                value={this.state.description}
+                onChange={this.handleChange}
+              />
+            </label>
+            <label>
+              Stock:
+              <input
+                type="text"
+                name="stock"
+                value={this.state.stock}
+                onChange={this.handleChange}
+              />
+            </label>{" "}
+            <label>
+              Rental Price:
+              <input
+                type="text"
+                name="rentalPrice"
+                value={this.state.rentalPrice}
+                onChange={this.handleChange}
+              />
+            </label>{" "}
+            <label>
+              Sale Price:
+              <input
+                type="text"
+                name="salePrice"
+                value={this.state.salePrice}
+                onChange={this.handleChange}
+              />
+            </label>
+            <label>
+              Availability:
+              <input
+                type="text"
+                name="availability"
+                value={this.state.availability}
+                onChange={this.handleChange}
+              />
+            </label>
+            <button onClick={this.createMovie}>Create Movie</button>
+          </div>
+        ) : null}
         <div className="movie-container">
           {movies.map((movie, imovie) => {
             // console.log(movie.fimg_url);
