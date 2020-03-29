@@ -27,7 +27,7 @@ class VideoStore extends React.Component {
       .then(function(response) {
         // console.log("data received", response);
         self.setState({
-          users: response.data
+          movies: response.data
         });
       })
       .catch(function(error) {
@@ -37,7 +37,7 @@ class VideoStore extends React.Component {
         });
       })
       .then(function() {
-        self.changeCredentials();
+        // self.changeCredentials();
         self.setState({
           showOverlay: false,
           overlayMsg: ""
@@ -45,11 +45,28 @@ class VideoStore extends React.Component {
       });
   }
 
+  componentDidMount() {
+    this.loadVideos();
+  }
+
   render() {
+    let { movies } = this.state;
     return (
       <div className="video-store-container">
         <Header history={this.props.history} />
-        Movie Store
+        {movies.map((movie, imovie) => {
+          return (
+            <div key={imovie} className="card-list">
+              {/* <FiUserMinus
+                  className="square-icon color-pink"
+                  onClick={() => {
+                    this.deleteUser(user.id);
+                  }}
+                /> */}
+              <div>{movie.title.rendered}</div>
+            </div>
+          );
+        })}
       </div>
     );
   }
