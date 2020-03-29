@@ -11,6 +11,7 @@ class VideoStore extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      filterByLike: false,
       url: "wp-json/wp/v2/video?per_page=100",
       urlPost: "wp-json/wp/v2/video",
       mediaUrl: "wp-json/wp/v2/media/",
@@ -37,6 +38,27 @@ class VideoStore extends React.Component {
     this.saveMovie = this.saveMovie.bind(this);
     this.deleteMovie = this.deleteMovie.bind(this);
     this.like = this.like.bind(this);
+    this.filterByLike = this.filterByLike.bind(this);
+  }
+
+  filterByLike() {
+    let { movies } = this.state;
+    movies.sort((a, b) => {
+      let aa = JSON.parse(a.likes);
+      let bb = JSON.parse(b.likes);
+      // console.log(aa, bb);
+
+      if (aa.length > bb.length) return -1;
+      if (aa.length < bb.length) return 1;
+      return 0;
+    });
+
+    // console.log(movies);
+
+    this.setState({
+      movies: movies,
+      filterByLike: true
+    });
   }
 
   iLiked(i) {
@@ -55,7 +77,7 @@ class VideoStore extends React.Component {
   }
 
   like(i) {
-    let { movies } = this.state;
+    let { movies, filterByLike } = this.state;
     let movie = movies[i];
     let likes = JSON.parse(movie.likes);
     // console.log(
@@ -79,6 +101,10 @@ class VideoStore extends React.Component {
       movies: movies
     });
     this.saveMovie(i);
+
+    if (filterByLike) {
+      this.filterByLike();
+    }
   }
 
   deleteMovie(movie) {
@@ -420,7 +446,7 @@ class VideoStore extends React.Component {
             <button onClick={this.createMovie}>Create Movie</button>
           </div>
         ) : null}
-
+        <button onClick={() => this.filterByLike()}>Filter by likes</button>
         <div className="movie-container">
           {this.props.isAdmin ? (
             <div
