@@ -4,17 +4,7 @@ $light-dark: rgba(44, 49, 72, 100);
 $blue: rgba(67, 86, 255, 100);
 $pink: rgba(253, 110, 138, 100);
 $green: rgba(89, 204, 128, 100);
-
-.card-list {
-  background-color: $soft-dark;
-  margin: 1.5rem 0;
-  border-radius: 0.6rem;
-  padding: 1.5rem;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: space-between;
-}
+$yellow: rgba(224, 131, 35, 100);
 
 .color-blue {
   color: $blue;
@@ -81,6 +71,14 @@ body {
   padding: 0.5rem;
   color: white;
   border-radius: 0.5rem;
+}
+
+.green-button {
+  background-color: $green !important;
+}
+
+.yellow-button {
+  background-color: $yellow !important;
 }
 
 @mixin center-center() {

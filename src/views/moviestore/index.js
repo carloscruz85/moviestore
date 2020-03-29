@@ -34,6 +34,42 @@ class VideoStore extends React.Component {
     this.switchDescription = this.switchDescription.bind(this);
     this.handleMovieInput = this.handleMovieInput.bind(this);
     this.saveMovie = this.saveMovie.bind(this);
+    this.deleteMovie = this.deleteMovie.bind(this);
+  }
+
+  deleteMovie(movie) {
+    const { urlPost, movies } = this.state;
+    let dataMovies = movies[movie];
+    var self = this;
+    let host = this.props.host + urlPost + "/" + dataMovies.id;
+    this.setState({
+      showOverlay: true,
+      overlayMsg: "Wait deleting movie..."
+    });
+    let user = cookie.load("user");
+    const myHeaders = { Authorization: "Bearer " + user.token };
+
+    // console.table(realData);
+
+    axios
+      .delete(host, { headers: myHeaders })
+      .then(function(response) {
+        // console.log(response);
+        self.loadVideos();
+        // self.showForm();
+      })
+      .catch(function(error) {
+        self.setState({
+          showOverlay: false,
+          userMsg: "Error " + error + "Please contact to carloscruz85@gmail.com"
+        });
+      })
+      .then(function() {
+        self.setState({
+          showOverlay: false,
+          overlayMsg: ""
+        });
+      });
   }
 
   saveMovie(movie) {
@@ -411,8 +447,17 @@ class VideoStore extends React.Component {
                             onChange={this.handleMovieInput}
                           />
                         </label>
-                        <button onClick={() => this.saveMovie(imovie)}>
+                        <button
+                          className="green-button"
+                          onClick={() => this.saveMovie(imovie)}
+                        >
                           Save Movie
+                        </button>
+                        <button
+                          className="yellow-button"
+                          onClick={() => this.deleteMovie(imovie)}
+                        >
+                          Delete Movie
                         </button>
                         <button onClick={() => this.switchDescription(imovie)}>
                           Close
