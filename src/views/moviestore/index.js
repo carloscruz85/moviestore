@@ -39,6 +39,25 @@ class VideoStore extends React.Component {
     this.deleteMovie = this.deleteMovie.bind(this);
     this.like = this.like.bind(this);
     this.filterByLike = this.filterByLike.bind(this);
+    this.filterByName = this.filterByName.bind(this);
+  }
+
+  filterByName() {
+    let { movies } = this.state;
+    movies.sort((a, b) => {
+      // console.log(aa, bb);
+
+      if (a.title.rendered > b.title.rendered) return 1;
+      if (a.title.rendered < b.title.rendered) return -1;
+      return 0;
+    });
+
+    // console.log(movies);
+
+    this.setState({
+      movies: movies,
+      filterByLike: false
+    });
   }
 
   filterByLike() {
@@ -337,8 +356,10 @@ class VideoStore extends React.Component {
       .get(url)
       .then(function(response) {
         // console.log("data received", response);
+        let movies = response.data;
+
         self.setState({
-          movies: response.data
+          movies: movies
         });
       })
       .catch(function(error) {
@@ -353,6 +374,9 @@ class VideoStore extends React.Component {
           showOverlay: false,
           overlayMsg: ""
         });
+        if (self.state.filterByLike === false) {
+          self.filterByName();
+        }
       });
   }
 
@@ -369,6 +393,7 @@ class VideoStore extends React.Component {
 
   render() {
     const {
+      filterByLike,
       showOverlay,
       overlayMsg,
       movies,
@@ -446,7 +471,11 @@ class VideoStore extends React.Component {
             <button onClick={this.createMovie}>Create Movie</button>
           </div>
         ) : null}
-        <button onClick={() => this.filterByLike()}>Filter by likes</button>
+        {filterByLike ? (
+          <button onClick={() => this.filterByName()}>Filter by name</button>
+        ) : (
+          <button onClick={() => this.filterByLike()}>Filter by likes</button>
+        )}
         <div className="movie-container">
           {this.props.isAdmin ? (
             <div
