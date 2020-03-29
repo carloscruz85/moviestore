@@ -3,7 +3,7 @@ import "./index.scss";
 import Header from "../../components/header";
 import { connect } from "react-redux";
 import axios from "axios";
-import { FiFilm, FiMoreHorizontal } from "react-icons/fi";
+import { FiPlusCircle } from "react-icons/fi";
 import cookie from "react-cookies";
 import Overlay from "../../components/overlayer";
 class VideoStore extends React.Component {
@@ -12,10 +12,11 @@ class VideoStore extends React.Component {
     this.state = {
       url: "wp-json/wp/v2/video?per_page=100",
       urlPost: "wp-json/wp/v2/video",
+      mediaUrl: "wp-json/wp/v2/media/",
       showOverlay: false,
       overlayMsg: "",
       movies: [],
-      showForm: true,
+      showForm: false,
       title: "title from app",
       description: "description",
       stock: "stock",
@@ -28,6 +29,84 @@ class VideoStore extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.createMovie = this.createMovie.bind(this);
     this.showForm = this.showForm.bind(this);
+    this.changeImage = this.changeImage.bind(this);
+    this.uploadImage = this.uploadImage.bind(this);
+    this.switchDescription = this.switchDescription.bind(this);
+    this.handleMovieInput = this.handleMovieInput.bind(this);
+  }
+
+  handleMovieInput(e) {
+    const { value, name } = e.target;
+    const data = name.split("|");
+    // console.log(value, name, data);
+    let movies = this.state.movies;
+    movies[data[0]][data[1]] = value;
+    this.setState({
+      movies: movies
+    });
+  }
+
+  switchDescription(i) {
+    let status = "false";
+    let movies = this.state.movies;
+    if (movies[i].show === "false") status = "true";
+    movies[i].show = status;
+    this.setState({
+      movies: movies
+    });
+  }
+
+  uploadImage(masterFile) {
+    const file = masterFile[0];
+    // console.log(file.type);
+
+    const { mediaUrl } = this.state;
+    var self = this;
+    let host = this.props.host + mediaUrl;
+    this.setState({
+      showOverlay: true,
+      overlayMsg: "Wait Upload the image..."
+    });
+    let user = cookie.load("user");
+    const myHeaders = {
+      Authorization: "Bearer " + user.token
+      // "Content-Type": "multipart/form-data boundary=__boundrytext__"
+      // "Content-Disposition": "attachment; filename=" + file.name
+    };
+    let realData = {
+      title: "image from app",
+      // file: {
+      //   uri: "base64",
+      //   name: file.name,
+      //   type: file.type
+      // },
+      caption: "image from app",
+      media_type: file.type,
+      status: "publish"
+    };
+    console.log(realData);
+
+    axios
+      .post(host, realData, { headers: myHeaders })
+      .then(function(response) {
+        console.log(response);
+
+        self.loadVideos();
+        // self.showForm();
+      })
+      .catch(function(error) {
+        self.setState({
+          showOverlay: false,
+          userMsg: "Error " + error + "Please contact to carloscruz85@gmail.com"
+        });
+      })
+      .then(function() {});
+  }
+
+  changeImage(e) {
+    const file = Array.from(e.target.files);
+    // console.log();
+    this.uploadImage(file);
   }
 
   showForm() {
@@ -71,7 +150,7 @@ class VideoStore extends React.Component {
         console.log(response);
 
         self.loadVideos();
-        // self.showForm();
+        self.showForm();
       })
       .catch(function(error) {
         self.setState({
@@ -152,16 +231,19 @@ class VideoStore extends React.Component {
               <input
                 type="text"
                 name="title"
-                value={this.state.title}
+                value={title}
                 onChange={this.handleChange}
               />
+            </label>
+            <label>
+              <input type="file" onChange={this.changeImage} />
             </label>
             <label>
               Description:
               <input
                 type="text"
                 name="description"
-                value={this.state.description}
+                value={description}
                 onChange={this.handleChange}
               />
             </label>
@@ -170,7 +252,7 @@ class VideoStore extends React.Component {
               <input
                 type="text"
                 name="stock"
-                value={this.state.stock}
+                value={stock}
                 onChange={this.handleChange}
               />
             </label>{" "}
@@ -179,7 +261,7 @@ class VideoStore extends React.Component {
               <input
                 type="text"
                 name="rentalPrice"
-                value={this.state.rentalPrice}
+                value={rentalPrice}
                 onChange={this.handleChange}
               />
             </label>{" "}
@@ -188,7 +270,7 @@ class VideoStore extends React.Component {
               <input
                 type="text"
                 name="salePrice"
-                value={this.state.salePrice}
+                value={salePrice}
                 onChange={this.handleChange}
               />
             </label>
@@ -197,33 +279,92 @@ class VideoStore extends React.Component {
               <input
                 type="text"
                 name="availability"
-                value={this.state.availability}
+                value={availability}
                 onChange={this.handleChange}
               />
             </label>
             <button onClick={this.createMovie}>Create Movie</button>
           </div>
         ) : null}
+
         <div className="movie-container">
+          <div className="movie-card add-movie" onClick={() => this.showForm()}>
+            <FiPlusCircle /> Add
+          </div>
           {movies.map((movie, imovie) => {
-            // console.log(movie.fimg_url);
+            // console.log(movie);
 
             return (
-              <div
-                key={imovie}
-                className="movie-card"
-                style={{ backgroundImage: `url(${movie.fimg_url})` }}
-              >
-                {movie.title.rendered}
-                {/* <FiUserMinus
-                  className="square-icon color-pink"
-                  onClick={() => {
-                    this.deleteUser(user.id);
-                  }}
-                /> */}
+              <div key={imovie}>
+                <div
+                  className="movie-card"
+                  style={{ backgroundImage: `url(${movie.fimg_url})` }}
+                  onClick={() => this.switchDescription(imovie)}
+                ></div>
                 <div>
-                  {!movie.show ? (
-                    <div className="movie-description">Description</div>
+                  {movie.show === "true" ? (
+                    <div className="movie-description">
+                      <div className="form-container">
+                        <label>
+                          Title:
+                          <input
+                            type="text"
+                            name={imovie + "|title"}
+                            value={movie.title.rendered}
+                            onChange={this.handleMovieInput}
+                          />
+                        </label>
+                        <label>
+                          Description:
+                          <input
+                            type="text"
+                            name={imovie + "|description"}
+                            value={movie.description}
+                            onChange={this.handleMovieInput}
+                          />
+                        </label>
+                        <label>
+                          Stock:
+                          <input
+                            type="text"
+                            name={imovie + "|stock"}
+                            value={movie.stock}
+                            onChange={this.handleMovieInput}
+                          />
+                        </label>
+                        <label>
+                          Rental Price:
+                          <input
+                            type="text"
+                            name={imovie + "|rental_price"}
+                            value={movie.rental_price}
+                            onChange={this.handleMovieInput}
+                          />
+                        </label>{" "}
+                        <label>
+                          Sale Price:
+                          <input
+                            type="text"
+                            name={imovie + "|sale_price"}
+                            value={movie.sale_price}
+                            onChange={this.handleMovieInput}
+                          />
+                        </label>
+                        <label>
+                          Availability:
+                          <input
+                            type="text"
+                            name={imovie + "|availability"}
+                            value={movie.availability}
+                            onChange={this.handleMovieInput}
+                          />
+                        </label>
+                        <button onClick={this.createMovie}>Save Movie</button>
+                        <button onClick={() => this.switchDescription(imovie)}>
+                          Close
+                        </button>
+                      </div>
+                    </div>
                   ) : null}
                 </div>
               </div>

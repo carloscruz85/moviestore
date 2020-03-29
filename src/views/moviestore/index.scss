@@ -2,6 +2,7 @@
 
 .video-store-container {
   .movie-container {
+    padding-top: 2rem;
     display: grid;
     @include multi(grid-column-gap, 5%, 4%, 4%, 4%);
     @include multi(
@@ -13,10 +14,22 @@
     );
     .movie-card {
       background-color: $light-dark;
-      color: $dark;
+      color: white;
       @include backimage();
       @include multi(height, 20vh, 20vh, 20vh, 20vh);
       margin: 5px;
+      @include center-center();
+      // font-size: 2rem;
+    }
+    .movie-description {
+      padding: 1rem;
+      background-color: $dark;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      @include center-center();
     }
   }
 }

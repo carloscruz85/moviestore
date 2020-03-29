@@ -70,7 +70,9 @@ body {
   background-color: $dark;
   color: white;
   font-size: 18px;
-  padding: 1rem;
+  padding: 5%;
+  margin: 0;
+  // width: 100vw;
 }
 
 @mixin button() {
@@ -160,7 +162,7 @@ $breakaux: ("tablet", "pc", "lg") !default;
     padding: 5% 0;
     border: none;
     color: white;
-    width: 95%;
+    width: 100%;
     margin-bottom: 5%;
     font-size: 1rem;
     letter-spacing: 0.2rem;
