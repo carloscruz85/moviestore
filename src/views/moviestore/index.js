@@ -59,10 +59,11 @@ class VideoStore extends React.Component {
       title: title,
       description: description,
       stock: stock,
-      rentalPrice: rentalPrice,
-      salePrice: salePrice,
+      rental_price: rentalPrice,
+      sale_price: salePrice,
       availability: availability,
-      status: "publish"
+      status: "publish",
+      show: "false"
     };
     axios
       .post(host, realData, { headers: myHeaders })
