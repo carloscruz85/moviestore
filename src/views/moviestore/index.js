@@ -4,6 +4,7 @@ import Header from "../../components/header";
 import { connect } from "react-redux";
 import axios from "axios";
 import { FiPlusCircle } from "react-icons/fi";
+import { IoIosHeartDislike, IoIosHeart } from "react-icons/io";
 import cookie from "react-cookies";
 import Overlay from "../../components/overlayer";
 class VideoStore extends React.Component {
@@ -35,6 +36,49 @@ class VideoStore extends React.Component {
     this.handleMovieInput = this.handleMovieInput.bind(this);
     this.saveMovie = this.saveMovie.bind(this);
     this.deleteMovie = this.deleteMovie.bind(this);
+    this.like = this.like.bind(this);
+  }
+
+  iLiked(i) {
+    let { movies } = this.state;
+    let movie = movies[i];
+    let likes = JSON.parse(movie.likes);
+    return likes.includes(this.props.currentUser.id);
+  }
+
+  getLikes(i) {
+    let { movies } = this.state;
+    let movie = movies[i];
+    let likes = JSON.parse(movie.likes);
+    // console.log(likes.length);
+    return likes.length;
+  }
+
+  like(i) {
+    let { movies } = this.state;
+    let movie = movies[i];
+    let likes = JSON.parse(movie.likes);
+    // console.log(
+    //   likes,
+    //   this.props.currentUser.id,
+    //   likes.includes(this.props.currentUser.id)
+    // );
+
+    if (!likes.includes(this.props.currentUser.id)) {
+      likes.push(this.props.currentUser.id);
+    } else {
+      let newLike = likes.filter(id => {
+        return id !== this.props.currentUser.id;
+      });
+      likes = newLike;
+    }
+
+    // console.log(likes);
+    movies[i].likes = JSON.stringify(likes);
+    this.setState({
+      movies: movies
+    });
+    this.saveMovie(i);
   }
 
   deleteMovie(movie) {
@@ -76,8 +120,8 @@ class VideoStore extends React.Component {
     const { urlPost, movies } = this.state;
 
     let dataMovies = movies[movie];
-    console.clear();
-    console.table(dataMovies);
+    // console.clear();
+    // console.table(dataMovies);
 
     var self = this;
     let host = this.props.host + urlPost + "/" + dataMovies.id;
@@ -93,7 +137,8 @@ class VideoStore extends React.Component {
       stock: dataMovies.stock,
       rental_price: dataMovies.rental_price,
       sale_price: dataMovies.sale_price,
-      availability: dataMovies.availability
+      availability: dataMovies.availability,
+      likes: dataMovies.likes
     };
     // console.table(realData);
 
@@ -230,7 +275,8 @@ class VideoStore extends React.Component {
       sale_price: salePrice,
       availability: availability,
       status: "publish",
-      show: "false"
+      show: "false",
+      likes: "[]"
     };
     axios
       .post(host, realData, { headers: myHeaders })
@@ -376,9 +422,15 @@ class VideoStore extends React.Component {
         ) : null}
 
         <div className="movie-container">
-          <div className="movie-card add-movie" onClick={() => this.showForm()}>
-            <FiPlusCircle /> Add
-          </div>
+          {this.props.isAdmin ? (
+            <div
+              className="movie-card add-movie"
+              onClick={() => this.showForm()}
+            >
+              <FiPlusCircle /> Add
+            </div>
+          ) : null}
+
           {movies.map((movie, imovie) => {
             // console.log(movie);
 
@@ -393,72 +445,98 @@ class VideoStore extends React.Component {
                   {movie.show === "true" ? (
                     <div className="movie-description">
                       <div className="form-container">
-                        <label>
-                          Title:
-                          <input
-                            type="text"
-                            name={imovie + "|title"}
-                            value={movie.title.rendered}
-                            onChange={this.handleMovieInput}
-                          />
-                        </label>
-                        <label>
-                          Description:
-                          <input
-                            type="text"
-                            name={imovie + "|description"}
-                            value={movie.description}
-                            onChange={this.handleMovieInput}
-                          />
-                        </label>
-                        <label>
-                          Stock:
-                          <input
-                            type="number"
-                            name={imovie + "|stock"}
-                            value={movie.stock}
-                            onChange={this.handleMovieInput}
-                          />
-                        </label>
-                        <label>
-                          Rental Price:
-                          <input
-                            type="number"
-                            name={imovie + "|rental_price"}
-                            value={movie.rental_price}
-                            onChange={this.handleMovieInput}
-                          />
-                        </label>{" "}
-                        <label>
-                          Sale Price:
-                          <input
-                            type="number"
-                            name={imovie + "|sale_price"}
-                            value={movie.sale_price}
-                            onChange={this.handleMovieInput}
-                          />
-                        </label>
-                        <label>
-                          Availability:
-                          <input
-                            type="number"
-                            name={imovie + "|availability"}
-                            value={movie.availability}
-                            onChange={this.handleMovieInput}
-                          />
-                        </label>
-                        <button
-                          className="green-button"
-                          onClick={() => this.saveMovie(imovie)}
-                        >
-                          Save Movie
-                        </button>
-                        <button
-                          className="yellow-button"
-                          onClick={() => this.deleteMovie(imovie)}
-                        >
-                          Delete Movie
-                        </button>
+                        {this.props.isAdmin ? (
+                          <div>
+                            <label>
+                              Title:
+                              <input
+                                type="text"
+                                name={imovie + "|title"}
+                                value={movie.title.rendered}
+                                onChange={this.handleMovieInput}
+                              />
+                            </label>
+                            <label>
+                              Description:
+                              <input
+                                type="text"
+                                name={imovie + "|description"}
+                                value={movie.description}
+                                onChange={this.handleMovieInput}
+                              />
+                            </label>
+                            <label>
+                              Stock:
+                              <input
+                                type="number"
+                                name={imovie + "|stock"}
+                                value={movie.stock}
+                                onChange={this.handleMovieInput}
+                              />
+                            </label>
+                            <label>
+                              Rental Price:
+                              <input
+                                type="number"
+                                name={imovie + "|rental_price"}
+                                value={movie.rental_price}
+                                onChange={this.handleMovieInput}
+                              />
+                            </label>{" "}
+                            <label>
+                              Sale Price:
+                              <input
+                                type="number"
+                                name={imovie + "|sale_price"}
+                                value={movie.sale_price}
+                                onChange={this.handleMovieInput}
+                              />
+                            </label>
+                            <label>
+                              Availability:
+                              <input
+                                type="number"
+                                name={imovie + "|availability"}
+                                value={movie.availability}
+                                onChange={this.handleMovieInput}
+                              />
+                            </label>
+                            <button
+                              className="green-button"
+                              onClick={() => this.saveMovie(imovie)}
+                            >
+                              Save Movie
+                            </button>
+                            <button
+                              className="yellow-button"
+                              onClick={() => this.deleteMovie(imovie)}
+                            >
+                              Delete Movie
+                            </button>
+                          </div>
+                        ) : (
+                          <div>
+                            <h3>{movie.title.rendered}</h3>
+                            <div className="color-yellow">
+                              {this.getLikes(imovie)} <div>Likes</div>
+                              {this.iLiked(imovie) ? (
+                                <IoIosHeartDislike
+                                  className="color-red"
+                                  onClick={() => this.like(imovie)}
+                                />
+                              ) : (
+                                <IoIosHeart
+                                  className="color-red"
+                                  onClick={() => this.like(imovie)}
+                                />
+                              )}
+                            </div>
+                            <p>Description: {movie.description}</p>
+                            <p>Rental Price: ${movie.rental_price}</p>
+                            <p>Sale Price: ${movie.sale_price}</p>
+                          </div>
+                        )}
+
                         <button onClick={() => this.switchDescription(imovie)}>
                           Close
                         </button>
@@ -478,7 +556,9 @@ class VideoStore extends React.Component {
 const mapStateToProps = state => {
   return {
     host: state.host,
-    currentUser: state.currentUser
+    currentUser: state.currentUser,
+    isLogin: state.isLogin,
+    isAdmin: state.isAdmin
   };
 };
 

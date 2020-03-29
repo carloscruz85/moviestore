@@ -5,6 +5,7 @@ $blue: rgba(67, 86, 255, 100);
 $pink: rgba(253, 110, 138, 100);
 $green: rgba(89, 204, 128, 100);
 $yellow: rgba(224, 131, 35, 100);
+$red: rgba(252, 119, 111, 100);
 
 .color-blue {
   color: $blue;
@@ -16,6 +17,14 @@ $yellow: rgba(224, 131, 35, 100);
 
 .color-pink {
   color: $pink;
+}
+
+.color-yellow {
+  color: $yellow;
+}
+
+.color-red {
+  color: $red;
 }
 
 .full {
@@ -176,4 +185,24 @@ $breakaux: ("tablet", "pc", "lg") !default;
     font-size: 1rem;
     font-weight: bold;
   }
+}
+
+.movie-card {
+  background-color: $light-dark;
+  color: white;
+  @include backimage();
+  @include multi(height, 20vh, 20vh, 20vh, 20vh);
+  margin: 5px;
+  @include center-center();
+  // font-size: 2rem;
+}
+.movie-description {
+  padding: 1rem;
+  background-color: $dark;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  @include center-center();
 }

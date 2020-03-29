@@ -77,10 +77,6 @@ class Header extends React.Component {
               className="icon-button"
               onClick={this.goToLogUserAdmin.bind(this)}
             />
-            <FiFilm
-              className="icon-button"
-              onClick={this.goToMovieStore.bind(this)}
-            />
           </section>
         ) : null}
         {!isLogin ? (
@@ -90,6 +86,10 @@ class Header extends React.Component {
           />
         ) : (
           <section>
+            <FiFilm
+              className="icon-button"
+              onClick={this.goToMovieStore.bind(this)}
+            />
             <FiSettings
               className="icon-button"
               onClick={this.goToLogDashboard.bind(this)}

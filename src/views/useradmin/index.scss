@@ -1,6 +1,7 @@
 @import "../../globals.scss";
 
 .usermain-container {
+  .card-list,
   .item-list,
   .item-list-green {
     margin: 0.5rem 0;
@@ -17,5 +18,10 @@
   }
   .item-list-green {
     border: $green solid 1px;
+  }
+  .card-list {
+    background-color: $soft-dark;
+    border: none;
+    margin-bottom: 2rem;
   }
 }
