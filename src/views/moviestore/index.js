@@ -378,7 +378,7 @@ class VideoStore extends React.Component {
                         <label>
                           Stock:
                           <input
-                            type="text"
+                            type="number"
                             name={imovie + "|stock"}
                             value={movie.stock}
                             onChange={this.handleMovieInput}
@@ -387,7 +387,7 @@ class VideoStore extends React.Component {
                         <label>
                           Rental Price:
                           <input
-                            type="text"
+                            type="number"
                             name={imovie + "|rental_price"}
                             value={movie.rental_price}
                             onChange={this.handleMovieInput}
@@ -396,7 +396,7 @@ class VideoStore extends React.Component {
                         <label>
                           Sale Price:
                           <input
-                            type="text"
+                            type="number"
                             name={imovie + "|sale_price"}
                             value={movie.sale_price}
                             onChange={this.handleMovieInput}
@@ -405,7 +405,7 @@ class VideoStore extends React.Component {
                         <label>
                           Availability:
                           <input
-                            type="text"
+                            type="number"
                             name={imovie + "|availability"}
                             value={movie.availability}
                             onChange={this.handleMovieInput}
