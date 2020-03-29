@@ -7,6 +7,8 @@ import { FiPlusCircle } from "react-icons/fi";
 import { IoIosHeartDislike, IoIosHeart } from "react-icons/io";
 import cookie from "react-cookies";
 import Overlay from "../../components/overlayer";
+import Input from "../../components/inputs/input";
+
 class VideoStore extends React.Component {
   constructor(props) {
     super(props);
@@ -411,63 +413,51 @@ class VideoStore extends React.Component {
         {showOverlay ? <Overlay msg={overlayMsg} /> : null}
         {showForm ? (
           <div className="form-container">
-            <label>
-              Title:
-              <input
-                type="text"
-                name="title"
-                value={title}
-                onChange={this.handleChange}
-              />
-            </label>
-            <label>
+            <Input
+              label="Title"
+              type="text"
+              name="title"
+              value={title}
+              customChange={this.handleChange.bind(this)}
+            />
+            <Input
+              label="Description"
+              type="text"
+              name="description"
+              value={description}
+              customChange={this.handleChange.bind(this)}
+            />
+            {/* <label>
               <input type="file" onChange={this.changeImage} />
-            </label>
-            <label>
-              Description:
-              <input
-                type="text"
-                name="description"
-                value={description}
-                onChange={this.handleChange}
-              />
-            </label>
-            <label>
-              Stock:
-              <input
-                type="number"
-                name="stock"
-                value={stock}
-                onChange={this.handleChange}
-              />
-            </label>{" "}
-            <label>
-              Rental Price:
-              <input
-                type="number"
-                name="rentalPrice"
-                value={rentalPrice}
-                onChange={this.handleChange}
-              />
-            </label>{" "}
-            <label>
-              Sale Price:
-              <input
-                type="number"
-                name="salePrice"
-                value={salePrice}
-                onChange={this.handleChange}
-              />
-            </label>
-            <label>
-              Availability:
-              <input
-                type="number"
-                name="availability"
-                value={availability}
-                onChange={this.handleChange}
-              />
-            </label>
+            </label> */}
+            <Input
+              label="Stock"
+              type="number"
+              name="stock"
+              value={stock}
+              customChange={this.handleChange.bind(this)}
+            />
+            <Input
+              label="Rental Price"
+              type="number"
+              name="rentalPrice"
+              value={rentalPrice}
+              customChange={this.handleChange.bind(this)}
+            />
+            <Input
+              label="Sale Price"
+              type="number"
+              name="salePrice"
+              value={salePrice}
+              customChange={this.handleChange.bind(this)}
+            />
+            <Input
+              label="Availability"
+              type="number"
+              name="availability"
+              value={availability}
+              customChange={this.handleChange.bind(this)}
+            />
             <button onClick={this.createMovie}>Create Movie</button>
           </div>
         ) : null}
