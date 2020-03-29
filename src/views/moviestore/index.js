@@ -33,14 +33,66 @@ class VideoStore extends React.Component {
     this.uploadImage = this.uploadImage.bind(this);
     this.switchDescription = this.switchDescription.bind(this);
     this.handleMovieInput = this.handleMovieInput.bind(this);
+    this.saveMovie = this.saveMovie.bind(this);
+  }
+
+  saveMovie(movie) {
+    const { urlPost, movies } = this.state;
+
+    let dataMovies = movies[movie];
+    console.clear();
+    console.table(dataMovies);
+
+    var self = this;
+    let host = this.props.host + urlPost + "/" + dataMovies.id;
+    this.setState({
+      showOverlay: true,
+      overlayMsg: "Wait saving movie..."
+    });
+    let user = cookie.load("user");
+    const myHeaders = { Authorization: "Bearer " + user.token };
+    let realData = {
+      title: dataMovies.title.rendered,
+      description: dataMovies.description,
+      stock: dataMovies.stock,
+      rental_price: dataMovies.rental_price,
+      sale_price: dataMovies.sale_price,
+      availability: dataMovies.availability
+    };
+    // console.table(realData);
+
+    axios
+      .post(host, realData, { headers: myHeaders })
+      .then(function(response) {
+        // console.log(response);
+        // self.loadVideos();
+        // self.showForm();
+      })
+      .catch(function(error) {
+        self.setState({
+          showOverlay: false,
+          userMsg: "Error " + error + "Please contact to carloscruz85@gmail.com"
+        });
+      })
+      .then(function() {
+        self.setState({
+          showOverlay: false,
+          overlayMsg: ""
+        });
+      });
   }
 
   handleMovieInput(e) {
     const { value, name } = e.target;
     const data = name.split("|");
-    // console.log(value, name, data);
     let movies = this.state.movies;
-    movies[data[0]][data[1]] = value;
+
+    if (data[1] === "title") {
+      movies[data[0]][data[1]].rendered = value;
+    } else {
+      movies[data[0]][data[1]] = value;
+    }
+
     this.setState({
       movies: movies
     });
@@ -359,7 +411,9 @@ class VideoStore extends React.Component {
                             onChange={this.handleMovieInput}
                           />
                         </label>
-                        <button onClick={this.createMovie}>Save Movie</button>
+                        <button onClick={() => this.saveMovie(imovie)}>
+                          Save Movie
+                        </button>
                         <button onClick={() => this.switchDescription(imovie)}>
                           Close
                         </button>
