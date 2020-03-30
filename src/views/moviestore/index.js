@@ -4,10 +4,10 @@ import Header from "../../components/header";
 import { connect } from "react-redux";
 import axios from "axios";
 import { FiPlusCircle } from "react-icons/fi";
-import { IoIosHeartDislike, IoIosHeart } from "react-icons/io";
 import cookie from "react-cookies";
 import Overlay from "../../components/overlayer";
 import Input from "../../components/inputs/input";
+import Movie from "../../components/movie";
 
 class VideoStore extends React.Component {
   constructor(props) {
@@ -101,11 +101,6 @@ class VideoStore extends React.Component {
     let { movies, filterByLike } = this.state;
     let movie = movies[i];
     let likes = JSON.parse(movie.likes);
-    // console.log(
-    //   likes,
-    //   this.props.currentUser.id,
-    //   likes.includes(this.props.currentUser.id)
-    // );
 
     if (!likes.includes(this.props.currentUser.id)) {
       likes.push(this.props.currentUser.id);
@@ -115,8 +110,6 @@ class VideoStore extends React.Component {
       });
       likes = newLike;
     }
-
-    // console.log(likes);
     movies[i].likes = JSON.stringify(likes);
     this.setState({
       movies: movies
@@ -480,113 +473,19 @@ class VideoStore extends React.Component {
             // console.log(movie);
             if (this.props.isAdmin === true || movie.availability > 0)
               return (
-                <div key={imovie}>
-                  <div
-                    className="movie-card"
-                    style={{ backgroundImage: `url(${movie.fimg_url})` }}
-                    onClick={() => this.switchDescription(imovie)}
-                  ></div>
-                  <div>
-                    {movie.show === "true" ? (
-                      <div className="movie-description">
-                        <div className="form-container">
-                          {this.props.isAdmin ? (
-                            <div>
-                              <Input
-                                label="Title"
-                                type="text"
-                                name={imovie + "|title"}
-                                value={movie.title.rendered}
-                                customChange={this.handleMovieInput.bind(this)}
-                              />
-                              <Input
-                                label="Description"
-                                type="text"
-                                name={imovie + "|description"}
-                                value={movie.description}
-                                customChange={this.handleMovieInput.bind(this)}
-                              />
-                              <Input
-                                label="Stock"
-                                type="number"
-                                name={imovie + "|stock"}
-                                value={movie.stock}
-                                customChange={this.handleMovieInput.bind(this)}
-                              />
-                              <Input
-                                label="Rental Price"
-                                type="number"
-                                name={imovie + "|rental_price"}
-                                value={movie.rental_price}
-                                customChange={this.handleMovieInput.bind(this)}
-                              />
-                              <Input
-                                label="Sale Price"
-                                type="number"
-                                name={imovie + "|sale_price"}
-                                value={movie.sale_price}
-                                customChange={this.handleMovieInput.bind(this)}
-                              />
-                              <Input
-                                label="Availability"
-                                type="number"
-                                name={imovie + "|availability"}
-                                value={movie.availability}
-                                customChange={this.handleMovieInput.bind(this)}
-                              />
-
-                              <button
-                                className="green-button"
-                                onClick={() => this.saveMovie(imovie)}
-                              >
-                                Save Movie
-                              </button>
-                              <button
-                                className="yellow-button"
-                                onClick={() => this.deleteMovie(imovie)}
-                              >
-                                Delete Movie
-                              </button>
-                            </div>
-                          ) : (
-                            <div>
-                              <h3>{movie.title.rendered}</h3>
-                              <div className="color-yellow">
-                                {this.getLikes(imovie)} <div>Likes</div>
-                                {this.iLiked(imovie) ? (
-                                  <IoIosHeartDislike
-                                    className="color-red"
-                                    onClick={() => this.like(imovie)}
-                                  />
-                                ) : (
-                                  <IoIosHeart
-                                    className="color-red"
-                                    onClick={() => this.like(imovie)}
-                                  />
-                                )}
-                              </div>
-                              <p className="card-list">
-                                Description: {movie.description}
-                              </p>
-                              <p className="card-list">
-                                Rental Price: ${movie.rental_price}
-                              </p>
-                              <p className="card-list">
-                                Sale Price: ${movie.sale_price}
-                              </p>
-                            </div>
-                          )}
-
-                          <button
-                            onClick={() => this.switchDescription(imovie)}
-                          >
-                            Close
-                          </button>
-                        </div>
-                      </div>
-                    ) : null}
-                  </div>
-                </div>
+                <Movie
+                  key={imovie}
+                  movie={movie}
+                  imovie={imovie}
+                  switchDescription={this.switchDescription.bind(this)}
+                  getLikes={this.getLikes.bind(this)}
+                  iLiked={this.iLiked.bind(this)}
+                  handleMovieInput={this.handleMovieInput.bind(this)}
+                  isAdmin={this.props.isAdmin}
+                  saveMovie={this.saveMovie.bind(this)}
+                  deleteMovie={this.deleteMovie.bind(this)}
+                  like={this.like.bind(this)}
+                />
               );
             else return null;
           })}
