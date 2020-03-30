@@ -15,6 +15,9 @@ class VideoStore extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      indexPagination: 0,
+      paginationSize: 3,
+      blocksPagination: [],
       searchFilter: "",
       filterByLike: false,
       url: "wp-json/wp/v2/video?per_page=100",
@@ -46,6 +49,39 @@ class VideoStore extends React.Component {
     this.filterByName = this.filterByName.bind(this);
     this.setSearchFilter = this.setSearchFilter.bind(this);
     this.matchTitle = this.matchTitle.bind(this);
+    this.paginate = this.paginate.bind(this);
+    this.setIndexPagination = this.setIndexPagination.bind(this);
+  }
+
+  setIndexPagination(i) {
+    this.setState({
+      indexPagination: i
+    });
+  }
+
+  paginate() {
+    let { blocksPagination, movies, paginationSize, searchFilter } = this.state;
+    //FILTER SEARCH
+    let matchs = movies.filter(it =>
+      new RegExp(searchFilter, "i").test(it.title.rendered)
+    );
+    // console.log(matchs);
+
+    //DIVIDE IN CHUNKS
+    const chunked_arr = [];
+    for (let i = 0; i < matchs.length; i++) {
+      const last = chunked_arr[chunked_arr.length - 1];
+      if (!last || last.length === paginationSize) {
+        chunked_arr.push([matchs[i]]);
+      } else {
+        last.push(matchs[i]);
+      }
+    }
+    // console.log(chunked_arr);
+
+    this.setState({
+      blocksPagination: chunked_arr
+    });
   }
 
   matchTitle(id) {
@@ -383,7 +419,6 @@ class VideoStore extends React.Component {
       .then(function(response) {
         // console.log("data received", response);
         let movies = response.data;
-
         self.setState({
           movies: movies
         });
@@ -395,6 +430,7 @@ class VideoStore extends React.Component {
         });
       })
       .then(function() {
+        self.paginate();
         // self.changeCredentials();
         self.setState({
           showOverlay: false,
@@ -419,6 +455,8 @@ class VideoStore extends React.Component {
 
   render() {
     const {
+      indexPagination,
+      blocksPagination,
       searchFilter,
       filterByLike,
       showOverlay,
@@ -462,38 +500,57 @@ class VideoStore extends React.Component {
             <button onClick={() => this.filterByLike()}>Filter by likes</button>
           )}
         </div>
-        <div className="movie-container">
-          {this.props.isAdmin ? (
-            <div
-              className="movie-card add-movie"
-              onClick={() => this.showForm()}
-            >
-              <FiPlusCircle /> Add
-            </div>
-          ) : null}
-
-          {movies.map((movie, imovie) => {
-            if (this.props.isAdmin === true || movie.availability === "true")
-              if (this.matchTitle(movie.id))
-                return (
-                  <Movie
-                    key={imovie}
-                    movie={movie}
-                    imovie={imovie}
-                    switchDescription={this.switchDescription.bind(this)}
-                    getLikes={this.getLikes.bind(this)}
-                    iLiked={this.iLiked.bind(this)}
-                    handleMovieInput={this.handleMovieInput.bind(this)}
-                    isAdmin={this.props.isAdmin}
-                    adminId={this.props.currentUser.id}
-                    saveMovie={this.saveMovie.bind(this)}
-                    deleteMovie={this.deleteMovie.bind(this)}
-                    like={this.like.bind(this)}
-                  />
-                );
-              else return null;
+        <div className="paginator-container">
+          {blocksPagination.map((block, iblock) => {
+            let selected = "";
+            if (iblock === indexPagination) selected = "selected";
+            return (
+              <div
+                className={selected + " pag"}
+                key={iblock}
+                onClick={() => this.setIndexPagination(iblock)}
+              >
+                {iblock}
+              </div>
+            );
           })}
         </div>
+        {blocksPagination.map((block, iblock) => {
+          // console.log(block);
+          if (iblock === indexPagination)
+            return (
+              <div className="block" key={iblock}>
+                <div className="movie-container">
+                  {this.props.isAdmin ? (
+                    <div
+                      className="movie-card add-movie"
+                      onClick={() => this.showForm()}
+                    >
+                      <FiPlusCircle /> Add
+                    </div>
+                  ) : null}
+                  {block.map((movie, imovie) => {
+                    return (
+                      <Movie
+                        key={imovie}
+                        movie={movie}
+                        imovie={imovie}
+                        switchDescription={this.switchDescription.bind(this)}
+                        getLikes={this.getLikes.bind(this)}
+                        iLiked={this.iLiked.bind(this)}
+                        handleMovieInput={this.handleMovieInput.bind(this)}
+                        isAdmin={this.props.isAdmin}
+                        adminId={this.props.currentUser.id}
+                        saveMovie={this.saveMovie.bind(this)}
+                        deleteMovie={this.deleteMovie.bind(this)}
+                        like={this.like.bind(this)}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+            );
+        })}
       </div>
     );
   }
