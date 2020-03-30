@@ -13,4 +13,17 @@
       25% 25% 25% 25%
     );
   }
+
+  .header-control {
+    margin: 1rem 0;
+    background-color: $soft-dark;
+    padding: 1rem;
+    border-radius: 0.4rem;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    * {
+      margin: 0.4rem;
+    }
+  }
 }

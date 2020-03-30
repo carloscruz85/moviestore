@@ -447,18 +447,20 @@ class VideoStore extends React.Component {
             showForm={this.showForm.bind(this)}
           />
         ) : null}
-        <Input
-          label="Search"
-          type="text"
-          name="search"
-          value={searchFilter}
-          customChange={this.setSearchFilter.bind(this)}
-        />
-        {filterByLike ? (
-          <button onClick={() => this.filterByName()}>Filter by name</button>
-        ) : (
-          <button onClick={() => this.filterByLike()}>Filter by likes</button>
-        )}
+        <div className="header-control">
+          <Input
+            label="Search"
+            type="text"
+            name="search"
+            value={searchFilter}
+            customChange={this.setSearchFilter.bind(this)}
+          />
+          {filterByLike ? (
+            <button onClick={() => this.filterByName()}>Filter by name</button>
+          ) : (
+            <button onClick={() => this.filterByLike()}>Filter by likes</button>
+          )}
+        </div>
         <div className="movie-container">
           {this.props.isAdmin ? (
             <div
