@@ -65,7 +65,6 @@ class VideoStore extends React.Component {
     let matchs = movies.filter(it =>
       new RegExp(searchFilter, "i").test(it.title.rendered)
     );
-    // console.log(matchs);
 
     //DIVIDE IN CHUNKS
     const chunked_arr = [];
@@ -77,8 +76,6 @@ class VideoStore extends React.Component {
         last.push(matchs[i]);
       }
     }
-    // console.log(chunked_arr);
-
     this.setState({
       blocksPagination: chunked_arr
     });
@@ -99,6 +96,7 @@ class VideoStore extends React.Component {
     this.setState({
       searchFilter: value
     });
+    this.paginate();
   }
   filterByName() {
     let { movies } = this.state;
@@ -510,7 +508,7 @@ class VideoStore extends React.Component {
                 key={iblock}
                 onClick={() => this.setIndexPagination(iblock)}
               >
-                {iblock}
+                {iblock + 1}
               </div>
             );
           })}
