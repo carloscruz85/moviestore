@@ -25,8 +25,7 @@ class VideoStore extends React.Component {
       description: "description",
       stock: 0,
       rentalPrice: 0,
-      salePrice: 0,
-      availability: 0
+      salePrice: 0
     };
 
     this.loadVideos = this.loadVideos.bind(this);
@@ -204,14 +203,25 @@ class VideoStore extends React.Component {
   }
 
   handleMovieInput(e) {
-    const { value, name } = e.target;
+    const { value, name, type, checked } = e.target;
+    // console.log(type);
     const data = name.split("|");
     let movies = this.state.movies;
+    switch (type) {
+      case "checkbox":
+        let newVal = value.toString();
+        // console.log(value, name, type, checked);
 
-    if (data[1] === "title") {
-      movies[data[0]][data[1]].rendered = value;
-    } else {
-      movies[data[0]][data[1]] = value;
+        movies[data[0]][data[1]] = checked.toString();
+
+        break;
+
+      default:
+        if (data[1] === "title") {
+          movies[data[0]][data[1]].rendered = value;
+        } else {
+          movies[data[0]][data[1]] = value;
+        }
     }
 
     this.setState({
@@ -313,7 +323,7 @@ class VideoStore extends React.Component {
       stock: stock,
       rental_price: rentalPrice,
       sale_price: salePrice,
-      availability: availability,
+      availability: "true",
       status: "publish",
       show: "false",
       likes: "[]"
@@ -321,7 +331,7 @@ class VideoStore extends React.Component {
     axios
       .post(host, realData, { headers: myHeaders })
       .then(function(response) {
-        console.log(response);
+        // console.log(response);
 
         self.loadVideos();
         self.showForm();
@@ -411,7 +421,6 @@ class VideoStore extends React.Component {
             stock={stock}
             rentalPrice={rentalPrice}
             salePrice={salePrice}
-            availability={availability}
             createMovie={this.createMovie.bind(this)}
             handleChange={this.handleChange.bind(this)}
             showForm={this.showForm.bind(this)}
@@ -434,7 +443,7 @@ class VideoStore extends React.Component {
 
           {movies.map((movie, imovie) => {
             // console.log(movie);
-            if (this.props.isAdmin === true || movie.availability > 0)
+            if (this.props.isAdmin === true || movie.availability === "true")
               return (
                 <Movie
                   key={imovie}

@@ -45,13 +45,7 @@ class FormMovie extends React.Component {
           value={this.props.salePrice}
           customChange={this.props.handleChange.bind(this)}
         />
-        <Input
-          label="Availability"
-          type="number"
-          name="availability"
-          value={this.props.availability}
-          customChange={this.props.handleChange.bind(this)}
-        />
+
         <button className="green-button" onClick={this.props.createMovie}>
           Create Movie
         </button>
@@ -67,7 +61,6 @@ FormMovie.propTypes = {
   stock: PropTypes.number.isRequired,
   rentalPrice: PropTypes.number.isRequired,
   salePrice: PropTypes.number.isRequired,
-  availability: PropTypes.number.isRequired,
   createMovie: PropTypes.func.isRequired,
   handleChange: PropTypes.func.isRequired,
   showForm: PropTypes.func.isRequired

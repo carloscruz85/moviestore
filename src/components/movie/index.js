@@ -2,6 +2,8 @@ import React from "react";
 import "./index.scss";
 import PropTypes from "prop-types";
 import Input from "../inputs/input";
+import CheckBox from "../inputs/checkbox";
+
 import { IoIosHeartDislike, IoIosHeart } from "react-icons/io";
 
 class Movie extends React.Component {
@@ -13,7 +15,9 @@ class Movie extends React.Component {
           className="movie-card"
           style={{ backgroundImage: `url(${movie.fimg_url})` }}
           onClick={() => this.props.switchDescription(imovie)}
-        ></div>
+        >
+          {movie.title.rendered}
+        </div>
         <div>
           {movie.show === "true" ? (
             <div className="movie-description">
@@ -55,9 +59,9 @@ class Movie extends React.Component {
                       value={movie.sale_price}
                       customChange={this.props.handleMovieInput.bind(this)}
                     />
-                    <Input
+                    <CheckBox
                       label="Availability"
-                      type="number"
+                      type="text"
                       name={imovie + "|availability"}
                       value={movie.availability}
                       customChange={this.props.handleMovieInput.bind(this)}
@@ -70,7 +74,7 @@ class Movie extends React.Component {
                       Save Movie
                     </button>
                     <button
-                      className="yellow-button"
+                      className="red-button"
                       onClick={() => this.props.deleteMovie(imovie)}
                     >
                       Delete Movie
@@ -79,7 +83,7 @@ class Movie extends React.Component {
                 ) : (
                   <div>
                     <h3>{movie.title.rendered}</h3>
-                    <div className="color-yellow">
+                    <div className="color-yellow ">
                       {this.props.getLikes(imovie)} <div>Likes</div>
                       {this.props.iLiked(imovie) ? (
                         <IoIosHeartDislike
@@ -103,7 +107,10 @@ class Movie extends React.Component {
                   </div>
                 )}
 
-                <button onClick={() => this.props.switchDescription(imovie)}>
+                <button
+                  className="yellow-button"
+                  onClick={() => this.props.switchDescription(imovie)}
+                >
                   Close
                 </button>
               </div>
