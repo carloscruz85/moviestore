@@ -9,14 +9,13 @@ import Overlay from "../../components/overlayer";
 import Movie from "../../movie";
 import FormMovie from "../../components/formMovie";
 import Input from "../../components/inputs/input";
-import Filter from "../../logic/filter";
 
 class VideoStore extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       indexPagination: 0,
-      paginationSize: 3,
+      paginationSize: 5,
       blocksPagination: [],
       searchFilter: "",
       filterByLike: false,
@@ -60,11 +59,32 @@ class VideoStore extends React.Component {
   }
 
   paginate() {
-    let { blocksPagination, movies, paginationSize, searchFilter } = this.state;
+    let { movies, paginationSize, searchFilter, filterByLike } = this.state;
     //FILTER SEARCH
     let matchs = movies.filter(it =>
       new RegExp(searchFilter, "i").test(it.title.rendered)
     );
+
+    //SORT
+    if (filterByLike) {
+      matchs.sort((a, b) => {
+        let aa = JSON.parse(a.likes);
+        let bb = JSON.parse(b.likes);
+        // console.log(aa, bb);
+
+        if (aa.length > bb.length) return -1;
+        if (aa.length < bb.length) return 1;
+        return 0;
+      });
+    } else {
+      matchs.sort((a, b) => {
+        // console.log(aa, bb);
+
+        if (a.title.rendered > b.title.rendered) return 1;
+        if (a.title.rendered < b.title.rendered) return -1;
+        return 0;
+      });
+    }
 
     //DIVIDE IN CHUNKS
     const chunked_arr = [];
@@ -98,42 +118,19 @@ class VideoStore extends React.Component {
     });
     this.paginate();
   }
+
   filterByName() {
-    let { movies } = this.state;
-    movies.sort((a, b) => {
-      // console.log(aa, bb);
-
-      if (a.title.rendered > b.title.rendered) return 1;
-      if (a.title.rendered < b.title.rendered) return -1;
-      return 0;
-    });
-
-    // console.log(movies);
-
     this.setState({
-      movies: movies,
       filterByLike: false
     });
+    this.paginate();
   }
 
   filterByLike() {
-    let { movies } = this.state;
-    movies.sort((a, b) => {
-      let aa = JSON.parse(a.likes);
-      let bb = JSON.parse(b.likes);
-      // console.log(aa, bb);
-
-      if (aa.length > bb.length) return -1;
-      if (aa.length < bb.length) return 1;
-      return 0;
-    });
-
-    // console.log(movies);
-
     this.setState({
-      movies: movies,
       filterByLike: true
     });
+    this.paginate();
   }
 
   iLiked(i) {
@@ -264,7 +261,6 @@ class VideoStore extends React.Component {
     let movies = this.state.movies;
     switch (type) {
       case "checkbox":
-        let newVal = value.toString();
         // console.log(value, name, type, checked);
 
         movies[data[0]][data[1]] = checked.toString();
@@ -361,7 +357,6 @@ class VideoStore extends React.Component {
       stock,
       rentalPrice,
       salePrice,
-      availability,
       urlPost
     } = this.state;
     var self = this;
@@ -459,14 +454,12 @@ class VideoStore extends React.Component {
       filterByLike,
       showOverlay,
       overlayMsg,
-      movies,
       showForm,
       title,
       description,
       stock,
       rentalPrice,
-      salePrice,
-      availability
+      salePrice
     } = this.state;
     return (
       <div className="video-store-container">
@@ -493,7 +486,7 @@ class VideoStore extends React.Component {
             customChange={this.setSearchFilter.bind(this)}
           />
           {filterByLike ? (
-            <button onClick={() => this.filterByName()}>Filter by name</button>
+            <button onClick={() => this.filterByName()}>Normal Filter</button>
           ) : (
             <button onClick={() => this.filterByLike()}>Filter by likes</button>
           )}
@@ -548,6 +541,7 @@ class VideoStore extends React.Component {
                 </div>
               </div>
             );
+          else return null;
         })}
       </div>
     );
