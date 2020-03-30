@@ -6,8 +6,8 @@ import axios from "axios";
 import { FiPlusCircle } from "react-icons/fi";
 import cookie from "react-cookies";
 import Overlay from "../../components/overlayer";
-import Input from "../../components/inputs/input";
 import Movie from "../../components/movie";
+import FormMovie from "../../components/formMovie";
 
 class VideoStore extends React.Component {
   constructor(props) {
@@ -405,54 +405,16 @@ class VideoStore extends React.Component {
         <Header history={this.props.history} />
         {showOverlay ? <Overlay msg={overlayMsg} /> : null}
         {showForm ? (
-          <div className="form-container">
-            <Input
-              label="Title"
-              type="text"
-              name="title"
-              value={title}
-              customChange={this.handleChange.bind(this)}
-            />
-            <Input
-              label="Description"
-              type="text"
-              name="description"
-              value={description}
-              customChange={this.handleChange.bind(this)}
-            />
-            {/* <label>
-              <input type="file" onChange={this.changeImage} />
-            </label> */}
-            <Input
-              label="Stock"
-              type="number"
-              name="stock"
-              value={stock}
-              customChange={this.handleChange.bind(this)}
-            />
-            <Input
-              label="Rental Price"
-              type="number"
-              name="rentalPrice"
-              value={rentalPrice}
-              customChange={this.handleChange.bind(this)}
-            />
-            <Input
-              label="Sale Price"
-              type="number"
-              name="salePrice"
-              value={salePrice}
-              customChange={this.handleChange.bind(this)}
-            />
-            <Input
-              label="Availability"
-              type="number"
-              name="availability"
-              value={availability}
-              customChange={this.handleChange.bind(this)}
-            />
-            <button onClick={this.createMovie}>Create Movie</button>
-          </div>
+          <FormMovie
+            title={title}
+            description={description}
+            stock={stock}
+            rentalPrice={rentalPrice}
+            salePrice={salePrice}
+            availability={availability}
+            createMovie={this.createMovie.bind(this)}
+            handleChange={this.handleChange.bind(this)}
+          />
         ) : null}
         {filterByLike ? (
           <button onClick={() => this.filterByName()}>Filter by name</button>
