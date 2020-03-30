@@ -61,7 +61,15 @@ class FormMovie extends React.Component {
   }
 }
 
-// OverLayer.propTypes = {
-//   msg: PropTypes.string.isRequired
-// };
+FormMovie.propTypes = {
+  title: PropTypes.string.isRequired,
+  description: PropTypes.string.isRequired,
+  stock: PropTypes.number.isRequired,
+  rentalPrice: PropTypes.number.isRequired,
+  salePrice: PropTypes.number.isRequired,
+  availability: PropTypes.number.isRequired,
+  createMovie: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  showForm: PropTypes.func.isRequired
+};
 export default FormMovie;
