@@ -83,20 +83,23 @@ class Movie extends React.Component {
                 ) : (
                   <div>
                     <h3>{movie.title.rendered}</h3>
-                    <div className="color-yellow ">
-                      {this.props.getLikes(imovie)} <div>Likes</div>
-                      {this.props.iLiked(imovie) ? (
-                        <IoIosHeartDislike
-                          className="color-red"
-                          onClick={() => this.props.like(imovie)}
-                        />
-                      ) : (
-                        <IoIosHeart
-                          className="color-red"
-                          onClick={() => this.props.like(imovie)}
-                        />
-                      )}
-                    </div>
+                    {this.props.adminId !== -1 ? (
+                      <div className="color-yellow ">
+                        {this.props.getLikes(imovie)} <div>Likes</div>
+                        {this.props.iLiked(imovie) ? (
+                          <IoIosHeartDislike
+                            className="color-red"
+                            onClick={() => this.props.like(imovie)}
+                          />
+                        ) : (
+                          <IoIosHeart
+                            className="color-red"
+                            onClick={() => this.props.like(imovie)}
+                          />
+                        )}
+                      </div>
+                    ) : null}
+
                     <p className="card-list">
                       Description: {movie.description}
                     </p>
@@ -132,6 +135,7 @@ Movie.propTypes = {
   isAdmin: PropTypes.bool.isRequired,
   saveMovie: PropTypes.func.isRequired,
   deleteMovie: PropTypes.func.isRequired,
-  like: PropTypes.func.isRequired
+  like: PropTypes.func.isRequired,
+  adminId: PropTypes.number.isRequired
 };
 export default Movie;

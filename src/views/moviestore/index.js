@@ -454,6 +454,7 @@ class VideoStore extends React.Component {
                   iLiked={this.iLiked.bind(this)}
                   handleMovieInput={this.handleMovieInput.bind(this)}
                   isAdmin={this.props.isAdmin}
+                  adminId={this.props.currentUser.id}
                   saveMovie={this.saveMovie.bind(this)}
                   deleteMovie={this.deleteMovie.bind(this)}
                   like={this.like.bind(this)}
