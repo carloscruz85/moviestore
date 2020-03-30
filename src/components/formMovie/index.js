@@ -52,7 +52,10 @@ class FormMovie extends React.Component {
           value={this.props.availability}
           customChange={this.props.handleChange.bind(this)}
         />
-        <button onClick={this.props.createMovie}>Create Movie</button>
+        <button className="green-button" onClick={this.props.createMovie}>
+          Create Movie
+        </button>
+        <button onClick={this.props.showForm}>Close</button>
       </div>
     );
   }

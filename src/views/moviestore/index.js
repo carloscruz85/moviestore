@@ -414,6 +414,7 @@ class VideoStore extends React.Component {
             availability={availability}
             createMovie={this.createMovie.bind(this)}
             handleChange={this.handleChange.bind(this)}
+            showForm={this.showForm.bind(this)}
           />
         ) : null}
         {filterByLike ? (
