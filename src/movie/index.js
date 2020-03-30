@@ -1,8 +1,8 @@
 import React from "react";
 import "./index.scss";
 import PropTypes from "prop-types";
-import Input from "../inputs/input";
-import CheckBox from "../inputs/checkbox";
+import Input from "../components/inputs/input";
+import CheckBox from "../components/inputs/checkbox";
 
 import { IoIosHeartDislike, IoIosHeart } from "react-icons/io";
 
