@@ -492,60 +492,49 @@ class VideoStore extends React.Component {
                       <div className="form-container">
                         {this.props.isAdmin ? (
                           <div>
-                            <label>
-                              Title:
-                              <input
-                                type="text"
-                                name={imovie + "|title"}
-                                value={movie.title.rendered}
-                                onChange={this.handleMovieInput}
-                              />
-                            </label>
-                            <label>
-                              Description:
-                              <input
-                                type="text"
-                                name={imovie + "|description"}
-                                value={movie.description}
-                                onChange={this.handleMovieInput}
-                              />
-                            </label>
-                            <label>
-                              Stock:
-                              <input
-                                type="number"
-                                name={imovie + "|stock"}
-                                value={movie.stock}
-                                onChange={this.handleMovieInput}
-                              />
-                            </label>
-                            <label>
-                              Rental Price:
-                              <input
-                                type="number"
-                                name={imovie + "|rental_price"}
-                                value={movie.rental_price}
-                                onChange={this.handleMovieInput}
-                              />
-                            </label>{" "}
-                            <label>
-                              Sale Price:
-                              <input
-                                type="number"
-                                name={imovie + "|sale_price"}
-                                value={movie.sale_price}
-                                onChange={this.handleMovieInput}
-                              />
-                            </label>
-                            <label>
-                              Availability:
-                              <input
-                                type="number"
-                                name={imovie + "|availability"}
-                                value={movie.availability}
-                                onChange={this.handleMovieInput}
-                              />
-                            </label>
+                            <Input
+                              label="Title"
+                              type="text"
+                              name={imovie + "|title"}
+                              value={movie.title.rendered}
+                              customChange={this.handleMovieInput.bind(this)}
+                            />
+                            <Input
+                              label="Description"
+                              type="text"
+                              name={imovie + "|description"}
+                              value={movie.description}
+                              customChange={this.handleMovieInput.bind(this)}
+                            />
+                            <Input
+                              label="Stock"
+                              type="number"
+                              name={imovie + "|stock"}
+                              value={movie.stock}
+                              customChange={this.handleMovieInput.bind(this)}
+                            />
+                            <Input
+                              label="Rental Price"
+                              type="number"
+                              name={imovie + "|rental_price"}
+                              value={movie.rental_price}
+                              customChange={this.handleMovieInput.bind(this)}
+                            />
+                            <Input
+                              label="Sale Price"
+                              type="number"
+                              name={imovie + "|sale_price"}
+                              value={movie.sale_price}
+                              customChange={this.handleMovieInput.bind(this)}
+                            />
+                            <Input
+                              label="Availability"
+                              type="number"
+                              name={imovie + "|availability"}
+                              value={movie.availability}
+                              customChange={this.handleMovieInput.bind(this)}
+                            />
+
                             <button
                               className="green-button"
                               onClick={() => this.saveMovie(imovie)}
