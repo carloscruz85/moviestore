@@ -6,13 +6,16 @@ import axios from "axios";
 import { FiPlusCircle } from "react-icons/fi";
 import cookie from "react-cookies";
 import Overlay from "../../components/overlayer";
-import Movie from "../../components/movie";
+import Movie from "../../movie";
 import FormMovie from "../../components/formMovie";
+import Input from "../../components/inputs/input";
+import Filter from "../../logic/filter";
 
 class VideoStore extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      searchFilter: "",
       filterByLike: false,
       url: "wp-json/wp/v2/video?per_page=100",
       urlPost: "wp-json/wp/v2/video",
@@ -41,8 +44,25 @@ class VideoStore extends React.Component {
     this.like = this.like.bind(this);
     this.filterByLike = this.filterByLike.bind(this);
     this.filterByName = this.filterByName.bind(this);
+    this.setSearchFilter = this.setSearchFilter.bind(this);
+    this.matchTitle = this.matchTitle.bind(this);
   }
 
+  matchTitle(id) {
+    let { searchFilter, movies } = this.state;
+    let res = movies.filter(it =>
+      new RegExp(searchFilter, "i").test(it.title.rendered)
+    );
+    if (res.some(user => user.id === id)) return true;
+    else return false;
+  }
+
+  setSearchFilter(e) {
+    const { value } = e.target;
+    this.setState({
+      searchFilter: value
+    });
+  }
   filterByName() {
     let { movies } = this.state;
     movies.sort((a, b) => {
@@ -398,6 +418,7 @@ class VideoStore extends React.Component {
 
   render() {
     const {
+      searchFilter,
       filterByLike,
       showOverlay,
       overlayMsg,
@@ -426,6 +447,13 @@ class VideoStore extends React.Component {
             showForm={this.showForm.bind(this)}
           />
         ) : null}
+        <Input
+          label="Search"
+          type="text"
+          name="search"
+          value={searchFilter}
+          customChange={this.setSearchFilter.bind(this)}
+        />
         {filterByLike ? (
           <button onClick={() => this.filterByName()}>Filter by name</button>
         ) : (
@@ -442,8 +470,10 @@ class VideoStore extends React.Component {
           ) : null}
 
           {movies.map((movie, imovie) => {
-            // console.log(movie);
-            if (this.props.isAdmin === true || movie.availability === "true")
+            if (
+              this.props.isAdmin === true ||
+              (movie.availability === "true" && this.matchTitle(movie.id))
+            )
               return (
                 <Movie
                   key={imovie}
