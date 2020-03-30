@@ -8,7 +8,7 @@ class Movie extends React.Component {
   render() {
     const { movie, imovie } = this.props;
     return (
-      <div key={imovie}>
+      <div>
         <div
           className="movie-card"
           style={{ backgroundImage: `url(${movie.fimg_url})` }}
@@ -115,7 +115,16 @@ class Movie extends React.Component {
   }
 }
 
-// OverLayer.propTypes = {
-//   msg: PropTypes.string.isRequired
-// };
+Movie.propTypes = {
+  movie: PropTypes.object.isRequired,
+  imovie: PropTypes.number.isRequired,
+  switchDescription: PropTypes.func.isRequired,
+  getLikes: PropTypes.func.isRequired,
+  iLiked: PropTypes.func.isRequired,
+  handleMovieInput: PropTypes.func.isRequired,
+  isAdmin: PropTypes.bool.isRequired,
+  saveMovie: PropTypes.func.isRequired,
+  deleteMovie: PropTypes.func.isRequired,
+  like: PropTypes.func.isRequired
+};
 export default Movie;
