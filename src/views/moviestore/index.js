@@ -50,6 +50,7 @@ class VideoStore extends React.Component {
 
   matchTitle(id) {
     let { searchFilter, movies } = this.state;
+    // if (searchFilter.length === 0) return true;
     let res = movies.filter(it =>
       new RegExp(searchFilter, "i").test(it.title.rendered)
     );
@@ -472,27 +473,25 @@ class VideoStore extends React.Component {
           ) : null}
 
           {movies.map((movie, imovie) => {
-            if (
-              this.props.isAdmin === true ||
-              (movie.availability === "true" && this.matchTitle(movie.id))
-            )
-              return (
-                <Movie
-                  key={imovie}
-                  movie={movie}
-                  imovie={imovie}
-                  switchDescription={this.switchDescription.bind(this)}
-                  getLikes={this.getLikes.bind(this)}
-                  iLiked={this.iLiked.bind(this)}
-                  handleMovieInput={this.handleMovieInput.bind(this)}
-                  isAdmin={this.props.isAdmin}
-                  adminId={this.props.currentUser.id}
-                  saveMovie={this.saveMovie.bind(this)}
-                  deleteMovie={this.deleteMovie.bind(this)}
-                  like={this.like.bind(this)}
-                />
-              );
-            else return null;
+            if (this.props.isAdmin === true || movie.availability === "true")
+              if (this.matchTitle(movie.id))
+                return (
+                  <Movie
+                    key={imovie}
+                    movie={movie}
+                    imovie={imovie}
+                    switchDescription={this.switchDescription.bind(this)}
+                    getLikes={this.getLikes.bind(this)}
+                    iLiked={this.iLiked.bind(this)}
+                    handleMovieInput={this.handleMovieInput.bind(this)}
+                    isAdmin={this.props.isAdmin}
+                    adminId={this.props.currentUser.id}
+                    saveMovie={this.saveMovie.bind(this)}
+                    deleteMovie={this.deleteMovie.bind(this)}
+                    like={this.like.bind(this)}
+                  />
+                );
+              else return null;
           })}
         </div>
       </div>
