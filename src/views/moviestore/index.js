@@ -6,7 +6,7 @@ import axios from "axios";
 import { FiPlusCircle } from "react-icons/fi";
 import cookie from "react-cookies";
 import Overlay from "../../components/overlayer";
-import Movie from "../../movie";
+import Movie from "../../components/movie";
 import FormMovie from "../../components/formMovie";
 import Input from "../../components/inputs/input";
 import { IoIosHeart } from "react-icons/io";
@@ -34,7 +34,9 @@ class VideoStore extends React.Component {
       stock: 0,
       rentalPrice: 0,
       salePrice: 0,
-      imageUrl: ""
+      imageUrl: "",
+      log_changes: "",
+      log_users: ""
     };
 
     this.loadVideos = this.loadVideos.bind(this);
@@ -257,6 +259,8 @@ class VideoStore extends React.Component {
   }
 
   saveMovie(movie) {
+    console.log("in saveMovie");
+
     const { urlPost, blocksPagination } = this.state;
     // this.switchDescription(movie);
     let arrow = this.getIndexOfId(movie);
@@ -273,16 +277,41 @@ class VideoStore extends React.Component {
     });
     let user = cookie.load("user");
     const myHeaders = { Authorization: "Bearer " + user.token };
-    let realData = {
-      title: dataMovies.title.rendered,
-      description: dataMovies.description,
-      stock: dataMovies.stock,
-      rental_price: dataMovies.rental_price,
-      sale_price: dataMovies.sale_price,
-      availability: dataMovies.availability,
-      likes: dataMovies.likes,
-      imageurl: dataMovies.imageurl
+    let prev,
+      toUpdate = {
+        title: dataMovies.title.rendered,
+        description: dataMovies.description,
+        stock: dataMovies.stock,
+        rental_price: dataMovies.rental_price,
+        sale_price: dataMovies.sale_price,
+        availability: dataMovies.availability,
+        likes: dataMovies.likes,
+        imageurl: dataMovies.imageurl
+      };
+
+    //PREPARING LOG
+    delete toUpdate.likes;
+
+    toUpdate = {
+      ...toUpdate,
+      date: new Date()
+        .toJSON()
+        .slice(0, 10)
+        .replace(/-/g, "/")
     };
+
+    let lastLogChanges = JSON.parse(dataMovies.log_changes);
+    lastLogChanges.push(toUpdate);
+
+    let realData = { ...prev, log_changes: JSON.stringify(lastLogChanges) };
+
+    //UPDATE STATE
+    blocksPagination[arrow.block][arrow.index].log_changes = JSON.stringify(
+      lastLogChanges
+    );
+    this.setState({
+      blocksPagination: blocksPagination
+    });
 
     axios
       .post(host, realData, { headers: myHeaders })
@@ -427,7 +456,9 @@ class VideoStore extends React.Component {
       status: "publish",
       show: "false",
       likes: "[]",
-      imageurl: imageUrl
+      imageurl: imageUrl,
+      log_changes: "[]",
+      log_users: "[]"
     };
     // console.log(realData);
 

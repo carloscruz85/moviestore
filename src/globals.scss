@@ -94,6 +94,10 @@ body {
   background-color: $red !important;
 }
 
+.blue-button {
+  background-color: $blue !important;
+}
+
 @mixin center-center() {
   display: flex;
   flex-flow: column nowrap;
