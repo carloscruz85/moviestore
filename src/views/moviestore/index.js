@@ -259,6 +259,8 @@ class VideoStore extends React.Component {
   }
 
   saveMovie(movie) {
+    console.log("in saveMovie");
+
     const { urlPost, blocksPagination } = this.state;
     // this.switchDescription(movie);
     let arrow = this.getIndexOfId(movie);

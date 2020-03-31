@@ -5,7 +5,7 @@ import Input from "../../components/inputs/input";
 import Textarea from "../../components/inputs/textarea";
 import CheckBox from "../../components/inputs/checkbox";
 import { FiSave, FiXCircle, FiArrowLeftCircle, FiMenu } from "react-icons/fi";
-
+// import StringToJson from "../../logic/stringToJson";
 import { IoIosHeartDislike, IoIosHeart } from "react-icons/io";
 
 class Movie extends React.Component {
@@ -23,7 +23,9 @@ class Movie extends React.Component {
   }
   render() {
     const { movie } = this.props;
-    // console.log(movie);
+
+    let log_changes = JSON.parse(movie.log_changes);
+    // console.log(StringToJson());
 
     return (
       <div>
@@ -39,7 +41,18 @@ class Movie extends React.Component {
                 {this.props.isAdmin ? (
                   <div>
                     {this.state.showLogs ? (
-                      <div className="logs">Logs</div>
+                      <div className="logs">
+                        {log_changes.map((log, ilog) => {
+                          return (
+                            <div key={ilog} className="log-item">
+                              <p className="color-yellow">{log.date}</p>
+                              <p>title: {log.title}</p>
+                              <p>Rental Price: {log.rental_price}</p>
+                              <p>Sale Price: {log.sale_price}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
                     ) : (
                       <div>
                         <Input
