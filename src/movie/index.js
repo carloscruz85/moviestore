@@ -16,7 +16,7 @@ class Movie extends React.Component {
           style={{ backgroundImage: `url(${movie.fimg_url})` }}
           onClick={() => this.props.switchDescription(movie.id)}
         >
-          {movie.title.rendered}
+          {movie.title.rendered} {this.props.getLikes(movie.id)}
         </div>
         <div>
           {movie.show === "true" ? (
@@ -24,7 +24,6 @@ class Movie extends React.Component {
               <div className="form-container">
                 {this.props.isAdmin ? (
                   <div>
-                    {movie.id}
                     <Input
                       label="Title"
                       type="text"
@@ -86,8 +85,8 @@ class Movie extends React.Component {
                     <h3>{movie.title.rendered}</h3>
                     {this.props.adminId !== -1 ? (
                       <div className="color-yellow ">
-                        {this.props.getLikes(imovie)} <div>Likes</div>
-                        {this.props.iLiked(imovie) ? (
+                        {this.props.getLikes(movie.id)} <div>Likes</div>
+                        {this.props.iLiked(movie.id) ? (
                           <IoIosHeartDislike
                             className="color-red"
                             onClick={() => this.props.like(movie.id)}

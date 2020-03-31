@@ -18,7 +18,7 @@ class VideoStore extends React.Component {
       paginationSize: 6,
       blocksPagination: [],
       searchFilter: "",
-      filterByLike: false,
+      filterByLike: true,
       url: "wp-json/wp/v2/video?per_page=100",
       urlPost: "wp-json/wp/v2/video",
       mediaUrl: "wp-json/wp/v2/media/",
@@ -51,11 +51,59 @@ class VideoStore extends React.Component {
     this.paginate = this.paginate.bind(this);
     this.setIndexPagination = this.setIndexPagination.bind(this);
     this.getIndexOfId = this.getIndexOfId.bind(this);
+    this.repaginate = this.repaginate.bind(this);
   }
 
   setIndexPagination(i) {
     this.setState({
       indexPagination: i
+    });
+  }
+
+  repaginate() {
+    let {
+      blocksPagination,
+      paginationSize,
+      searchFilter,
+      filterByLike
+    } = this.state;
+    let matchs = blocksPagination.reduce((acc, it) => [...acc, ...it], []);
+
+    //FILTER AVAIBLES
+    if (!this.props.isAdmin) {
+      matchs = matchs.filter(it => it.availability === "true");
+    }
+
+    //SORT
+    if (filterByLike) {
+      matchs.sort((a, b) => {
+        let aa = JSON.parse(a.likes);
+        let bb = JSON.parse(b.likes);
+
+        if (aa.length > bb.length) return -1;
+        if (aa.length < bb.length) return 1;
+        return 0;
+      });
+    } else {
+      matchs.sort((a, b) => {
+        if (a.title.rendered > b.title.rendered) return 1;
+        if (a.title.rendered < b.title.rendered) return -1;
+        return 0;
+      });
+    }
+
+    //DIVIDE IN CHUNKS
+    const chunked_arr = [];
+    for (let i = 0; i < matchs.length; i++) {
+      const last = chunked_arr[chunked_arr.length - 1];
+      if (!last || last.length === paginationSize) {
+        chunked_arr.push([matchs[i]]);
+      } else {
+        last.push(matchs[i]);
+      }
+    }
+    this.setState({
+      blocksPagination: chunked_arr
     });
   }
 
@@ -76,7 +124,6 @@ class VideoStore extends React.Component {
       matchs.sort((a, b) => {
         let aa = JSON.parse(a.likes);
         let bb = JSON.parse(b.likes);
-        // console.log(aa, bb);
 
         if (aa.length > bb.length) return -1;
         if (aa.length < bb.length) return 1;
@@ -84,8 +131,6 @@ class VideoStore extends React.Component {
       });
     } else {
       matchs.sort((a, b) => {
-        // console.log(aa, bb);
-
         if (a.title.rendered > b.title.rendered) return 1;
         if (a.title.rendered < b.title.rendered) return -1;
         return 0;
@@ -130,35 +175,40 @@ class VideoStore extends React.Component {
     this.setState({
       filterByLike: false
     });
-    this.paginate();
+    this.repaginate();
   }
 
   filterByLike() {
     this.setState({
       filterByLike: true
     });
-    this.paginate();
+    this.repaginate();
   }
 
   iLiked(i) {
     let { blocksPagination } = this.state;
-    let movie = blocksPagination[this.getIndexOfId(i)];
+    let arrow = this.getIndexOfId(i);
+    let movie = blocksPagination[arrow.block][arrow.index];
     let likes = JSON.parse(movie.likes);
     return likes.includes(this.props.currentUser.id);
   }
 
   getLikes(i) {
-    let { movies } = this.state;
-    let movie = movies[i];
+    let { blocksPagination } = this.state;
+    let arrow = this.getIndexOfId(i);
+    let movie = blocksPagination[arrow.block][arrow.index];
     let likes = JSON.parse(movie.likes);
     // console.log(likes.length);
     return likes.length;
   }
 
   like(i) {
-    let { movies, filterByLike } = this.state;
-    let movie = movies[i];
+    let { blocksPagination, filterByLike } = this.state;
+    let arrow = this.getIndexOfId(i);
+    let movie = blocksPagination[arrow.block][arrow.index];
+
     let likes = JSON.parse(movie.likes);
+    console.log(likes);
 
     if (!likes.includes(this.props.currentUser.id)) {
       likes.push(this.props.currentUser.id);
@@ -168,9 +218,15 @@ class VideoStore extends React.Component {
       });
       likes = newLike;
     }
-    movies[i].likes = JSON.stringify(likes);
+
+    // console.log(blocksPagination[arrow.block][arrow.index]);
+
+    blocksPagination[arrow.block][arrow.index].likes = JSON.stringify(likes);
+
+    // console.log(movie[i].likes);
+
     this.setState({
-      movies: movies
+      blocksPagination: blocksPagination
     });
     this.saveMovie(i);
 
@@ -215,7 +271,7 @@ class VideoStore extends React.Component {
 
   saveMovie(movie) {
     const { urlPost, blocksPagination } = this.state;
-    this.switchDescription(movie);
+    // this.switchDescription(movie);
     let arrow = this.getIndexOfId(movie);
 
     let dataMovies = blocksPagination[arrow.block][arrow.index];
