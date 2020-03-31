@@ -16,7 +16,7 @@ class Movie extends React.Component {
           style={{ backgroundImage: `url(${movie.fimg_url})` }}
           onClick={() => this.props.switchDescription(movie.id)}
         >
-          {movie.title.rendered} {this.props.getLikes(movie.id)}
+          {movie.title.rendered}
         </div>
         <div>
           {movie.show === "true" ? (

@@ -60,15 +60,14 @@ class VideoStore extends React.Component {
     });
   }
 
-  repaginate() {
-    let {
-      blocksPagination,
-      paginationSize,
-      searchFilter,
-      filterByLike
-    } = this.state;
-    let matchs = blocksPagination.reduce((acc, it) => [...acc, ...it], []);
+  basicFilter(block) {
+    let { paginationSize, searchFilter, filterByLike } = this.state;
+    let matchs = block;
 
+    //SEARCH FILTER
+    matchs = matchs.filter(it =>
+      new RegExp(searchFilter, "i").test(it.title.rendered)
+    );
     //FILTER AVAIBLES
     if (!this.props.isAdmin) {
       matchs = matchs.filter(it => it.availability === "true");
@@ -102,53 +101,25 @@ class VideoStore extends React.Component {
         last.push(matchs[i]);
       }
     }
+
+    return chunked_arr;
+  }
+
+  repaginate() {
+    let { blocksPagination } = this.state;
+
+    let matchs = blocksPagination.reduce((acc, it) => [...acc, ...it], []);
+
     this.setState({
-      blocksPagination: chunked_arr
+      blocksPagination: this.basicFilter(matchs)
     });
   }
 
   paginate() {
-    let { movies, paginationSize, searchFilter, filterByLike } = this.state;
-    //FILTER SEARCH
-    let matchs = movies.filter(it =>
-      new RegExp(searchFilter, "i").test(it.title.rendered)
-    );
+    let { movies } = this.state;
 
-    //FILTER AVAIBLES
-    if (!this.props.isAdmin) {
-      matchs = matchs.filter(it => it.availability === "true");
-    }
-
-    //SORT
-    if (filterByLike) {
-      matchs.sort((a, b) => {
-        let aa = JSON.parse(a.likes);
-        let bb = JSON.parse(b.likes);
-
-        if (aa.length > bb.length) return -1;
-        if (aa.length < bb.length) return 1;
-        return 0;
-      });
-    } else {
-      matchs.sort((a, b) => {
-        if (a.title.rendered > b.title.rendered) return 1;
-        if (a.title.rendered < b.title.rendered) return -1;
-        return 0;
-      });
-    }
-
-    //DIVIDE IN CHUNKS
-    const chunked_arr = [];
-    for (let i = 0; i < matchs.length; i++) {
-      const last = chunked_arr[chunked_arr.length - 1];
-      if (!last || last.length === paginationSize) {
-        chunked_arr.push([matchs[i]]);
-      } else {
-        last.push(matchs[i]);
-      }
-    }
     this.setState({
-      blocksPagination: chunked_arr
+      blocksPagination: this.basicFilter(movies)
     });
     // this.forceUpdate();
   }
@@ -172,6 +143,8 @@ class VideoStore extends React.Component {
   }
 
   filterByName() {
+    // console.log("filterByName");
+
     this.setState({
       filterByLike: false
     });
@@ -179,6 +152,8 @@ class VideoStore extends React.Component {
   }
 
   filterByLike() {
+    // console.log("filterByLike");
+
     this.setState({
       filterByLike: true
     });
