@@ -15,7 +15,7 @@ class VideoStore extends React.Component {
     super(props);
     this.state = {
       indexPagination: 0,
-      paginationSize: 5,
+      paginationSize: 6,
       blocksPagination: [],
       searchFilter: "",
       filterByLike: false,
@@ -65,6 +65,11 @@ class VideoStore extends React.Component {
     let matchs = movies.filter(it =>
       new RegExp(searchFilter, "i").test(it.title.rendered)
     );
+
+    //FILTER AVAIBLES
+    if (!this.props.isAdmin) {
+      matchs = matchs.filter(it => it.availability === "true");
+    }
 
     //SORT
     if (filterByLike) {
@@ -136,8 +141,8 @@ class VideoStore extends React.Component {
   }
 
   iLiked(i) {
-    let { movies } = this.state;
-    let movie = movies[i];
+    let { blocksPagination } = this.state;
+    let movie = blocksPagination[this.getIndexOfId(i)];
     let likes = JSON.parse(movie.likes);
     return likes.includes(this.props.currentUser.id);
   }
@@ -210,7 +215,7 @@ class VideoStore extends React.Component {
 
   saveMovie(movie) {
     const { urlPost, blocksPagination } = this.state;
-
+    this.switchDescription(movie);
     let arrow = this.getIndexOfId(movie);
 
     let dataMovies = blocksPagination[arrow.block][arrow.index];
