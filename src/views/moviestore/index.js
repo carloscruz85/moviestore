@@ -6,7 +6,7 @@ import axios from "axios";
 import { FiPlusCircle } from "react-icons/fi";
 import cookie from "react-cookies";
 import Overlay from "../../components/overlayer";
-import Movie from "../../movie";
+import Movie from "../../components/movie";
 import FormMovie from "../../components/formMovie";
 import Input from "../../components/inputs/input";
 import { IoIosHeart } from "react-icons/io";

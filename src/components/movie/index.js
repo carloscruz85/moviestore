@@ -1,9 +1,9 @@
 import React from "react";
 import "./index.scss";
 import PropTypes from "prop-types";
-import Input from "../components/inputs/input";
-import Textarea from "../components/inputs/textarea";
-import CheckBox from "../components/inputs/checkbox";
+import Input from "../../components/inputs/input";
+import Textarea from "../../components/inputs/textarea";
+import CheckBox from "../../components/inputs/checkbox";
 import { FiSave, FiXCircle, FiArrowLeftCircle } from "react-icons/fi";
 
 import { IoIosHeartDislike, IoIosHeart } from "react-icons/io";
