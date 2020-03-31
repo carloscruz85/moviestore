@@ -1,0 +1,6 @@
+@import '../../../globals.scss';
+
+.pink-button{
+    @include button;
+    background-color: $pink;
+}

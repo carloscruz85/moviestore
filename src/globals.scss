@@ -1,0 +1,283 @@
+$dark: rgba(17, 20, 34, 100);
+$soft-dark: rgba(27, 30, 47, 100);
+$light-dark: rgba(44, 49, 72, 100);
+$blue: rgba(67, 86, 255, 100);
+$pink: rgba(253, 110, 138, 100);
+$green: rgba(89, 204, 128, 100);
+$yellow: rgba(224, 131, 35, 100);
+$red: rgba(252, 119, 111, 100);
+
+.color-blue {
+  color: $blue;
+}
+
+.color-green {
+  color: $green;
+}
+
+.color-pink {
+  color: $pink;
+}
+
+.color-yellow {
+  color: $yellow;
+}
+
+.color-red {
+  color: $red;
+}
+
+.full {
+  width: 100% !important;
+}
+
+.square-icon,
+.square-icon-blue,
+.square-icon-green {
+  border: 1px solid $pink;
+  padding: 0.2rem;
+  font-size: 2rem;
+  border-radius: 0.5rem;
+}
+
+.square-icon-blue {
+  color: $blue;
+  border: 1px solid $blue;
+}
+
+.square-icon-green {
+  color: $green;
+  border: 1px solid $green;
+}
+
+@font-face {
+  font-family: "regular";
+  src: url("./assets/fonts/OpenSans-Regular.ttf");
+}
+* {
+  box-sizing: border-box;
+}
+
+.icon-button {
+  color: $pink;
+  font-size: 1.25rem;
+  // box-shadow: $blue 1px 1px 5px;
+}
+
+body {
+  font-family: regular;
+  background-color: $dark;
+  color: white;
+  font-size: 18px;
+  padding: 5%;
+  margin: 0;
+  // width: 100vw;
+}
+
+@mixin button() {
+  background-color: $light-dark;
+  border: none;
+  padding: 0.5rem;
+  color: white;
+  border-radius: 0.5rem;
+}
+
+.green-button {
+  background-color: $green !important;
+}
+
+.yellow-button {
+  background-color: $yellow !important;
+}
+
+.red-button {
+  background-color: $red !important;
+}
+
+@mixin center-center() {
+  display: flex;
+  flex-flow: column nowrap;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+@mixin full-full {
+  width: 100vw;
+  height: 100vh;
+}
+
+@mixin backimage {
+  width: 100%;
+  height: 50vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+$breakpoints: (
+  "cel": (
+    min-width: 640px
+  ),
+  "tablet": (
+    min-width: 765px
+  ),
+  "pc": (
+    min-width: 1024px
+  ),
+  "xl": (
+    min-width: 1500px
+  )
+) !default;
+
+$breakaux: ("tablet", "pc", "lg") !default;
+
+@mixin respond-to($breakpoint) {
+  // If the key exists in the map
+  @if map-has-key($breakpoints, $breakpoint) {
+    // Prints a media query based on the value
+    @media #{inspect(map-get($breakpoints, $breakpoint))} {
+      @content;
+    }
+  }
+
+  // If the key doesn't exist in the map
+  @else {
+    @warn "Unfortunately, no value could be retrieved from `#{$breakpoint}`. "
+        + "Available breakpoints are: #{map-keys($breakpoints)}.";
+  }
+}
+
+@mixin multi($property, $cel, $tablet, $pc, $xl) {
+  #{$property}: $cel;
+  @include respond-to("tablet") {
+    #{$property}: $tablet;
+  }
+  @include respond-to("pc") {
+    #{$property}: $pc;
+  }
+  @include respond-to("xl") {
+    #{$property}: $xl;
+  }
+}
+
+.form-container {
+  margin: 2rem 0;
+  @include multi(width, 100%, 80%, 60%, 50%);
+
+  input,
+  button,
+  textarea {
+    background-color: $light-dark;
+    border-radius: 0.4rem;
+    text-align: center;
+    padding: 5% 0;
+    border: none;
+    color: white;
+    width: 100%;
+    margin-bottom: 5%;
+    font-size: 1rem;
+    letter-spacing: 0.2rem;
+  }
+  button {
+    background-color: $pink;
+    color: #fff !important;
+    border: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-align: center;
+    display: block;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+  textarea {
+    // height: 40vh;
+  }
+}
+
+.movie-card {
+  background-color: $light-dark;
+  color: white;
+  @include backimage();
+  @include multi(height, 20vh, 30vh, 50vh, 50vh);
+  margin: 5px;
+  @include center-center();
+  // font-size: 2rem;
+}
+.movie-description {
+  padding: 1rem;
+  background-color: $dark;
+  position: absolute;
+  top: 0;
+  left: 0;
+  // width: 100vw;
+  // height: 100vh;
+  @include center-center();
+}
+
+.card-list,
+.item-list,
+.item-list-green {
+  margin: 0.5rem 0;
+  border: $blue solid 1px;
+  border-radius: 0.6rem;
+  padding: 1rem;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+  .square-icon {
+    margin-right: 0.75rem !important;
+  }
+}
+.item-list-green {
+  border: $green solid 1px;
+}
+.card-list {
+  background-color: $soft-dark;
+  border: none;
+  margin-bottom: 2rem;
+}
+
+.paginator-container {
+  margin-top: 1rem;
+  display: grid;
+  grid-column-gap: 4%;
+  grid-template-columns: 14% 14% 14% 14% 14% 14%;
+  .pag {
+    padding: 1rem;
+    background-color: $light-dark;
+    margin-bottom: 0.5rem;
+    border-radius: 0.6rem;
+    text-align: center;
+  }
+  .selected {
+    background-color: $yellow;
+    color: $dark;
+  }
+  .big {
+    font-size: 3.2rem;
+  }
+}
+
+.icons-group {
+  margin-top: 0.5rem;
+  // background-color: $green;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  .pag {
+    padding: 1rem;
+    background-color: $light-dark;
+    border-radius: 0.6rem;
+    text-align: center;
+    margin-left: 0.5rem;
+  }
+  .selected {
+    background-color: $yellow;
+    color: $dark;
+  }
+  .big {
+    font-size: 3.2rem;
+  }
+}
