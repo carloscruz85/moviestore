@@ -727,7 +727,7 @@ class VideoStore extends React.Component {
                             deleteMovie={this.deleteMovie.bind(this)}
                             like={this.like.bind(this)}
                             rent={this.rent.bind(this)}
-                            rentConf={this.rentConf}
+                            rentConf={rentConf}
                           />
                         );
                       } else return null;

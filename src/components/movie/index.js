@@ -102,8 +102,12 @@ class Movie extends React.Component {
                         return (
                           <div className="rent" key={irent}>
                             <button>
-                              {rent.userName} devolution{" "}
-                              {GetTotalDays(rent.date, d.getTime())}{" "}
+                              {rent.userName} devolution
+                              {GetTotalDays(
+                                rent.date,
+                                d.getTime(),
+                                this.props.rentConf
+                              )}
                             </button>
                           </div>
                         );
