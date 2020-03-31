@@ -67,7 +67,7 @@ class VideoStore extends React.Component {
     this.devolution = this.devolution.bind(this);
   }
 
-  devolution(movieId, userId) {
+  devolution(movieId, userId, userName) {
     const { urlPost, blocksPagination } = this.state;
     let arrow = this.getIndexOfId(movieId);
     let dataMovies = blocksPagination[arrow.block][arrow.index];
@@ -80,6 +80,7 @@ class VideoStore extends React.Component {
     });
     let user = cookie.load("user");
     const myHeaders = { Authorization: "Bearer " + user.token };
+    let current_log_users_aux = JSON.parse(dataMovies.log_users_aux);
 
     let currentUserLog = JSON.parse(dataMovies.log_users);
     // console.log(currentUserLog);
@@ -91,30 +92,35 @@ class VideoStore extends React.Component {
 
     // console.log(newUserLog);
 
-    // var d = new Date();
-    // let thisInteraction = {
-    //   userId: this.props.currentUser.id,
-    //   userName: this.props.currentUser.user_nicename,
-    //   movieId: movieId,
-    //   type: "in",
-    //   date: d.getTime()
-    // };
+    var d = new Date();
+    let thisInteraction = {
+      userId: userId,
+      userName: userName,
+      movieId: movieId,
+      type: "devolution",
+      date: d.getTime()
+    };
+
+    current_log_users_aux.push(thisInteraction);
 
     // currentUserLog.push(thisInteraction);
     // console.log(currentUserLog);
 
     let log_users = JSON.stringify(newUserLog);
+    let log_users_aux = JSON.stringify(current_log_users_aux);
 
     //UPDATING STOCK
     let currentStock = parseInt(dataMovies.stock) + 1;
 
     let realData = {
       log_users: log_users,
-      stock: currentStock
+      stock: currentStock,
+      log_users_aux: log_users_aux
     };
 
     //UPDATE STATE
     blocksPagination[arrow.block][arrow.index].log_users = log_users;
+    blocksPagination[arrow.block][arrow.index].log_users_aux = log_users_aux;
     blocksPagination[arrow.block][arrow.index].stock = currentStock;
     this.setState({
       blocksPagination: blocksPagination
@@ -152,31 +158,38 @@ class VideoStore extends React.Component {
     let user = cookie.load("user");
     const myHeaders = { Authorization: "Bearer " + user.token };
 
+    //AUX LOGS
+    let log_users_aux_prev = JSON.parse(dataMovies.log_users_aux);
+
     let currentUserLog = JSON.parse(dataMovies.log_users);
     var d = new Date();
     let thisInteraction = {
       userId: this.props.currentUser.id,
       userName: this.props.currentUser.user_nicename,
       movieId: movieId,
-      type: "out",
+      type: "rent",
       date: d.getTime()
     };
 
     currentUserLog.push(thisInteraction);
+    log_users_aux_prev.push(thisInteraction);
     // console.log(currentUserLog);
 
     let log_users = JSON.stringify(currentUserLog);
+    let log_users_aux = JSON.stringify(log_users_aux_prev);
 
     //UPDATING STOCK
     let currentStock = dataMovies.stock - 1;
 
     let realData = {
       log_users: log_users,
-      stock: currentStock
+      stock: currentStock,
+      log_users_aux: log_users_aux
     };
 
     //UPDATE STATE
     blocksPagination[arrow.block][arrow.index].log_users = log_users;
+    blocksPagination[arrow.block][arrow.index].log_users_aux = log_users_aux;
     blocksPagination[arrow.block][arrow.index].stock = currentStock;
     // blocksPagination[arrow.block][arrow.index].show = false;
     this.setState({

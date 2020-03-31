@@ -13,7 +13,7 @@ class Movie extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showLogs: false
+      showLogs: true
     };
   }
 
@@ -124,7 +124,8 @@ class Movie extends React.Component {
                                   onClick={() => {
                                     this.props.devolution(
                                       movie.id,
-                                      rent.userId
+                                      rent.userId,
+                                      rent.userName
                                     );
                                   }}
                                 >
