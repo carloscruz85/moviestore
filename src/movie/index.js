@@ -2,22 +2,23 @@ import React from "react";
 import "./index.scss";
 import PropTypes from "prop-types";
 import Input from "../components/inputs/input";
+import Textarea from "../components/inputs/textarea";
 import CheckBox from "../components/inputs/checkbox";
 
 import { IoIosHeartDislike, IoIosHeart } from "react-icons/io";
 
 class Movie extends React.Component {
   render() {
-    const { movie, imovie } = this.props;
+    const { movie } = this.props;
+    // console.log(movie);
+
     return (
       <div>
         <div
           className="movie-card"
-          style={{ backgroundImage: `url(${movie.fimg_url})` }}
+          style={{ backgroundImage: `url(${movie.imageurl})` }}
           onClick={() => this.props.switchDescription(movie.id)}
-        >
-          {movie.title.rendered}
-        </div>
+        ></div>
         <div>
           {movie.show === "true" ? (
             <div className="movie-description">
@@ -31,11 +32,18 @@ class Movie extends React.Component {
                       value={movie.title.rendered}
                       customChange={this.props.handleMovieInput.bind(this)}
                     />
-                    <Input
+                    <Textarea
                       label="Description"
                       type="text"
                       name={movie.id + "|description"}
                       value={movie.description}
+                      customChange={this.props.handleMovieInput.bind(this)}
+                    />
+                    <Input
+                      label="Image Url"
+                      type="text"
+                      name={movie.id + "|imageurl"}
+                      value={movie.imageurl}
                       customChange={this.props.handleMovieInput.bind(this)}
                     />
                     <Input

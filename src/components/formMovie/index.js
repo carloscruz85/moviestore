@@ -2,6 +2,7 @@ import React from "react";
 import "./index.scss";
 import PropTypes from "prop-types";
 import Input from "../inputs/input";
+import Textarea from "../inputs/textarea";
 
 class FormMovie extends React.Component {
   render() {
@@ -14,16 +15,20 @@ class FormMovie extends React.Component {
           value={this.props.title}
           customChange={this.props.handleChange.bind(this)}
         />
-        <Input
+        <Textarea
           label="Description"
           type="text"
           name="description"
           value={this.props.description}
           customChange={this.props.handleChange.bind(this)}
         />
-        {/* <label>
-              <input type="file" onChange={this.propschangeImage} />
-            </label> */}
+        <Input
+          label="Image Url"
+          type="text"
+          name="imageUrl"
+          value={this.props.imageUrl}
+          customChange={this.props.handleChange.bind(this)}
+        />
         <Input
           label="Stock"
           type="number"

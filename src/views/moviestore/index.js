@@ -26,19 +26,20 @@ class VideoStore extends React.Component {
       overlayMsg: "",
       movies: [],
       showForm: false,
-      title: "title from app",
-      description: "description",
+      title: "",
+      description: "",
       stock: 0,
       rentalPrice: 0,
-      salePrice: 0
+      salePrice: 0,
+      imageUrl: ""
     };
 
     this.loadVideos = this.loadVideos.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.createMovie = this.createMovie.bind(this);
     this.showForm = this.showForm.bind(this);
-    this.changeImage = this.changeImage.bind(this);
-    this.uploadImage = this.uploadImage.bind(this);
+    // this.changeImage = this.changeImage.bind(this);
+    // this.uploadImage = this.uploadImage.bind(this);
     this.switchDescription = this.switchDescription.bind(this);
     this.handleMovieInput = this.handleMovieInput.bind(this);
     this.saveMovie = this.saveMovie.bind(this);
@@ -211,6 +212,7 @@ class VideoStore extends React.Component {
   }
 
   deleteMovie(movie) {
+    this.switchDescription(movie);
     const { urlPost } = this.state;
     var self = this;
     let host = this.props.host + urlPost + "/" + movie;
@@ -268,9 +270,9 @@ class VideoStore extends React.Component {
       rental_price: dataMovies.rental_price,
       sale_price: dataMovies.sale_price,
       availability: dataMovies.availability,
-      likes: dataMovies.likes
+      likes: dataMovies.likes,
+      imageurl: dataMovies.imageurl
     };
-    // console.table(realData);
 
     axios
       .post(host, realData, { headers: myHeaders })
@@ -332,7 +334,6 @@ class VideoStore extends React.Component {
       block: 0,
       index: 0
     };
-    var result = 0;
 
     for (let block = 0; block < blocksPagination.length; block++) {
       // console.log("In Block ", block);
@@ -381,59 +382,6 @@ class VideoStore extends React.Component {
     });
   }
 
-  uploadImage(masterFile) {
-    const file = masterFile[0];
-    // console.log(file.type);
-
-    const { mediaUrl } = this.state;
-    var self = this;
-    let host = this.props.host + mediaUrl;
-    this.setState({
-      showOverlay: true,
-      overlayMsg: "Wait Upload the image..."
-    });
-    let user = cookie.load("user");
-    const myHeaders = {
-      Authorization: "Bearer " + user.token
-      // "Content-Type": "multipart/form-data boundary=__boundrytext__"
-      // "Content-Disposition": "attachment; filename=" + file.name
-    };
-    let realData = {
-      title: "image from app",
-      // file: {
-      //   uri: "base64",
-      //   name: file.name,
-      //   type: file.type
-      // },
-      caption: "image from app",
-      media_type: file.type,
-      status: "publish"
-    };
-    console.log(realData);
-
-    axios
-      .post(host, realData, { headers: myHeaders })
-      .then(function(response) {
-        console.log(response);
-
-        self.loadVideos();
-        // self.showForm();
-      })
-      .catch(function(error) {
-        self.setState({
-          showOverlay: false,
-          userMsg: "Error " + error + "Please contact to carloscruz85@gmail.com"
-        });
-      })
-      .then(function() {});
-  }
-
-  changeImage(e) {
-    const file = Array.from(e.target.files);
-    // console.log();
-    this.uploadImage(file);
-  }
-
   showForm() {
     let showForm = !this.state.showForm;
     this.setState({
@@ -448,6 +396,7 @@ class VideoStore extends React.Component {
       stock,
       rentalPrice,
       salePrice,
+      imageUrl,
       urlPost
     } = this.state;
     var self = this;
@@ -467,8 +416,11 @@ class VideoStore extends React.Component {
       availability: "true",
       status: "publish",
       show: "false",
-      likes: "[]"
+      likes: "[]",
+      imageurl: imageUrl
     };
+    // console.log(realData);
+
     axios
       .post(host, realData, { headers: myHeaders })
       .then(function(response) {
@@ -548,7 +500,8 @@ class VideoStore extends React.Component {
       description,
       stock,
       rentalPrice,
-      salePrice
+      salePrice,
+      imageUrl
     } = this.state;
     return (
       <div className="video-store-container">
@@ -564,6 +517,7 @@ class VideoStore extends React.Component {
             createMovie={this.createMovie.bind(this)}
             handleChange={this.handleChange.bind(this)}
             showForm={this.showForm.bind(this)}
+            imageUrl={imageUrl}
           />
         ) : null}
         <div className="header-control">
@@ -595,44 +549,60 @@ class VideoStore extends React.Component {
             );
           })}
         </div>
-        {blocksPagination.map((block, iblock) => {
-          // console.log(block);
-          if (iblock === indexPagination)
-            return (
-              <div className="block" key={iblock}>
-                <div className="movie-container">
-                  {this.props.isAdmin ? (
-                    <div
-                      className="movie-card add-movie"
-                      onClick={() => this.showForm()}
-                    >
-                      <FiPlusCircle /> Add
-                    </div>
-                  ) : null}
-                  {block.map((movie, imovie) => {
-                    if (this.props.isAdmin || movie.availability === "true")
-                      return (
-                        <Movie
-                          key={imovie}
-                          movie={movie}
-                          imovie={imovie}
-                          switchDescription={this.switchDescription.bind(this)}
-                          getLikes={this.getLikes.bind(this)}
-                          iLiked={this.iLiked.bind(this)}
-                          handleMovieInput={this.handleMovieInput.bind(this)}
-                          isAdmin={this.props.isAdmin}
-                          adminId={this.props.currentUser.id}
-                          saveMovie={this.saveMovie.bind(this)}
-                          deleteMovie={this.deleteMovie.bind(this)}
-                          like={this.like.bind(this)}
-                        />
-                      );
-                  })}
-                </div>
+        {blocksPagination.length === 0 ? (
+          <div className="movie-container">
+            {this.props.isAdmin ? (
+              <div
+                className="movie-card add-movie"
+                onClick={() => this.showForm()}
+              >
+                <FiPlusCircle /> Add
               </div>
-            );
-          else return null;
-        })}
+            ) : null}
+          </div>
+        ) : (
+          blocksPagination.map((block, iblock) => {
+            // console.log(block);
+            if (iblock === indexPagination)
+              return (
+                <div className="block" key={iblock}>
+                  <div className="movie-container">
+                    {this.props.isAdmin ? (
+                      <div
+                        className="movie-card add-movie"
+                        onClick={() => this.showForm()}
+                      >
+                        <FiPlusCircle /> Add
+                      </div>
+                    ) : null}
+                    {block.map((movie, imovie) => {
+                      if (this.props.isAdmin || movie.availability === "true") {
+                        return (
+                          <Movie
+                            key={imovie}
+                            movie={movie}
+                            imovie={imovie}
+                            switchDescription={this.switchDescription.bind(
+                              this
+                            )}
+                            getLikes={this.getLikes.bind(this)}
+                            iLiked={this.iLiked.bind(this)}
+                            handleMovieInput={this.handleMovieInput.bind(this)}
+                            isAdmin={this.props.isAdmin}
+                            adminId={this.props.currentUser.id}
+                            saveMovie={this.saveMovie.bind(this)}
+                            deleteMovie={this.deleteMovie.bind(this)}
+                            like={this.like.bind(this)}
+                          />
+                        );
+                      } else return null;
+                    })}
+                  </div>
+                </div>
+              );
+            else return null;
+          })
+        )}
       </div>
     );
   }
