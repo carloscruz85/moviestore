@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Input from "../../components/inputs/input";
 import Textarea from "../../components/inputs/textarea";
 import CheckBox from "../../components/inputs/checkbox";
-import { FiSave, FiXCircle, FiArrowLeftCircle, FiMenu } from "react-icons/fi";
+import { FiSave, FiXCircle, FiTrash2, FiMenu } from "react-icons/fi";
 // import StringToJson from "../../logic/stringToJson";
 import { IoIosHeartDislike, IoIosHeart } from "react-icons/io";
 
@@ -148,7 +148,7 @@ class Movie extends React.Component {
                     />
                   ) : null}
                   {this.props.isAdmin ? (
-                    <FiXCircle
+                    <FiTrash2
                       className="pag big red-button"
                       onClick={() => this.props.deleteMovie(movie.id)}
                     />
@@ -161,7 +161,7 @@ class Movie extends React.Component {
                     />
                   ) : null}
 
-                  <FiArrowLeftCircle
+                  <FiXCircle
                     className="pag big yellow-button"
                     onClick={() => this.props.switchDescription(movie.id)}
                   />
