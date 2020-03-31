@@ -1,0 +1,29 @@
+@import "../../globals.scss";
+
+.logs {
+  // @include full-full();
+  width: 95vw;
+  .log-item {
+    background-color: $soft-dark;
+    padding: 1rem;
+    margin-bottom: 0.5rem;
+    p {
+      margin: 0;
+    }
+  }
+}
+
+.movie-description {
+  // @include full-full();
+}
+.overlayer {
+  z-index: 9999;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: $dark * 0.8;
+  // padding: 20%;
+  // @include center-center();
+  // @include full-full();
+  color: $pink;
+}

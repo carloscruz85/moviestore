@@ -1,7 +1,7 @@
 import React from "react";
 import "./index.scss";
 import cookie from "react-cookies";
-import { FiLogIn, FiLogOut, FiSettings, FiUser, FiFilm } from "react-icons/fi";
+import { FiLogIn, FiLogOut, FiUser, FiFilm } from "react-icons/fi";
 import { connect } from "react-redux";
 import { sendLoginData } from "../../store/actionCreators";
 import PropTypes from "prop-types";
