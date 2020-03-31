@@ -90,6 +90,10 @@ body {
   background-color: $yellow !important;
 }
 
+.red-button {
+  background-color: $red !important;
+}
+
 @mixin center-center() {
   display: flex;
   flex-flow: column nowrap;
@@ -250,6 +254,9 @@ $breakaux: ("tablet", "pc", "lg") !default;
   .selected {
     background-color: $yellow;
     color: $dark;
+  }
+  .big {
+    font-size: 3.2rem;
   }
 }
 
