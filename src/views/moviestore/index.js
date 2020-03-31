@@ -287,6 +287,7 @@ class VideoStore extends React.Component {
         imageurl: dataMovies.imageurl
       };
 
+    //PREPARING LOG
     delete toUpdate.likes;
 
     toUpdate = {

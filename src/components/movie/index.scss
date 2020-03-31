@@ -1,5 +1,8 @@
 @import "../../globals.scss";
 
+.movie-description {
+  @include full-full();
+}
 .overlayer {
   z-index: 9999;
   position: fixed;

@@ -4,11 +4,23 @@ import PropTypes from "prop-types";
 import Input from "../../components/inputs/input";
 import Textarea from "../../components/inputs/textarea";
 import CheckBox from "../../components/inputs/checkbox";
-import { FiSave, FiXCircle, FiArrowLeftCircle } from "react-icons/fi";
+import { FiSave, FiXCircle, FiArrowLeftCircle, FiMenu } from "react-icons/fi";
 
 import { IoIosHeartDislike, IoIosHeart } from "react-icons/io";
 
 class Movie extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      showLogs: true
+    };
+  }
+
+  switchLogs() {
+    this.setState(prevState => ({
+      showLogs: !prevState.showLogs
+    }));
+  }
   render() {
     const { movie } = this.props;
     // console.log(movie);
@@ -26,55 +38,61 @@ class Movie extends React.Component {
               <div className="form-container">
                 {this.props.isAdmin ? (
                   <div>
-                    <Input
-                      label="Title"
-                      type="text"
-                      name={movie.id + "|title"}
-                      value={movie.title.rendered}
-                      customChange={this.props.handleMovieInput.bind(this)}
-                    />
-                    <Textarea
-                      label="Description"
-                      type="text"
-                      name={movie.id + "|description"}
-                      value={movie.description}
-                      customChange={this.props.handleMovieInput.bind(this)}
-                    />
-                    <Input
-                      label="Image Url"
-                      type="text"
-                      name={movie.id + "|imageurl"}
-                      value={movie.imageurl}
-                      customChange={this.props.handleMovieInput.bind(this)}
-                    />
-                    <Input
-                      label="Stock"
-                      type="number"
-                      name={movie.id + "|stock"}
-                      value={movie.stock}
-                      customChange={this.props.handleMovieInput.bind(this)}
-                    />
-                    <Input
-                      label="Rental Price"
-                      type="number"
-                      name={movie.id + "|rental_price"}
-                      value={movie.rental_price}
-                      customChange={this.props.handleMovieInput.bind(this)}
-                    />
-                    <Input
-                      label="Sale Price"
-                      type="number"
-                      name={movie.id + "|sale_price"}
-                      value={movie.sale_price}
-                      customChange={this.props.handleMovieInput.bind(this)}
-                    />
-                    <CheckBox
-                      label="Availability"
-                      type="text"
-                      name={movie.id + "|availability"}
-                      value={movie.availability}
-                      customChange={this.props.handleMovieInput.bind(this)}
-                    />
+                    {this.state.showLogs ? (
+                      <div className="logs">Logs</div>
+                    ) : (
+                      <div>
+                        <Input
+                          label="Title"
+                          type="text"
+                          name={movie.id + "|title"}
+                          value={movie.title.rendered}
+                          customChange={this.props.handleMovieInput.bind(this)}
+                        />
+                        <Textarea
+                          label="Description"
+                          type="text"
+                          name={movie.id + "|description"}
+                          value={movie.description}
+                          customChange={this.props.handleMovieInput.bind(this)}
+                        />
+                        <Input
+                          label="Image Url"
+                          type="text"
+                          name={movie.id + "|imageurl"}
+                          value={movie.imageurl}
+                          customChange={this.props.handleMovieInput.bind(this)}
+                        />
+                        <Input
+                          label="Stock"
+                          type="number"
+                          name={movie.id + "|stock"}
+                          value={movie.stock}
+                          customChange={this.props.handleMovieInput.bind(this)}
+                        />
+                        <Input
+                          label="Rental Price"
+                          type="number"
+                          name={movie.id + "|rental_price"}
+                          value={movie.rental_price}
+                          customChange={this.props.handleMovieInput.bind(this)}
+                        />
+                        <Input
+                          label="Sale Price"
+                          type="number"
+                          name={movie.id + "|sale_price"}
+                          value={movie.sale_price}
+                          customChange={this.props.handleMovieInput.bind(this)}
+                        />
+                        <CheckBox
+                          label="Availability"
+                          type="text"
+                          name={movie.id + "|availability"}
+                          value={movie.availability}
+                          customChange={this.props.handleMovieInput.bind(this)}
+                        />
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <div>
@@ -120,6 +138,13 @@ class Movie extends React.Component {
                     <FiXCircle
                       className="pag big red-button"
                       onClick={() => this.props.deleteMovie(movie.id)}
+                    />
+                  ) : null}
+
+                  {this.props.isAdmin ? (
+                    <FiMenu
+                      className="pag big blue-button"
+                      onClick={() => this.switchLogs()}
                     />
                   ) : null}
 
