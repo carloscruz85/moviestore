@@ -89,10 +89,10 @@ class Header extends React.Component {
               className="pag big"
               onClick={this.goToMovieStore.bind(this)}
             />
-            <FiSettings
+            {/* <FiSettings
               className="pag big"
               onClick={this.goToLogDashboard.bind(this)}
-            />
+            /> */}
             <FiLogOut
               className="pag big"
               onClick={this.goToLogOut.bind(this)}

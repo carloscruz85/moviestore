@@ -13,8 +13,8 @@ class Login extends React.Component {
       loginUrl: "wp-json/jwt-auth/v1/token",
       showOverlay: false,
       overlayMsg: "msg",
-      username: "admin",
-      password: "ILoveApplaudo",
+      username: "",
+      password: "",
       userMsg: ""
     };
     this.handleChange = this.handleChange.bind(this);
@@ -61,7 +61,7 @@ class Login extends React.Component {
               currentUser: res.data
             });
           }
-          this.props.history.push("/dashboard");
+          this.props.history.push("/moviestore");
         }
       })
       .catch(error => {
