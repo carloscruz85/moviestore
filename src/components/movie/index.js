@@ -105,7 +105,7 @@ class Movie extends React.Component {
                       {log_users.map((rent, irent) => {
                         // const today =
                         var d = new Date();
-                        if (rent.type === "out") {
+                        if (rent.type === "rent") {
                           return (
                             <div className="rent" key={irent}>
                               <div className="izq">
