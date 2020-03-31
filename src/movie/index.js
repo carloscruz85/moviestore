@@ -90,20 +90,24 @@ class Movie extends React.Component {
                   </div>
                 ) : (
                   <div>
-                    <h3>{movie.title.rendered}</h3>
+                    <h3>
+                      {movie.title.rendered} ({this.props.getLikes(movie.id)}
+                      Likes)
+                    </h3>
                     {this.props.adminId !== -1 ? (
                       <div className="color-yellow ">
-                        {this.props.getLikes(movie.id)} <div>Likes</div>
                         {this.props.iLiked(movie.id) ? (
-                          <IoIosHeartDislike
-                            className="color-red"
-                            onClick={() => this.props.like(movie.id)}
-                          />
+                          <button onClick={() => this.props.like(movie.id)}>
+                            {" "}
+                            Dislike
+                            <IoIosHeartDislike />
+                          </button>
                         ) : (
-                          <IoIosHeart
-                            className="color-red"
-                            onClick={() => this.props.like(movie.id)}
-                          />
+                          <button onClick={() => this.props.like(movie.id)}>
+                            {" "}
+                            Like
+                            <IoIosHeart />
+                          </button>
                         )}
                       </div>
                     ) : null}
