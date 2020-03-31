@@ -27,3 +27,27 @@
   // @include full-full();
   color: $pink;
 }
+
+.rent {
+  background-color: $light-dark;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: center;
+  align-items: center;
+  padding: 0.8rem;
+  .izq {
+    text-align: left;
+    width: 70%;
+  }
+  .der {
+    text-align: right;
+    width: 30%;
+    .inner-button {
+      background-color: $pink;
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+      font-size: 1rem;
+      text-align: center;
+    }
+  }
+}
