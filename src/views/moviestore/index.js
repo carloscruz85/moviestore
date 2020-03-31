@@ -18,7 +18,7 @@ class VideoStore extends React.Component {
       paginationSize: 6,
       blocksPagination: [],
       searchFilter: "",
-      filterByLike: true,
+      filterByLike: false,
       url: "wp-json/wp/v2/video?per_page=100",
       urlPost: "wp-json/wp/v2/video",
       mediaUrl: "wp-json/wp/v2/media/",
@@ -436,7 +436,13 @@ class VideoStore extends React.Component {
       .then(function() {
         self.setState({
           showOverlay: false,
-          overlayMsg: ""
+          overlayMsg: "",
+          title: "",
+          description: "",
+          stock: 0,
+          rentalPrice: 0,
+          salePrice: 0,
+          imageUrl: ""
         });
       });
   }
