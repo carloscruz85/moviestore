@@ -16,6 +16,7 @@ class VideoStore extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      showSearcher: false,
       indexPagination: 0,
       paginationSize: 6,
       blocksPagination: [],
@@ -55,6 +56,13 @@ class VideoStore extends React.Component {
     this.setIndexPagination = this.setIndexPagination.bind(this);
     this.getIndexOfId = this.getIndexOfId.bind(this);
     this.repaginate = this.repaginate.bind(this);
+    this.switchSearcher = this.switchSearcher.bind(this);
+  }
+
+  switchSearcher() {
+    this.setState(prevState => ({
+      showSearcher: !prevState.showSearcher
+    }));
   }
 
   setIndexPagination(i) {
@@ -497,6 +505,7 @@ class VideoStore extends React.Component {
 
   render() {
     const {
+      showSearcher,
       indexPagination,
       blocksPagination,
       searchFilter,
@@ -528,10 +537,27 @@ class VideoStore extends React.Component {
             imageUrl={imageUrl}
           />
         ) : null}
-        <div className="paginator-container">
-          <div className="pag">
-            <FiSearch />
-          </div>
+        <div className="icons-group">
+          {showSearcher ? (
+            <div
+              className="pag selected"
+              onClick={() => {
+                this.switchSearcher();
+              }}
+            >
+              <FiSearch />
+            </div>
+          ) : (
+            <div
+              className="pag"
+              onClick={() => {
+                this.switchSearcher();
+              }}
+            >
+              <FiSearch />
+            </div>
+          )}
+
           {filterByLike ? (
             <div className="pag selected" onClick={() => this.filterByName()}>
               <IoIosHeart />
@@ -542,15 +568,17 @@ class VideoStore extends React.Component {
             </div>
           )}
         </div>
-        <div className="header-control">
-          <Input
-            label="Search"
-            type="text"
-            name="search"
-            value={searchFilter}
-            customChange={this.setSearchFilter.bind(this)}
-          />
-        </div>
+        {showSearcher ? (
+          <div className="header-control">
+            <Input
+              label="Search"
+              type="text"
+              name="search"
+              value={searchFilter}
+              customChange={this.setSearchFilter.bind(this)}
+            />
+          </div>
+        ) : null}
 
         {blocksPagination.length === 0 ? (
           <div className="movie-container">

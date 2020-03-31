@@ -252,3 +252,22 @@ $breakaux: ("tablet", "pc", "lg") !default;
     color: $dark;
   }
 }
+
+.icons-group {
+  margin-top: 0.5rem;
+  // background-color: $green;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  .pag {
+    padding: 1rem;
+    background-color: $light-dark;
+    border-radius: 0.6rem;
+    text-align: center;
+    margin-left: 0.5rem;
+  }
+  .selected {
+    background-color: $yellow;
+    color: $dark;
+  }
+}
