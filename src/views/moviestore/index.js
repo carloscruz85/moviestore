@@ -77,16 +77,13 @@ class VideoStore extends React.Component {
     const myHeaders = { Authorization: "Bearer " + user.token };
 
     let currentUserLog = JSON.parse(dataMovies.log_users);
-
+    var d = new Date();
     let thisInteraction = {
       userId: this.props.currentUser.id,
       userName: this.props.currentUser.user_nicename,
       movieId: movieId,
       type: "out",
-      date: new Date()
-        .toJSON()
-        .slice(0, 10)
-        .replace(/-/g, "/")
+      date: d.getTime()
     };
 
     currentUserLog.push(thisInteraction);
