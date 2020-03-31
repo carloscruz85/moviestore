@@ -105,7 +105,7 @@ class Movie extends React.Component {
                       {log_users.map((rent, irent) => {
                         // const today =
                         var d = new Date();
-                        if (rent.type === "out") {
+                        if (rent.type === "rent") {
                           return (
                             <div className="rent" key={irent}>
                               <div className="izq">
@@ -216,7 +216,18 @@ class Movie extends React.Component {
                         </div>
                       ) : null}
                     </div>
-                    <p className="card-list">Sale Price: ${movie.sale_price}</p>
+                    <div className="card-list">
+                      Sale Price: ${movie.sale_price}
+                      {haveIt === 0 ? (
+                        <button
+                          onClick={() => {
+                            this.props.buy(movie.id);
+                          }}
+                        >
+                          Buy
+                        </button>
+                      ) : null}
+                    </div>
                   </div>
                 )}
                 <div className="paginator-container">
