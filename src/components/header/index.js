@@ -72,32 +72,29 @@ class Header extends React.Component {
   render() {
     const { isLogin, isAdmin } = this.props;
     return (
-      <div className="header-container">
+      <div className="icons-group">
         {isAdmin ? (
           <section>
             <FiUser
-              className="icon-button"
+              className="pag big"
               onClick={this.goToLogUserAdmin.bind(this)}
             />
           </section>
         ) : null}
         {!isLogin ? (
-          <FiLogIn
-            className="icon-button"
-            onClick={this.goToLogin.bind(this)}
-          />
+          <FiLogIn className="pag big" onClick={this.goToLogin.bind(this)} />
         ) : (
           <section>
             <FiFilm
-              className="icon-button"
+              className="pag big"
               onClick={this.goToMovieStore.bind(this)}
             />
             <FiSettings
-              className="icon-button"
+              className="pag big"
               onClick={this.goToLogDashboard.bind(this)}
             />
             <FiLogOut
-              className="icon-button"
+              className="pag big"
               onClick={this.goToLogOut.bind(this)}
             />
           </section>
