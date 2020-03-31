@@ -135,7 +135,14 @@ class Movie extends React.Component {
                       Description: {movie.description}
                     </p>
                     <p className="card-list">
-                      Rental Price: ${movie.rental_price} <button>Rent </button>
+                      Rental Price: ${movie.rental_price}{" "}
+                      <button
+                        onClick={() => {
+                          this.props.rent(movie.id);
+                        }}
+                      >
+                        Rent {movie.stock} in stock
+                      </button>
                     </p>
                     <p className="card-list">Sale Price: ${movie.sale_price}</p>
                   </div>
