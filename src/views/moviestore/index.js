@@ -9,6 +9,8 @@ import Overlay from "../../components/overlayer";
 import Movie from "../../movie";
 import FormMovie from "../../components/formMovie";
 import Input from "../../components/inputs/input";
+import { IoIosHeart } from "react-icons/io";
+import { FiSearch } from "react-icons/fi";
 
 class VideoStore extends React.Component {
   constructor(props) {
@@ -526,6 +528,20 @@ class VideoStore extends React.Component {
             imageUrl={imageUrl}
           />
         ) : null}
+        <div className="paginator-container">
+          <div className="pag">
+            <FiSearch />
+          </div>
+          {filterByLike ? (
+            <div className="pag selected" onClick={() => this.filterByName()}>
+              <IoIosHeart />
+            </div>
+          ) : (
+            <div className="pag" onClick={() => this.filterByLike()}>
+              <IoIosHeart />
+            </div>
+          )}
+        </div>
         <div className="header-control">
           <Input
             label="Search"
@@ -534,11 +550,6 @@ class VideoStore extends React.Component {
             value={searchFilter}
             customChange={this.setSearchFilter.bind(this)}
           />
-          {filterByLike ? (
-            <button onClick={() => this.filterByName()}>Normal Filter</button>
-          ) : (
-            <button onClick={() => this.filterByLike()}>Filter by likes</button>
-          )}
         </div>
 
         {blocksPagination.length === 0 ? (
