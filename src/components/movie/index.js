@@ -7,12 +7,13 @@ import CheckBox from "../../components/inputs/checkbox";
 import { FiSave, FiXCircle, FiTrash2, FiMenu } from "react-icons/fi";
 // import StringToJson from "../../logic/stringToJson";
 import { IoIosHeartDislike, IoIosHeart } from "react-icons/io";
+import GetTotalDays from "../../logic/getTotalDays";
 
 class Movie extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showLogs: true
+      showLogs: false
     };
   }
 
@@ -25,7 +26,14 @@ class Movie extends React.Component {
     const { movie } = this.props;
 
     let log_changes = JSON.parse(movie.log_changes);
-    // console.log(StringToJson());
+    let log_users = JSON.parse(movie.log_users);
+    let log_users_aux = JSON.parse(movie.log_users_aux);
+    let haveIt = 0;
+
+    haveIt = log_users.reduce((curr, acc) => {
+      if (this.props.adminId === acc.userId) return 1;
+      else return 0;
+    }, 0);
 
     return (
       <div>
@@ -91,6 +99,48 @@ class Movie extends React.Component {
                         customChange={this.props.handleMovieInput.bind(this)}
                       />
                     </div>
+
+                    <div className="active-rents">
+                      <h3 className="color-yellow">Active rents</h3>
+                      {log_users.map((rent, irent) => {
+                        // const today =
+                        var d = new Date();
+                        if (rent.type === "out") {
+                          return (
+                            <div className="rent" key={irent}>
+                              <div className="izq">
+                                <p>{rent.userName}</p>
+                                <p>
+                                  {GetTotalDays(
+                                    rent.date,
+                                    d.getTime(),
+                                    this.props.rentConf
+                                  )}
+                                </p>
+                              </div>
+                              <div className="der">
+                                {" "}
+                                <div
+                                  className="inner-button"
+                                  onClick={() => {
+                                    this.props.devolution(
+                                      movie.id,
+                                      rent.userId,
+                                      rent.userName
+                                    );
+                                  }}
+                                >
+                                  devolution
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        } else {
+                          return null;
+                        }
+                      })}
+                    </div>
+
                     {this.state.showLogs ? (
                       <div className="logs">
                         <h3 className="color-red">Movie logs</h3>
@@ -101,6 +151,20 @@ class Movie extends React.Component {
                               <p>title: {log.title}</p>
                               <p>Rental Price: {log.rental_price}</p>
                               <p>Sale Price: {log.sale_price}</p>
+                            </div>
+                          );
+                        })}
+
+                        {log_users_aux.map((log, ilog) => {
+                          const ndate = new Date(log.date)
+                            .toJSON()
+                            .slice(0, 10)
+                            .replace(/-/g, "/");
+                          return (
+                            <div key={ilog} className="log-item">
+                              <p className="color-yellow">{ndate}</p>
+                              <p>user: {log.userName}</p>
+                              <p>Type: {log.type}</p>
                             </div>
                           );
                         })}
@@ -134,9 +198,24 @@ class Movie extends React.Component {
                     <p className="card-list">
                       Description: {movie.description}
                     </p>
-                    <p className="card-list">
-                      Rental Price: ${movie.rental_price}
-                    </p>
+                    <div className="card-list">
+                      Rental Price: ${movie.rental_price}{" "}
+                      {this.props.isLogin ? (
+                        <div>
+                          {haveIt === 0 ? (
+                            <button
+                              onClick={() => {
+                                this.props.rent(movie.id);
+                              }}
+                            >
+                              Rent {movie.stock} in stock
+                            </button>
+                          ) : (
+                            <button>You have this movie</button>
+                          )}
+                        </div>
+                      ) : null}
+                    </div>
                     <p className="card-list">Sale Price: ${movie.sale_price}</p>
                   </div>
                 )}
