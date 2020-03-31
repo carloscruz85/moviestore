@@ -95,20 +95,33 @@ class Movie extends React.Component {
                     </div>
 
                     <div className="active-rents">
-                      <h3>Active rents</h3>
+                      <h3 className="color-yellow">Active rents</h3>
                       {log_users.map((rent, irent) => {
                         // const today =
                         var d = new Date();
                         return (
                           <div className="rent" key={irent}>
-                            <button>
-                              {rent.userName} devolution
-                              {GetTotalDays(
-                                rent.date,
-                                d.getTime(),
-                                this.props.rentConf
-                              )}
-                            </button>
+                            <div className="izq">
+                              <p>{rent.userName}</p>
+                              <p>
+                                {GetTotalDays(
+                                  rent.date,
+                                  d.getTime(),
+                                  this.props.rentConf
+                                )}
+                              </p>
+                            </div>
+                            <div className="der">
+                              {" "}
+                              <div
+                                className="inner-button"
+                                onClick={() => {
+                                  this.props.devolution(movie.id);
+                                }}
+                              >
+                                devolution
+                              </div>
+                            </div>
                           </div>
                         );
                       })}
