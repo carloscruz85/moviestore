@@ -13,7 +13,7 @@ class Movie extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      showLogs: true
+      showLogs: false
     };
   }
 
@@ -27,6 +27,7 @@ class Movie extends React.Component {
 
     let log_changes = JSON.parse(movie.log_changes);
     let log_users = JSON.parse(movie.log_users);
+    let log_users_aux = JSON.parse(movie.log_users_aux);
     let haveIt = 0;
 
     haveIt = log_users.reduce((curr, acc) => {
@@ -150,6 +151,20 @@ class Movie extends React.Component {
                               <p>title: {log.title}</p>
                               <p>Rental Price: {log.rental_price}</p>
                               <p>Sale Price: {log.sale_price}</p>
+                            </div>
+                          );
+                        })}
+
+                        {log_users_aux.map((log, ilog) => {
+                          const ndate = new Date(log.date)
+                            .toJSON()
+                            .slice(0, 10)
+                            .replace(/-/g, "/");
+                          return (
+                            <div key={ilog} className="log-item">
+                              <p className="color-yellow">{ndate}</p>
+                              <p>user: {log.userName}</p>
+                              <p>Type: {log.type}</p>
                             </div>
                           );
                         })}
