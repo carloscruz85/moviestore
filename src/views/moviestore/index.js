@@ -9,14 +9,16 @@ import Overlay from "../../components/overlayer";
 import Movie from "../../movie";
 import FormMovie from "../../components/formMovie";
 import Input from "../../components/inputs/input";
-import Filter from "../../logic/filter";
 
 class VideoStore extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      indexPagination: 0,
+      paginationSize: 6,
+      blocksPagination: [],
       searchFilter: "",
-      filterByLike: false,
+      filterByLike: true,
       url: "wp-json/wp/v2/video?per_page=100",
       urlPost: "wp-json/wp/v2/video",
       mediaUrl: "wp-json/wp/v2/media/",
@@ -46,6 +48,80 @@ class VideoStore extends React.Component {
     this.filterByName = this.filterByName.bind(this);
     this.setSearchFilter = this.setSearchFilter.bind(this);
     this.matchTitle = this.matchTitle.bind(this);
+    this.paginate = this.paginate.bind(this);
+    this.setIndexPagination = this.setIndexPagination.bind(this);
+    this.getIndexOfId = this.getIndexOfId.bind(this);
+    this.repaginate = this.repaginate.bind(this);
+  }
+
+  setIndexPagination(i) {
+    this.setState({
+      indexPagination: i
+    });
+  }
+
+  basicFilter(block) {
+    let { paginationSize, searchFilter, filterByLike } = this.state;
+    let matchs = block;
+
+    //SEARCH FILTER
+    matchs = matchs.filter(it =>
+      new RegExp(searchFilter, "i").test(it.title.rendered)
+    );
+    //FILTER AVAIBLES
+    if (!this.props.isAdmin) {
+      matchs = matchs.filter(it => it.availability === "true");
+    }
+
+    //SORT
+    if (filterByLike) {
+      matchs.sort((a, b) => {
+        let aa = JSON.parse(a.likes);
+        let bb = JSON.parse(b.likes);
+
+        if (aa.length > bb.length) return -1;
+        if (aa.length < bb.length) return 1;
+        return 0;
+      });
+    } else {
+      matchs.sort((a, b) => {
+        if (a.title.rendered > b.title.rendered) return 1;
+        if (a.title.rendered < b.title.rendered) return -1;
+        return 0;
+      });
+    }
+
+    //DIVIDE IN CHUNKS
+    const chunked_arr = [];
+    for (let i = 0; i < matchs.length; i++) {
+      const last = chunked_arr[chunked_arr.length - 1];
+      if (!last || last.length === paginationSize) {
+        chunked_arr.push([matchs[i]]);
+      } else {
+        last.push(matchs[i]);
+      }
+    }
+
+    return chunked_arr;
+  }
+
+  repaginate() {
+    let { blocksPagination } = this.state;
+
+    let matchs = blocksPagination.reduce((acc, it) => [...acc, ...it], []);
+
+    this.setState({
+      blocksPagination: this.basicFilter(matchs)
+    });
+  }
+
+  paginate() {
+    let { movies } = this.state;
+
+    this.setState({
+      blocksPagination: this.basicFilter(movies)
+    });
+    // this.forceUpdate();
   }
 
   matchTitle(id) {
@@ -63,64 +139,51 @@ class VideoStore extends React.Component {
     this.setState({
       searchFilter: value
     });
+    this.paginate();
   }
+
   filterByName() {
-    let { movies } = this.state;
-    movies.sort((a, b) => {
-      // console.log(aa, bb);
-
-      if (a.title.rendered > b.title.rendered) return 1;
-      if (a.title.rendered < b.title.rendered) return -1;
-      return 0;
-    });
-
-    // console.log(movies);
+    // console.log("filterByName");
 
     this.setState({
-      movies: movies,
       filterByLike: false
     });
+    this.repaginate();
   }
 
   filterByLike() {
-    let { movies } = this.state;
-    movies.sort((a, b) => {
-      let aa = JSON.parse(a.likes);
-      let bb = JSON.parse(b.likes);
-      // console.log(aa, bb);
-
-      if (aa.length > bb.length) return -1;
-      if (aa.length < bb.length) return 1;
-      return 0;
-    });
-
-    // console.log(movies);
+    // console.log("filterByLike");
 
     this.setState({
-      movies: movies,
       filterByLike: true
     });
+    this.repaginate();
   }
 
   iLiked(i) {
-    let { movies } = this.state;
-    let movie = movies[i];
+    let { blocksPagination } = this.state;
+    let arrow = this.getIndexOfId(i);
+    let movie = blocksPagination[arrow.block][arrow.index];
     let likes = JSON.parse(movie.likes);
     return likes.includes(this.props.currentUser.id);
   }
 
   getLikes(i) {
-    let { movies } = this.state;
-    let movie = movies[i];
+    let { blocksPagination } = this.state;
+    let arrow = this.getIndexOfId(i);
+    let movie = blocksPagination[arrow.block][arrow.index];
     let likes = JSON.parse(movie.likes);
     // console.log(likes.length);
     return likes.length;
   }
 
   like(i) {
-    let { movies, filterByLike } = this.state;
-    let movie = movies[i];
+    let { blocksPagination, filterByLike } = this.state;
+    let arrow = this.getIndexOfId(i);
+    let movie = blocksPagination[arrow.block][arrow.index];
+
     let likes = JSON.parse(movie.likes);
+    console.log(likes);
 
     if (!likes.includes(this.props.currentUser.id)) {
       likes.push(this.props.currentUser.id);
@@ -130,9 +193,15 @@ class VideoStore extends React.Component {
       });
       likes = newLike;
     }
-    movies[i].likes = JSON.stringify(likes);
+
+    // console.log(blocksPagination[arrow.block][arrow.index]);
+
+    blocksPagination[arrow.block][arrow.index].likes = JSON.stringify(likes);
+
+    // console.log(movie[i].likes);
+
     this.setState({
-      movies: movies
+      blocksPagination: blocksPagination
     });
     this.saveMovie(i);
 
@@ -142,10 +211,9 @@ class VideoStore extends React.Component {
   }
 
   deleteMovie(movie) {
-    const { urlPost, movies } = this.state;
-    let dataMovies = movies[movie];
+    const { urlPost } = this.state;
     var self = this;
-    let host = this.props.host + urlPost + "/" + dataMovies.id;
+    let host = this.props.host + urlPost + "/" + movie;
     this.setState({
       showOverlay: true,
       overlayMsg: "Wait deleting movie..."
@@ -177,9 +245,11 @@ class VideoStore extends React.Component {
   }
 
   saveMovie(movie) {
-    const { urlPost, movies } = this.state;
+    const { urlPost, blocksPagination } = this.state;
+    // this.switchDescription(movie);
+    let arrow = this.getIndexOfId(movie);
 
-    let dataMovies = movies[movie];
+    let dataMovies = blocksPagination[arrow.block][arrow.index];
     // console.clear();
     // console.table(dataMovies);
 
@@ -225,38 +295,89 @@ class VideoStore extends React.Component {
 
   handleMovieInput(e) {
     const { value, name, type, checked } = e.target;
-    // console.log(type);
     const data = name.split("|");
-    let movies = this.state.movies;
+    let blocksPagination = this.state.blocksPagination;
+
+    let arrow = this.getIndexOfId(data);
+    // console.log(data);
+    // console.log(blocksPagination[arrow.block][arrow.index]);
+
     switch (type) {
       case "checkbox":
-        let newVal = value.toString();
-        // console.log(value, name, type, checked);
-
-        movies[data[0]][data[1]] = checked.toString();
-
+        let status = "false";
+        if (checked) status = "true";
+        blocksPagination[arrow.block][arrow.index][data[1]] = status;
         break;
 
       default:
         if (data[1] === "title") {
-          movies[data[0]][data[1]].rendered = value;
+          blocksPagination[arrow.block][arrow.index].title.rendered = value;
         } else {
-          movies[data[0]][data[1]] = value;
+          blocksPagination[arrow.block][arrow.index][data[1]] = value;
         }
     }
 
+    // console.log(blocksPagination[arrow.block][arrow.index]);
+
     this.setState({
-      movies: movies
+      blocksPagination: blocksPagination
     });
+  }
+
+  getIndexOfId(id) {
+    // console.log("in getIndex", id);
+
+    let { blocksPagination } = this.state;
+    let arrow = {
+      block: 0,
+      index: 0
+    };
+    var result = 0;
+
+    for (let block = 0; block < blocksPagination.length; block++) {
+      // console.log("In Block ", block);
+
+      for (var index = 0; index < blocksPagination[block].length; index++) {
+        // console.log(
+        //   "In Block ",
+        //   block,
+        //   "Index ",
+        //   index,
+        //   blocksPagination[block][index].id
+        // );
+        let idr = parseInt(id, 10);
+        let idf = parseInt(blocksPagination[block][index].id, 10);
+
+        if (idr === idf) {
+          // console.log(index, blocksPagination[block][index].id);
+          arrow = {
+            block: block,
+            index: index
+          };
+        }
+      }
+    }
+    // console.log(
+    //   "movie to work ",
+    //   blocksPagination[arrow.block][arrow.index].title.rendered
+    // );
+
+    // console.log(id, arrow);
+
+    return arrow;
   }
 
   switchDescription(i) {
     let status = "false";
-    let movies = this.state.movies;
-    if (movies[i].show === "false") status = "true";
-    movies[i].show = status;
+    let blocksPagination = this.state.blocksPagination;
+
+    let arrow = this.getIndexOfId(i);
+
+    if (blocksPagination[arrow.block][arrow.index].show === "false")
+      status = "true";
+    blocksPagination[arrow.block][arrow.index].show = status;
     this.setState({
-      movies: movies
+      blocksPagination: blocksPagination
     });
   }
 
@@ -327,7 +448,6 @@ class VideoStore extends React.Component {
       stock,
       rentalPrice,
       salePrice,
-      availability,
       urlPost
     } = this.state;
     var self = this;
@@ -352,8 +472,6 @@ class VideoStore extends React.Component {
     axios
       .post(host, realData, { headers: myHeaders })
       .then(function(response) {
-        // console.log(response);
-
         self.loadVideos();
         self.showForm();
       })
@@ -383,7 +501,6 @@ class VideoStore extends React.Component {
       .then(function(response) {
         // console.log("data received", response);
         let movies = response.data;
-
         self.setState({
           movies: movies
         });
@@ -395,6 +512,7 @@ class VideoStore extends React.Component {
         });
       })
       .then(function() {
+        self.paginate();
         // self.changeCredentials();
         self.setState({
           showOverlay: false,
@@ -419,18 +537,18 @@ class VideoStore extends React.Component {
 
   render() {
     const {
+      indexPagination,
+      blocksPagination,
       searchFilter,
       filterByLike,
       showOverlay,
       overlayMsg,
-      movies,
       showForm,
       title,
       description,
       stock,
       rentalPrice,
-      salePrice,
-      availability
+      salePrice
     } = this.state;
     return (
       <div className="video-store-container">
@@ -457,43 +575,64 @@ class VideoStore extends React.Component {
             customChange={this.setSearchFilter.bind(this)}
           />
           {filterByLike ? (
-            <button onClick={() => this.filterByName()}>Filter by name</button>
+            <button onClick={() => this.filterByName()}>Normal Filter</button>
           ) : (
             <button onClick={() => this.filterByLike()}>Filter by likes</button>
           )}
         </div>
-        <div className="movie-container">
-          {this.props.isAdmin ? (
-            <div
-              className="movie-card add-movie"
-              onClick={() => this.showForm()}
-            >
-              <FiPlusCircle /> Add
-            </div>
-          ) : null}
-
-          {movies.map((movie, imovie) => {
-            if (this.props.isAdmin === true || movie.availability === "true")
-              if (this.matchTitle(movie.id))
-                return (
-                  <Movie
-                    key={imovie}
-                    movie={movie}
-                    imovie={imovie}
-                    switchDescription={this.switchDescription.bind(this)}
-                    getLikes={this.getLikes.bind(this)}
-                    iLiked={this.iLiked.bind(this)}
-                    handleMovieInput={this.handleMovieInput.bind(this)}
-                    isAdmin={this.props.isAdmin}
-                    adminId={this.props.currentUser.id}
-                    saveMovie={this.saveMovie.bind(this)}
-                    deleteMovie={this.deleteMovie.bind(this)}
-                    like={this.like.bind(this)}
-                  />
-                );
-              else return null;
+        <div className="paginator-container">
+          {blocksPagination.map((block, iblock) => {
+            let selected = "";
+            if (iblock === indexPagination) selected = "selected";
+            return (
+              <div
+                className={selected + " pag"}
+                key={iblock}
+                onClick={() => this.setIndexPagination(iblock)}
+              >
+                {iblock + 1}
+              </div>
+            );
           })}
         </div>
+        {blocksPagination.map((block, iblock) => {
+          // console.log(block);
+          if (iblock === indexPagination)
+            return (
+              <div className="block" key={iblock}>
+                <div className="movie-container">
+                  {this.props.isAdmin ? (
+                    <div
+                      className="movie-card add-movie"
+                      onClick={() => this.showForm()}
+                    >
+                      <FiPlusCircle /> Add
+                    </div>
+                  ) : null}
+                  {block.map((movie, imovie) => {
+                    if (this.props.isAdmin || movie.availability === "true")
+                      return (
+                        <Movie
+                          key={imovie}
+                          movie={movie}
+                          imovie={imovie}
+                          switchDescription={this.switchDescription.bind(this)}
+                          getLikes={this.getLikes.bind(this)}
+                          iLiked={this.iLiked.bind(this)}
+                          handleMovieInput={this.handleMovieInput.bind(this)}
+                          isAdmin={this.props.isAdmin}
+                          adminId={this.props.currentUser.id}
+                          saveMovie={this.saveMovie.bind(this)}
+                          deleteMovie={this.deleteMovie.bind(this)}
+                          like={this.like.bind(this)}
+                        />
+                      );
+                  })}
+                </div>
+              </div>
+            );
+          else return null;
+        })}
       </div>
     );
   }

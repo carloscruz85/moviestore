@@ -230,3 +230,20 @@ $breakaux: ("tablet", "pc", "lg") !default;
   border: none;
   margin-bottom: 2rem;
 }
+
+.paginator-container {
+  display: grid;
+  grid-column-gap: 4%;
+  grid-template-columns: 14% 14% 14% 14% 14% 14%;
+  .pag {
+    padding: 1rem;
+    background-color: $light-dark;
+    margin-bottom: 0.5rem;
+    border-radius: 0.6rem;
+    text-align: center;
+  }
+  .selected {
+    background-color: $yellow;
+    color: $dark;
+  }
+}
