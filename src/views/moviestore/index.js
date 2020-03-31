@@ -302,6 +302,14 @@ class VideoStore extends React.Component {
 
     let realData = { ...prev, log_changes: JSON.stringify(lastLogChanges) };
 
+    //UPDATE STATE
+    blocksPagination[arrow.block][arrow.index].log_changes = JSON.stringify(
+      lastLogChanges
+    );
+    this.setState({
+      blocksPagination: blocksPagination
+    });
+
     axios
       .post(host, realData, { headers: myHeaders })
       .then(function(response) {
