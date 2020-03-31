@@ -279,18 +279,17 @@ class VideoStore extends React.Component {
     });
     let user = cookie.load("user");
     const myHeaders = { Authorization: "Bearer " + user.token };
-    let prev,
-      toUpdate = {
-        title: dataMovies.title.rendered,
-        description: dataMovies.description,
-        stock: dataMovies.stock,
-        rental_price: dataMovies.rental_price,
-        sale_price: dataMovies.sale_price,
-        availability: dataMovies.availability,
-        likes: dataMovies.likes,
-        imageurl: dataMovies.imageurl
-      };
-
+    let prev = {
+      title: dataMovies.title.rendered,
+      description: dataMovies.description,
+      stock: dataMovies.stock,
+      rental_price: dataMovies.rental_price,
+      sale_price: dataMovies.sale_price,
+      availability: dataMovies.availability,
+      likes: dataMovies.likes,
+      imageurl: dataMovies.imageurl
+    };
+    let toUpdate = prev;
     //PREPARING LOG
     delete toUpdate.likes;
 
@@ -306,6 +305,7 @@ class VideoStore extends React.Component {
     lastLogChanges.push(toUpdate);
 
     let realData = { ...prev, log_changes: JSON.stringify(lastLogChanges) };
+    console.log(realData);
 
     //UPDATE STATE
     blocksPagination[arrow.block][arrow.index].log_changes = JSON.stringify(
