@@ -600,7 +600,8 @@ class VideoStore extends React.Component {
       likes: "[]",
       imageurl: imageUrl,
       log_changes: "[]",
-      log_users: "[]"
+      log_users: "[]",
+      log_users_aux: "[]"
     };
     // console.log(realData);
 
