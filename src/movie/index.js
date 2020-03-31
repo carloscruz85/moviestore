@@ -14,7 +14,7 @@ class Movie extends React.Component {
         <div
           className="movie-card"
           style={{ backgroundImage: `url(${movie.fimg_url})` }}
-          onClick={() => this.props.switchDescription(imovie)}
+          onClick={() => this.props.switchDescription(movie.id)}
         >
           {movie.title.rendered}
         </div>
@@ -24,58 +24,59 @@ class Movie extends React.Component {
               <div className="form-container">
                 {this.props.isAdmin ? (
                   <div>
+                    {movie.id}
                     <Input
                       label="Title"
                       type="text"
-                      name={imovie + "|title"}
+                      name={movie.id + "|title"}
                       value={movie.title.rendered}
                       customChange={this.props.handleMovieInput.bind(this)}
                     />
                     <Input
                       label="Description"
                       type="text"
-                      name={imovie + "|description"}
+                      name={movie.id + "|description"}
                       value={movie.description}
                       customChange={this.props.handleMovieInput.bind(this)}
                     />
                     <Input
                       label="Stock"
                       type="number"
-                      name={imovie + "|stock"}
+                      name={movie.id + "|stock"}
                       value={movie.stock}
                       customChange={this.props.handleMovieInput.bind(this)}
                     />
                     <Input
                       label="Rental Price"
                       type="number"
-                      name={imovie + "|rental_price"}
+                      name={movie.id + "|rental_price"}
                       value={movie.rental_price}
                       customChange={this.props.handleMovieInput.bind(this)}
                     />
                     <Input
                       label="Sale Price"
                       type="number"
-                      name={imovie + "|sale_price"}
+                      name={movie.id + "|sale_price"}
                       value={movie.sale_price}
                       customChange={this.props.handleMovieInput.bind(this)}
                     />
                     <CheckBox
                       label="Availability"
                       type="text"
-                      name={imovie + "|availability"}
+                      name={movie.id + "|availability"}
                       value={movie.availability}
                       customChange={this.props.handleMovieInput.bind(this)}
                     />
 
                     <button
                       className="green-button"
-                      onClick={() => this.props.saveMovie(imovie)}
+                      onClick={() => this.props.saveMovie(movie.id)}
                     >
                       Save Movie
                     </button>
                     <button
                       className="red-button"
-                      onClick={() => this.props.deleteMovie(imovie)}
+                      onClick={() => this.props.deleteMovie(movie.id)}
                     >
                       Delete Movie
                     </button>
@@ -89,12 +90,12 @@ class Movie extends React.Component {
                         {this.props.iLiked(imovie) ? (
                           <IoIosHeartDislike
                             className="color-red"
-                            onClick={() => this.props.like(imovie)}
+                            onClick={() => this.props.like(movie.id)}
                           />
                         ) : (
                           <IoIosHeart
                             className="color-red"
-                            onClick={() => this.props.like(imovie)}
+                            onClick={() => this.props.like(movie.id)}
                           />
                         )}
                       </div>
@@ -112,7 +113,7 @@ class Movie extends React.Component {
 
                 <button
                   className="yellow-button"
-                  onClick={() => this.props.switchDescription(imovie)}
+                  onClick={() => this.props.switchDescription(movie.id)}
                 >
                   Close
                 </button>

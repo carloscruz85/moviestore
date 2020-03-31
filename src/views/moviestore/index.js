@@ -50,6 +50,7 @@ class VideoStore extends React.Component {
     this.matchTitle = this.matchTitle.bind(this);
     this.paginate = this.paginate.bind(this);
     this.setIndexPagination = this.setIndexPagination.bind(this);
+    this.getIndexOfId = this.getIndexOfId.bind(this);
   }
 
   setIndexPagination(i) {
@@ -99,6 +100,7 @@ class VideoStore extends React.Component {
     this.setState({
       blocksPagination: chunked_arr
     });
+    // this.forceUpdate();
   }
 
   matchTitle(id) {
@@ -173,10 +175,9 @@ class VideoStore extends React.Component {
   }
 
   deleteMovie(movie) {
-    const { urlPost, movies } = this.state;
-    let dataMovies = movies[movie];
+    const { urlPost } = this.state;
     var self = this;
-    let host = this.props.host + urlPost + "/" + dataMovies.id;
+    let host = this.props.host + urlPost + "/" + movie;
     this.setState({
       showOverlay: true,
       overlayMsg: "Wait deleting movie..."
@@ -208,9 +209,11 @@ class VideoStore extends React.Component {
   }
 
   saveMovie(movie) {
-    const { urlPost, movies } = this.state;
+    const { urlPost, blocksPagination } = this.state;
 
-    let dataMovies = movies[movie];
+    let arrow = this.getIndexOfId(movie);
+
+    let dataMovies = blocksPagination[arrow.block][arrow.index];
     // console.clear();
     // console.table(dataMovies);
 
@@ -256,37 +259,89 @@ class VideoStore extends React.Component {
 
   handleMovieInput(e) {
     const { value, name, type, checked } = e.target;
-    // console.log(type);
     const data = name.split("|");
-    let movies = this.state.movies;
+    let blocksPagination = this.state.blocksPagination;
+
+    let arrow = this.getIndexOfId(data);
+    // console.log(data);
+    // console.log(blocksPagination[arrow.block][arrow.index]);
+
     switch (type) {
       case "checkbox":
-        // console.log(value, name, type, checked);
-
-        movies[data[0]][data[1]] = checked.toString();
-
+        let status = "false";
+        if (checked) status = "true";
+        blocksPagination[arrow.block][arrow.index][data[1]] = status;
         break;
 
       default:
         if (data[1] === "title") {
-          movies[data[0]][data[1]].rendered = value;
+          blocksPagination[arrow.block][arrow.index].title.rendered = value;
         } else {
-          movies[data[0]][data[1]] = value;
+          blocksPagination[arrow.block][arrow.index][data[1]] = value;
         }
     }
 
+    // console.log(blocksPagination[arrow.block][arrow.index]);
+
     this.setState({
-      movies: movies
+      blocksPagination: blocksPagination
     });
+  }
+
+  getIndexOfId(id) {
+    // console.log("in getIndex", id);
+
+    let { blocksPagination } = this.state;
+    let arrow = {
+      block: 0,
+      index: 0
+    };
+    var result = 0;
+
+    for (let block = 0; block < blocksPagination.length; block++) {
+      // console.log("In Block ", block);
+
+      for (var index = 0; index < blocksPagination[block].length; index++) {
+        // console.log(
+        //   "In Block ",
+        //   block,
+        //   "Index ",
+        //   index,
+        //   blocksPagination[block][index].id
+        // );
+        let idr = parseInt(id, 10);
+        let idf = parseInt(blocksPagination[block][index].id, 10);
+
+        if (idr === idf) {
+          // console.log(index, blocksPagination[block][index].id);
+          arrow = {
+            block: block,
+            index: index
+          };
+        }
+      }
+    }
+    // console.log(
+    //   "movie to work ",
+    //   blocksPagination[arrow.block][arrow.index].title.rendered
+    // );
+
+    // console.log(id, arrow);
+
+    return arrow;
   }
 
   switchDescription(i) {
     let status = "false";
-    let movies = this.state.movies;
-    if (movies[i].show === "false") status = "true";
-    movies[i].show = status;
+    let blocksPagination = this.state.blocksPagination;
+
+    let arrow = this.getIndexOfId(i);
+
+    if (blocksPagination[arrow.block][arrow.index].show === "false")
+      status = "true";
+    blocksPagination[arrow.block][arrow.index].show = status;
     this.setState({
-      movies: movies
+      blocksPagination: blocksPagination
     });
   }
 
@@ -381,8 +436,6 @@ class VideoStore extends React.Component {
     axios
       .post(host, realData, { headers: myHeaders })
       .then(function(response) {
-        // console.log(response);
-
         self.loadVideos();
         self.showForm();
       })
@@ -521,22 +574,23 @@ class VideoStore extends React.Component {
                     </div>
                   ) : null}
                   {block.map((movie, imovie) => {
-                    return (
-                      <Movie
-                        key={imovie}
-                        movie={movie}
-                        imovie={imovie}
-                        switchDescription={this.switchDescription.bind(this)}
-                        getLikes={this.getLikes.bind(this)}
-                        iLiked={this.iLiked.bind(this)}
-                        handleMovieInput={this.handleMovieInput.bind(this)}
-                        isAdmin={this.props.isAdmin}
-                        adminId={this.props.currentUser.id}
-                        saveMovie={this.saveMovie.bind(this)}
-                        deleteMovie={this.deleteMovie.bind(this)}
-                        like={this.like.bind(this)}
-                      />
-                    );
+                    if (this.props.isAdmin || movie.availability === "true")
+                      return (
+                        <Movie
+                          key={imovie}
+                          movie={movie}
+                          imovie={imovie}
+                          switchDescription={this.switchDescription.bind(this)}
+                          getLikes={this.getLikes.bind(this)}
+                          iLiked={this.iLiked.bind(this)}
+                          handleMovieInput={this.handleMovieInput.bind(this)}
+                          isAdmin={this.props.isAdmin}
+                          adminId={this.props.currentUser.id}
+                          saveMovie={this.saveMovie.bind(this)}
+                          deleteMovie={this.deleteMovie.bind(this)}
+                          like={this.like.bind(this)}
+                        />
+                      );
                   })}
                 </div>
               </div>
