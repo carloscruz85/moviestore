@@ -99,31 +99,38 @@ class Movie extends React.Component {
                       {log_users.map((rent, irent) => {
                         // const today =
                         var d = new Date();
-                        return (
-                          <div className="rent" key={irent}>
-                            <div className="izq">
-                              <p>{rent.userName}</p>
-                              <p>
-                                {GetTotalDays(
-                                  rent.date,
-                                  d.getTime(),
-                                  this.props.rentConf
-                                )}
-                              </p>
-                            </div>
-                            <div className="der">
-                              {" "}
-                              <div
-                                className="inner-button"
-                                onClick={() => {
-                                  this.props.devolution(movie.id);
-                                }}
-                              >
-                                devolution
+                        if (rent.type === "out") {
+                          return (
+                            <div className="rent" key={irent}>
+                              <div className="izq">
+                                <p>{rent.userName}</p>
+                                <p>
+                                  {GetTotalDays(
+                                    rent.date,
+                                    d.getTime(),
+                                    this.props.rentConf
+                                  )}
+                                </p>
+                              </div>
+                              <div className="der">
+                                {" "}
+                                <div
+                                  className="inner-button"
+                                  onClick={() => {
+                                    this.props.devolution(
+                                      movie.id,
+                                      rent.userId
+                                    );
+                                  }}
+                                >
+                                  devolution
+                                </div>
                               </div>
                             </div>
-                          </div>
-                        );
+                          );
+                        } else {
+                          return null;
+                        }
                       })}
                     </div>
 
@@ -172,13 +179,15 @@ class Movie extends React.Component {
                     </p>
                     <p className="card-list">
                       Rental Price: ${movie.rental_price}{" "}
-                      <button
-                        onClick={() => {
-                          this.props.rent(movie.id);
-                        }}
-                      >
-                        Rent {movie.stock} in stock
-                      </button>
+                      {this.props.isLogin ? (
+                        <button
+                          onClick={() => {
+                            this.props.rent(movie.id);
+                          }}
+                        >
+                          Rent {movie.stock} in stock
+                        </button>
+                      ) : null}
                     </p>
                     <p className="card-list">Sale Price: ${movie.sale_price}</p>
                   </div>

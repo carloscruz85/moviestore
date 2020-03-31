@@ -64,6 +64,78 @@ class VideoStore extends React.Component {
     this.repaginate = this.repaginate.bind(this);
     this.switchSearcher = this.switchSearcher.bind(this);
     this.rent = this.rent.bind(this);
+    this.devolution = this.devolution.bind(this);
+  }
+
+  devolution(movieId, userId) {
+    const { urlPost, blocksPagination } = this.state;
+    let arrow = this.getIndexOfId(movieId);
+    let dataMovies = blocksPagination[arrow.block][arrow.index];
+
+    var self = this;
+    let host = this.props.host + urlPost + "/" + dataMovies.id;
+    this.setState({
+      showOverlay: true,
+      overlayMsg: "Wait making devolution..."
+    });
+    let user = cookie.load("user");
+    const myHeaders = { Authorization: "Bearer " + user.token };
+
+    let currentUserLog = JSON.parse(dataMovies.log_users);
+    // console.log(currentUserLog);
+
+    let newUserLog = currentUserLog.filter(i => {
+      // console.log(this.props.currentUser.id, i.userId);
+      return i.userId !== userId;
+    });
+
+    // console.log(newUserLog);
+
+    // var d = new Date();
+    // let thisInteraction = {
+    //   userId: this.props.currentUser.id,
+    //   userName: this.props.currentUser.user_nicename,
+    //   movieId: movieId,
+    //   type: "in",
+    //   date: d.getTime()
+    // };
+
+    // currentUserLog.push(thisInteraction);
+    // console.log(currentUserLog);
+
+    let log_users = JSON.stringify(newUserLog);
+
+    //UPDATING STOCK
+    let currentStock = parseInt(dataMovies.stock) + 1;
+
+    let realData = {
+      log_users: log_users,
+      stock: currentStock
+    };
+
+    //UPDATE STATE
+    blocksPagination[arrow.block][arrow.index].log_users = log_users;
+    blocksPagination[arrow.block][arrow.index].stock = currentStock;
+    this.setState({
+      blocksPagination: blocksPagination
+    });
+
+    axios
+      .post(host, realData, { headers: myHeaders })
+      .then(function(response) {})
+      .catch(function(error) {
+        self.setState({
+          showOverlay: false,
+          userMsg: "Error " + error + "Please contact to carloscruz85@gmail.com"
+        });
+      })
+      .then(function() {
+        self.repaginate();
+        self.setState({
+          showOverlay: false,
+          overlayMsg: ""
+        });
+      });
   }
 
   rent(movieId) {
@@ -728,6 +800,7 @@ class VideoStore extends React.Component {
                             like={this.like.bind(this)}
                             rent={this.rent.bind(this)}
                             rentConf={rentConf}
+                            devolution={this.devolution.bind(this)}
                           />
                         );
                       } else return null;
