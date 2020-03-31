@@ -25,6 +25,7 @@ class Movie extends React.Component {
     const { movie } = this.props;
 
     let log_changes = JSON.parse(movie.log_changes);
+    let log_users = JSON.parse(movie.log_users);
     // console.log(StringToJson());
 
     return (
@@ -91,6 +92,18 @@ class Movie extends React.Component {
                         customChange={this.props.handleMovieInput.bind(this)}
                       />
                     </div>
+
+                    <div className="active-rents">
+                      <h3>Active rents</h3>
+                      {log_users.map((rent, irent) => {
+                        return (
+                          <div className="rent" key={irent}>
+                            <button>{rent.userName} devolution</button>
+                          </div>
+                        );
+                      })}
+                    </div>
+
                     {this.state.showLogs ? (
                       <div className="logs">
                         <h3 className="color-red">Movie logs</h3>

@@ -80,6 +80,7 @@ class VideoStore extends React.Component {
 
     let thisInteraction = {
       userId: this.props.currentUser.id,
+      userName: this.props.currentUser.user_nicename,
       movieId: movieId,
       type: "out",
       date: new Date()
