@@ -1,0 +1,29 @@
+@import "../../globals.scss";
+
+.video-store-container {
+  .movie-container {
+    padding-top: 2rem;
+    display: grid;
+    @include multi(grid-column-gap, 5%, 4%, 4%, 4%);
+    @include multi(
+      grid-template-columns,
+      29% 29% 29%,
+      25% 25% 25% 25%,
+      25% 25% 25% 25%,
+      25% 25% 25% 25%
+    );
+  }
+
+  .header-control {
+    margin: 1rem 0;
+    background-color: $soft-dark;
+    padding: 1rem;
+    border-radius: 0.4rem;
+    display: flex;
+    flex-flow: column nowrap;
+    align-items: center;
+    * {
+      margin: 0.4rem;
+    }
+  }
+}

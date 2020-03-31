@@ -1,7 +1,7 @@
 import React from "react";
 import "./index.scss";
 import cookie from "react-cookies";
-import { FiLogIn, FiLogOut, FiSettings, FiUser } from "react-icons/fi";
+import { FiLogIn, FiLogOut, FiSettings, FiUser, FiFilm } from "react-icons/fi";
 import { connect } from "react-redux";
 import { sendLoginData } from "../../store/actionCreators";
 import PropTypes from "prop-types";
@@ -13,6 +13,11 @@ class Header extends React.Component {
     this.goToLogOut = this.goToLogOut.bind(this);
     this.goToLogDashboard = this.goToLogDashboard.bind(this);
     this.goToLogUserAdmin = this.goToLogUserAdmin.bind(this);
+    this.goToMovieStore = this.goToMovieStore.bind(this);
+  }
+
+  goToMovieStore() {
+    this.props.history.push("/moviestore");
   }
 
   goToLogUserAdmin() {
@@ -38,9 +43,11 @@ class Header extends React.Component {
       this.props.sendLoginDataInner({
         isAdmin: false,
         isLogin: false,
-        currentUser: user
+        currentUser: {
+          id: -1
+        }
       });
-      this.goToLogDashboard();
+      this.goToMovieStore();
     } else {
       if (user.user_role[0] === "administrator") {
         this.props.sendLoginDataInner({
@@ -81,6 +88,10 @@ class Header extends React.Component {
           />
         ) : (
           <section>
+            <FiFilm
+              className="icon-button"
+              onClick={this.goToMovieStore.bind(this)}
+            />
             <FiSettings
               className="icon-button"
               onClick={this.goToLogDashboard.bind(this)}

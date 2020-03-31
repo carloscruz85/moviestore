@@ -8,6 +8,7 @@ import Login from "./views/login";
 import LogOut from "./views/logout";
 import Dashboard from "./views/dashboard";
 import UserAdmin from "./views/useradmin";
+import MovieStore from "./views/moviestore";
 
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
@@ -21,6 +22,7 @@ export default class MyIndex extends Component {
           <Route exact path="/logout" component={LogOut} />
           <Route exact path="/useradmin" component={UserAdmin} />
           <Route exact path="/dashboard" component={Dashboard} />
+          <Route exact path="/moviestore" component={MovieStore} />
         </Router>
       </Provider>
     );

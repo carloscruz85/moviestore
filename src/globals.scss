@@ -4,17 +4,8 @@ $light-dark: rgba(44, 49, 72, 100);
 $blue: rgba(67, 86, 255, 100);
 $pink: rgba(253, 110, 138, 100);
 $green: rgba(89, 204, 128, 100);
-
-.card-list {
-  background-color: $soft-dark;
-  margin: 1.5rem 0;
-  border-radius: 0.6rem;
-  padding: 1.5rem;
-  display: flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: space-between;
-}
+$yellow: rgba(224, 131, 35, 100);
+$red: rgba(252, 119, 111, 100);
 
 .color-blue {
   color: $blue;
@@ -26,6 +17,14 @@ $green: rgba(89, 204, 128, 100);
 
 .color-pink {
   color: $pink;
+}
+
+.color-yellow {
+  color: $yellow;
+}
+
+.color-red {
+  color: $red;
 }
 
 .full {
@@ -70,7 +69,9 @@ body {
   background-color: $dark;
   color: white;
   font-size: 18px;
-  padding: 1rem;
+  padding: 5%;
+  margin: 0;
+  // width: 100vw;
 }
 
 @mixin button() {
@@ -79,6 +80,14 @@ body {
   padding: 0.5rem;
   color: white;
   border-radius: 0.5rem;
+}
+
+.green-button {
+  background-color: $green !important;
+}
+
+.yellow-button {
+  background-color: $yellow !important;
 }
 
 @mixin center-center() {
@@ -92,6 +101,14 @@ body {
 @mixin full-full {
   width: 100vw;
   height: 100vh;
+}
+
+@mixin backimage {
+  width: 100%;
+  height: 50vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
 }
 
 $breakpoints: (
@@ -141,18 +158,19 @@ $breakaux: ("tablet", "pc", "lg") !default;
 }
 
 .form-container {
-  margin: 0.5rem 0;
+  margin: 2rem 0;
   @include multi(width, 100%, 80%, 60%, 50%);
+
   input,
   button {
     background-color: $light-dark;
     border-radius: 0.4rem;
     text-align: center;
-    padding: 0.5rem 0;
+    padding: 5% 0;
     border: none;
     color: white;
     width: 100%;
-    margin-top: 0.5rem;
+    margin-bottom: 5%;
     font-size: 1rem;
     letter-spacing: 0.2rem;
   }
@@ -166,5 +184,66 @@ $breakaux: ("tablet", "pc", "lg") !default;
     display: block;
     font-size: 1rem;
     font-weight: bold;
+  }
+}
+
+.movie-card {
+  background-color: $light-dark;
+  color: white;
+  @include backimage();
+  @include multi(height, 20vh, 20vh, 20vh, 20vh);
+  margin: 5px;
+  @include center-center();
+  // font-size: 2rem;
+}
+.movie-description {
+  padding: 1rem;
+  background-color: $dark;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  @include center-center();
+}
+
+.card-list,
+.item-list,
+.item-list-green {
+  margin: 0.5rem 0;
+  border: $blue solid 1px;
+  border-radius: 0.6rem;
+  padding: 1rem;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: space-between;
+  .square-icon {
+    margin-right: 0.75rem !important;
+  }
+}
+.item-list-green {
+  border: $green solid 1px;
+}
+.card-list {
+  background-color: $soft-dark;
+  border: none;
+  margin-bottom: 2rem;
+}
+
+.paginator-container {
+  display: grid;
+  grid-column-gap: 4%;
+  grid-template-columns: 14% 14% 14% 14% 14% 14%;
+  .pag {
+    padding: 1rem;
+    background-color: $light-dark;
+    margin-bottom: 0.5rem;
+    border-radius: 0.6rem;
+    text-align: center;
+  }
+  .selected {
+    background-color: $yellow;
+    color: $dark;
   }
 }
