@@ -6,7 +6,7 @@ import axios from "axios";
 import { FiPlusCircle } from "react-icons/fi";
 import cookie from "react-cookies";
 import Overlay from "../../components/overlayer";
-import Movie from "../../movie";
+import Movie from "../../components/movie";
 import FormMovie from "../../components/formMovie";
 import Input from "../../components/inputs/input";
 import { IoIosHeart } from "react-icons/io";
@@ -16,6 +16,10 @@ class VideoStore extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      rentConf: {
+        penalty: 5,
+        days: 7
+      },
       showSearcher: false,
       indexPagination: 0,
       paginationSize: 6,
@@ -34,7 +38,9 @@ class VideoStore extends React.Component {
       stock: 0,
       rentalPrice: 0,
       salePrice: 0,
-      imageUrl: ""
+      imageUrl: "",
+      log_changes: "",
+      log_users: ""
     };
 
     this.loadVideos = this.loadVideos.bind(this);
@@ -57,6 +63,221 @@ class VideoStore extends React.Component {
     this.getIndexOfId = this.getIndexOfId.bind(this);
     this.repaginate = this.repaginate.bind(this);
     this.switchSearcher = this.switchSearcher.bind(this);
+    this.rent = this.rent.bind(this);
+    this.devolution = this.devolution.bind(this);
+    this.buy = this.buy.bind(this);
+  }
+
+  buy(movieId) {
+    const { urlPost, blocksPagination } = this.state;
+    let arrow = this.getIndexOfId(movieId);
+    let dataMovies = blocksPagination[arrow.block][arrow.index];
+
+    var self = this;
+    let host = this.props.host + urlPost + "/" + dataMovies.id;
+    this.setState({
+      showOverlay: true,
+      overlayMsg: "Wait buying the movie..."
+    });
+    let user = cookie.load("user");
+    const myHeaders = { Authorization: "Bearer " + user.token };
+
+    //AUX LOGS
+    let log_users_aux_prev = JSON.parse(dataMovies.log_users_aux);
+
+    var d = new Date();
+    let thisInteraction = {
+      userId: this.props.currentUser.id,
+      userName: this.props.currentUser.user_nicename,
+      movieId: movieId,
+      type: "buy",
+      date: d.getTime()
+    };
+
+    log_users_aux_prev.push(thisInteraction);
+    // console.log(currentUserLog);
+
+    let log_users_aux = JSON.stringify(log_users_aux_prev);
+
+    //UPDATING STOCK
+    let currentStock = dataMovies.stock - 1;
+
+    let realData = {
+      stock: currentStock,
+      log_users_aux: log_users_aux
+    };
+
+    //UPDATE STATE
+    blocksPagination[arrow.block][arrow.index].log_users_aux = log_users_aux;
+    blocksPagination[arrow.block][arrow.index].stock = currentStock;
+    // blocksPagination[arrow.block][arrow.index].show = false;
+    this.setState({
+      blocksPagination: blocksPagination
+    });
+
+    axios
+      .post(host, realData, { headers: myHeaders })
+      .then(function(response) {})
+      .catch(function(error) {
+        self.setState({
+          showOverlay: false,
+          userMsg: "Error " + error + "Please contact to carloscruz85@gmail.com"
+        });
+      })
+      .then(function() {
+        self.repaginate();
+        self.setState({
+          showOverlay: false,
+          overlayMsg: ""
+        });
+      });
+  }
+
+  devolution(movieId, userId, userName) {
+    const { urlPost, blocksPagination } = this.state;
+    let arrow = this.getIndexOfId(movieId);
+    let dataMovies = blocksPagination[arrow.block][arrow.index];
+
+    var self = this;
+    let host = this.props.host + urlPost + "/" + dataMovies.id;
+    this.setState({
+      showOverlay: true,
+      overlayMsg: "Wait making devolution..."
+    });
+    let user = cookie.load("user");
+    const myHeaders = { Authorization: "Bearer " + user.token };
+    let current_log_users_aux = JSON.parse(dataMovies.log_users_aux);
+
+    let currentUserLog = JSON.parse(dataMovies.log_users);
+    // console.log(currentUserLog);
+
+    let newUserLog = currentUserLog.filter(i => {
+      // console.log(this.props.currentUser.id, i.userId);
+      return i.userId !== userId;
+    });
+
+    // console.log(newUserLog);
+
+    var d = new Date();
+    let thisInteraction = {
+      userId: userId,
+      userName: userName,
+      movieId: movieId,
+      type: "devolution",
+      date: d.getTime()
+    };
+
+    current_log_users_aux.push(thisInteraction);
+
+    // currentUserLog.push(thisInteraction);
+    // console.log(currentUserLog);
+
+    let log_users = JSON.stringify(newUserLog);
+    let log_users_aux = JSON.stringify(current_log_users_aux);
+
+    //UPDATING STOCK
+    let currentStock = parseInt(dataMovies.stock) + 1;
+
+    let realData = {
+      log_users: log_users,
+      stock: currentStock,
+      log_users_aux: log_users_aux
+    };
+
+    //UPDATE STATE
+    blocksPagination[arrow.block][arrow.index].log_users = log_users;
+    blocksPagination[arrow.block][arrow.index].log_users_aux = log_users_aux;
+    blocksPagination[arrow.block][arrow.index].stock = currentStock;
+    this.setState({
+      blocksPagination: blocksPagination
+    });
+
+    axios
+      .post(host, realData, { headers: myHeaders })
+      .then(function(response) {})
+      .catch(function(error) {
+        self.setState({
+          showOverlay: false,
+          userMsg: "Error " + error + "Please contact to carloscruz85@gmail.com"
+        });
+      })
+      .then(function() {
+        self.repaginate();
+        self.setState({
+          showOverlay: false,
+          overlayMsg: ""
+        });
+      });
+  }
+
+  rent(movieId) {
+    const { urlPost, blocksPagination } = this.state;
+    let arrow = this.getIndexOfId(movieId);
+    let dataMovies = blocksPagination[arrow.block][arrow.index];
+
+    var self = this;
+    let host = this.props.host + urlPost + "/" + dataMovies.id;
+    this.setState({
+      showOverlay: true,
+      overlayMsg: "Wait renting the movie..."
+    });
+    let user = cookie.load("user");
+    const myHeaders = { Authorization: "Bearer " + user.token };
+
+    //AUX LOGS
+    let log_users_aux_prev = JSON.parse(dataMovies.log_users_aux);
+
+    let currentUserLog = JSON.parse(dataMovies.log_users);
+    var d = new Date();
+    let thisInteraction = {
+      userId: this.props.currentUser.id,
+      userName: this.props.currentUser.user_nicename,
+      movieId: movieId,
+      type: "rent",
+      date: d.getTime()
+    };
+
+    currentUserLog.push(thisInteraction);
+    log_users_aux_prev.push(thisInteraction);
+    // console.log(currentUserLog);
+
+    let log_users = JSON.stringify(currentUserLog);
+    let log_users_aux = JSON.stringify(log_users_aux_prev);
+
+    //UPDATING STOCK
+    let currentStock = dataMovies.stock - 1;
+
+    let realData = {
+      log_users: log_users,
+      stock: currentStock,
+      log_users_aux: log_users_aux
+    };
+
+    //UPDATE STATE
+    blocksPagination[arrow.block][arrow.index].log_users = log_users;
+    blocksPagination[arrow.block][arrow.index].log_users_aux = log_users_aux;
+    blocksPagination[arrow.block][arrow.index].stock = currentStock;
+    // blocksPagination[arrow.block][arrow.index].show = false;
+    this.setState({
+      blocksPagination: blocksPagination
+    });
+
+    axios
+      .post(host, realData, { headers: myHeaders })
+      .then(function(response) {})
+      .catch(function(error) {
+        self.setState({
+          showOverlay: false,
+          userMsg: "Error " + error + "Please contact to carloscruz85@gmail.com"
+        });
+      })
+      .then(function() {
+        self.repaginate();
+        self.setState({
+          showOverlay: false,
+          overlayMsg: ""
+        });
+      });
   }
 
   switchSearcher() {
@@ -82,6 +303,8 @@ class VideoStore extends React.Component {
     //FILTER AVAIBLES
     if (!this.props.isAdmin) {
       matchs = matchs.filter(it => it.availability === "true");
+      //FILTER IF STOCK
+      matchs = matchs.filter(it => it.stock > 0);
     }
 
     //SORT
@@ -257,6 +480,8 @@ class VideoStore extends React.Component {
   }
 
   saveMovie(movie) {
+    // console.log("in saveMovie");
+
     const { urlPost, blocksPagination } = this.state;
     // this.switchDescription(movie);
     let arrow = this.getIndexOfId(movie);
@@ -273,7 +498,7 @@ class VideoStore extends React.Component {
     });
     let user = cookie.load("user");
     const myHeaders = { Authorization: "Bearer " + user.token };
-    let realData = {
+    let prev = {
       title: dataMovies.title.rendered,
       description: dataMovies.description,
       stock: dataMovies.stock,
@@ -283,6 +508,31 @@ class VideoStore extends React.Component {
       likes: dataMovies.likes,
       imageurl: dataMovies.imageurl
     };
+    let toUpdate = prev;
+    //PREPARING LOG
+    delete toUpdate.likes;
+
+    toUpdate = {
+      ...toUpdate,
+      date: new Date()
+        .toJSON()
+        .slice(0, 10)
+        .replace(/-/g, "/")
+    };
+
+    let lastLogChanges = JSON.parse(dataMovies.log_changes);
+    lastLogChanges.push(toUpdate);
+
+    let realData = { ...prev, log_changes: JSON.stringify(lastLogChanges) };
+    console.log(realData);
+
+    //UPDATE STATE
+    blocksPagination[arrow.block][arrow.index].log_changes = JSON.stringify(
+      lastLogChanges
+    );
+    this.setState({
+      blocksPagination: blocksPagination
+    });
 
     axios
       .post(host, realData, { headers: myHeaders })
@@ -427,7 +677,10 @@ class VideoStore extends React.Component {
       status: "publish",
       show: "false",
       likes: "[]",
-      imageurl: imageUrl
+      imageurl: imageUrl,
+      log_changes: "[]",
+      log_users: "[]",
+      log_users_aux: "[]"
     };
     // console.log(realData);
 
@@ -505,6 +758,7 @@ class VideoStore extends React.Component {
 
   render() {
     const {
+      rentConf,
       showSearcher,
       indexPagination,
       blocksPagination,
@@ -620,10 +874,15 @@ class VideoStore extends React.Component {
                             iLiked={this.iLiked.bind(this)}
                             handleMovieInput={this.handleMovieInput.bind(this)}
                             isAdmin={this.props.isAdmin}
+                            isLogin={this.props.isLogin}
                             adminId={this.props.currentUser.id}
                             saveMovie={this.saveMovie.bind(this)}
                             deleteMovie={this.deleteMovie.bind(this)}
                             like={this.like.bind(this)}
+                            rent={this.rent.bind(this)}
+                            rentConf={rentConf}
+                            devolution={this.devolution.bind(this)}
+                            buy={this.buy.bind(this)}
                           />
                         );
                       } else return null;

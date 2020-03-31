@@ -94,6 +94,10 @@ body {
   background-color: $red !important;
 }
 
+.blue-button {
+  background-color: $blue !important;
+}
+
 @mixin center-center() {
   display: flex;
   flex-flow: column nowrap;
@@ -171,7 +175,7 @@ $breakaux: ("tablet", "pc", "lg") !default;
     background-color: $light-dark;
     border-radius: 0.4rem;
     text-align: center;
-    padding: 5% 0;
+    padding: 2% 0;
     border: none;
     color: white;
     width: 100%;
@@ -192,6 +196,8 @@ $breakaux: ("tablet", "pc", "lg") !default;
   }
   textarea {
     // height: 40vh;
+    height: 30vh;
+    padding: 1rem;
   }
 }
 
