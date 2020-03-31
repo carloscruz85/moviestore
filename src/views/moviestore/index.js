@@ -65,6 +65,72 @@ class VideoStore extends React.Component {
     this.switchSearcher = this.switchSearcher.bind(this);
     this.rent = this.rent.bind(this);
     this.devolution = this.devolution.bind(this);
+    this.buy = this.buy.bind(this);
+  }
+
+  buy(movieId) {
+    const { urlPost, blocksPagination } = this.state;
+    let arrow = this.getIndexOfId(movieId);
+    let dataMovies = blocksPagination[arrow.block][arrow.index];
+
+    var self = this;
+    let host = this.props.host + urlPost + "/" + dataMovies.id;
+    this.setState({
+      showOverlay: true,
+      overlayMsg: "Wait buying the movie..."
+    });
+    let user = cookie.load("user");
+    const myHeaders = { Authorization: "Bearer " + user.token };
+
+    //AUX LOGS
+    let log_users_aux_prev = JSON.parse(dataMovies.log_users_aux);
+
+    var d = new Date();
+    let thisInteraction = {
+      userId: this.props.currentUser.id,
+      userName: this.props.currentUser.user_nicename,
+      movieId: movieId,
+      type: "buy",
+      date: d.getTime()
+    };
+
+    log_users_aux_prev.push(thisInteraction);
+    // console.log(currentUserLog);
+
+    let log_users_aux = JSON.stringify(log_users_aux_prev);
+
+    //UPDATING STOCK
+    let currentStock = dataMovies.stock - 1;
+
+    let realData = {
+      stock: currentStock,
+      log_users_aux: log_users_aux
+    };
+
+    //UPDATE STATE
+    blocksPagination[arrow.block][arrow.index].log_users_aux = log_users_aux;
+    blocksPagination[arrow.block][arrow.index].stock = currentStock;
+    // blocksPagination[arrow.block][arrow.index].show = false;
+    this.setState({
+      blocksPagination: blocksPagination
+    });
+
+    axios
+      .post(host, realData, { headers: myHeaders })
+      .then(function(response) {})
+      .catch(function(error) {
+        self.setState({
+          showOverlay: false,
+          userMsg: "Error " + error + "Please contact to carloscruz85@gmail.com"
+        });
+      })
+      .then(function() {
+        self.repaginate();
+        self.setState({
+          showOverlay: false,
+          overlayMsg: ""
+        });
+      });
   }
 
   devolution(movieId, userId, userName) {
@@ -816,6 +882,7 @@ class VideoStore extends React.Component {
                             rent={this.rent.bind(this)}
                             rentConf={rentConf}
                             devolution={this.devolution.bind(this)}
+                            buy={this.buy.bind(this)}
                           />
                         );
                       } else return null;
