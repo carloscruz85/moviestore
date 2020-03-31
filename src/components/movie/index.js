@@ -7,6 +7,7 @@ import CheckBox from "../../components/inputs/checkbox";
 import { FiSave, FiXCircle, FiTrash2, FiMenu } from "react-icons/fi";
 // import StringToJson from "../../logic/stringToJson";
 import { IoIosHeartDislike, IoIosHeart } from "react-icons/io";
+import GetTotalDays from "../../logic/getTotalDays";
 
 class Movie extends React.Component {
   constructor(props) {
@@ -96,9 +97,14 @@ class Movie extends React.Component {
                     <div className="active-rents">
                       <h3>Active rents</h3>
                       {log_users.map((rent, irent) => {
+                        // const today =
+                        var d = new Date();
                         return (
                           <div className="rent" key={irent}>
-                            <button>{rent.userName} devolution</button>
+                            <button>
+                              {rent.userName} devolution{" "}
+                              {GetTotalDays(rent.date, d.getTime())}{" "}
+                            </button>
                           </div>
                         );
                       })}

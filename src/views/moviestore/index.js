@@ -16,6 +16,10 @@ class VideoStore extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      rentConf: {
+        penalty: 5,
+        days: 7
+      },
       showSearcher: false,
       indexPagination: 0,
       paginationSize: 6,
@@ -602,6 +606,7 @@ class VideoStore extends React.Component {
 
   render() {
     const {
+      rentConf,
       showSearcher,
       indexPagination,
       blocksPagination,
@@ -722,6 +727,7 @@ class VideoStore extends React.Component {
                             deleteMovie={this.deleteMovie.bind(this)}
                             like={this.like.bind(this)}
                             rent={this.rent.bind(this)}
+                            rentConf={this.rentConf}
                           />
                         );
                       } else return null;
