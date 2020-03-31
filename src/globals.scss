@@ -236,6 +236,7 @@ $breakaux: ("tablet", "pc", "lg") !default;
 }
 
 .paginator-container {
+  margin-top: 1rem;
   display: grid;
   grid-column-gap: 4%;
   grid-template-columns: 14% 14% 14% 14% 14% 14%;

@@ -540,21 +540,7 @@ class VideoStore extends React.Component {
             <button onClick={() => this.filterByLike()}>Filter by likes</button>
           )}
         </div>
-        <div className="paginator-container">
-          {blocksPagination.map((block, iblock) => {
-            let selected = "";
-            if (iblock === indexPagination) selected = "selected";
-            return (
-              <div
-                className={selected + " pag"}
-                key={iblock}
-                onClick={() => this.setIndexPagination(iblock)}
-              >
-                {iblock + 1}
-              </div>
-            );
-          })}
-        </div>
+
         {blocksPagination.length === 0 ? (
           <div className="movie-container">
             {this.props.isAdmin ? (
@@ -609,6 +595,21 @@ class VideoStore extends React.Component {
             else return null;
           })
         )}
+        <div className="paginator-container">
+          {blocksPagination.map((block, iblock) => {
+            let selected = "";
+            if (iblock === indexPagination) selected = "selected";
+            return (
+              <div
+                className={selected + " pag"}
+                key={iblock}
+                onClick={() => this.setIndexPagination(iblock)}
+              >
+                {iblock + 1}
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }
