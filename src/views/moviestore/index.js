@@ -178,7 +178,7 @@ class VideoStore extends React.Component {
     //UPDATE STATE
     blocksPagination[arrow.block][arrow.index].log_users = log_users;
     blocksPagination[arrow.block][arrow.index].stock = currentStock;
-    blocksPagination[arrow.block][arrow.index].show = false;
+    // blocksPagination[arrow.block][arrow.index].show = false;
     this.setState({
       blocksPagination: blocksPagination
     });
@@ -794,6 +794,7 @@ class VideoStore extends React.Component {
                             iLiked={this.iLiked.bind(this)}
                             handleMovieInput={this.handleMovieInput.bind(this)}
                             isAdmin={this.props.isAdmin}
+                            isLogin={this.props.isLogin}
                             adminId={this.props.currentUser.id}
                             saveMovie={this.saveMovie.bind(this)}
                             deleteMovie={this.deleteMovie.bind(this)}

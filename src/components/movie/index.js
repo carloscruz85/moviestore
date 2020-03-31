@@ -27,7 +27,12 @@ class Movie extends React.Component {
 
     let log_changes = JSON.parse(movie.log_changes);
     let log_users = JSON.parse(movie.log_users);
-    // console.log(StringToJson());
+    let haveIt = 0;
+
+    haveIt = log_users.reduce((curr, acc) => {
+      if (this.props.adminId === acc.userId) return 1;
+      else return 0;
+    }, 0);
 
     return (
       <div>
@@ -177,18 +182,24 @@ class Movie extends React.Component {
                     <p className="card-list">
                       Description: {movie.description}
                     </p>
-                    <p className="card-list">
+                    <div className="card-list">
                       Rental Price: ${movie.rental_price}{" "}
                       {this.props.isLogin ? (
-                        <button
-                          onClick={() => {
-                            this.props.rent(movie.id);
-                          }}
-                        >
-                          Rent {movie.stock} in stock
-                        </button>
+                        <div>
+                          {haveIt === 0 ? (
+                            <button
+                              onClick={() => {
+                                this.props.rent(movie.id);
+                              }}
+                            >
+                              Rent {movie.stock} in stock
+                            </button>
+                          ) : (
+                            <button>You have this movie</button>
+                          )}
+                        </div>
                       ) : null}
-                    </p>
+                    </div>
                     <p className="card-list">Sale Price: ${movie.sale_price}</p>
                   </div>
                 )}
