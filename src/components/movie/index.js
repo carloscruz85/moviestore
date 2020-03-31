@@ -135,7 +135,7 @@ class Movie extends React.Component {
                       Description: {movie.description}
                     </p>
                     <p className="card-list">
-                      Rental Price: ${movie.rental_price}
+                      Rental Price: ${movie.rental_price} <button>Rent </button>
                     </p>
                     <p className="card-list">Sale Price: ${movie.sale_price}</p>
                   </div>

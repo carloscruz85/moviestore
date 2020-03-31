@@ -84,6 +84,8 @@ class VideoStore extends React.Component {
     //FILTER AVAIBLES
     if (!this.props.isAdmin) {
       matchs = matchs.filter(it => it.availability === "true");
+      //FILTER IF STOCK
+      matchs = matchs.filter(it => it.stock > 0);
     }
 
     //SORT
