@@ -90,6 +90,10 @@ body {
   background-color: $yellow !important;
 }
 
+.red-button {
+  background-color: $red !important;
+}
+
 @mixin center-center() {
   display: flex;
   flex-flow: column nowrap;
@@ -195,7 +199,7 @@ $breakaux: ("tablet", "pc", "lg") !default;
   background-color: $light-dark;
   color: white;
   @include backimage();
-  @include multi(height, 20vh, 20vh, 20vh, 20vh);
+  @include multi(height, 20vh, 30vh, 50vh, 50vh);
   margin: 5px;
   @include center-center();
   // font-size: 2rem;
@@ -206,8 +210,8 @@ $breakaux: ("tablet", "pc", "lg") !default;
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vw;
-  height: 100vh;
+  // width: 100vw;
+  // height: 100vh;
   @include center-center();
 }
 
@@ -236,6 +240,7 @@ $breakaux: ("tablet", "pc", "lg") !default;
 }
 
 .paginator-container {
+  margin-top: 1rem;
   display: grid;
   grid-column-gap: 4%;
   grid-template-columns: 14% 14% 14% 14% 14% 14%;
@@ -249,5 +254,30 @@ $breakaux: ("tablet", "pc", "lg") !default;
   .selected {
     background-color: $yellow;
     color: $dark;
+  }
+  .big {
+    font-size: 3.2rem;
+  }
+}
+
+.icons-group {
+  margin-top: 0.5rem;
+  // background-color: $green;
+  display: flex;
+  flex-flow: row nowrap;
+  justify-content: flex-end;
+  .pag {
+    padding: 1rem;
+    background-color: $light-dark;
+    border-radius: 0.6rem;
+    text-align: center;
+    margin-left: 0.5rem;
+  }
+  .selected {
+    background-color: $yellow;
+    color: $dark;
+  }
+  .big {
+    font-size: 3.2rem;
   }
 }

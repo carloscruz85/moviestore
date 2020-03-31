@@ -9,16 +9,19 @@ import Overlay from "../../components/overlayer";
 import Movie from "../../movie";
 import FormMovie from "../../components/formMovie";
 import Input from "../../components/inputs/input";
+import { IoIosHeart } from "react-icons/io";
+import { FiSearch } from "react-icons/fi";
 
 class VideoStore extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      showSearcher: false,
       indexPagination: 0,
       paginationSize: 6,
       blocksPagination: [],
       searchFilter: "",
-      filterByLike: true,
+      filterByLike: false,
       url: "wp-json/wp/v2/video?per_page=100",
       urlPost: "wp-json/wp/v2/video",
       mediaUrl: "wp-json/wp/v2/media/",
@@ -53,6 +56,13 @@ class VideoStore extends React.Component {
     this.setIndexPagination = this.setIndexPagination.bind(this);
     this.getIndexOfId = this.getIndexOfId.bind(this);
     this.repaginate = this.repaginate.bind(this);
+    this.switchSearcher = this.switchSearcher.bind(this);
+  }
+
+  switchSearcher() {
+    this.setState(prevState => ({
+      showSearcher: !prevState.showSearcher
+    }));
   }
 
   setIndexPagination(i) {
@@ -436,7 +446,13 @@ class VideoStore extends React.Component {
       .then(function() {
         self.setState({
           showOverlay: false,
-          overlayMsg: ""
+          overlayMsg: "",
+          title: "",
+          description: "",
+          stock: 0,
+          rentalPrice: 0,
+          salePrice: 0,
+          imageUrl: ""
         });
       });
   }
@@ -489,6 +505,7 @@ class VideoStore extends React.Component {
 
   render() {
     const {
+      showSearcher,
       indexPagination,
       blocksPagination,
       searchFilter,
@@ -520,35 +537,49 @@ class VideoStore extends React.Component {
             imageUrl={imageUrl}
           />
         ) : null}
-        <div className="header-control">
-          <Input
-            label="Search"
-            type="text"
-            name="search"
-            value={searchFilter}
-            customChange={this.setSearchFilter.bind(this)}
-          />
-          {filterByLike ? (
-            <button onClick={() => this.filterByName()}>Normal Filter</button>
+        <div className="icons-group">
+          {showSearcher ? (
+            <div
+              className="pag selected"
+              onClick={() => {
+                this.switchSearcher();
+              }}
+            >
+              <FiSearch />
+            </div>
           ) : (
-            <button onClick={() => this.filterByLike()}>Filter by likes</button>
+            <div
+              className="pag"
+              onClick={() => {
+                this.switchSearcher();
+              }}
+            >
+              <FiSearch />
+            </div>
+          )}
+
+          {filterByLike ? (
+            <div className="pag selected" onClick={() => this.filterByName()}>
+              <IoIosHeart />
+            </div>
+          ) : (
+            <div className="pag" onClick={() => this.filterByLike()}>
+              <IoIosHeart />
+            </div>
           )}
         </div>
-        <div className="paginator-container">
-          {blocksPagination.map((block, iblock) => {
-            let selected = "";
-            if (iblock === indexPagination) selected = "selected";
-            return (
-              <div
-                className={selected + " pag"}
-                key={iblock}
-                onClick={() => this.setIndexPagination(iblock)}
-              >
-                {iblock + 1}
-              </div>
-            );
-          })}
-        </div>
+        {showSearcher ? (
+          <div className="header-control">
+            <Input
+              label="Search"
+              type="text"
+              name="search"
+              value={searchFilter}
+              customChange={this.setSearchFilter.bind(this)}
+            />
+          </div>
+        ) : null}
+
         {blocksPagination.length === 0 ? (
           <div className="movie-container">
             {this.props.isAdmin ? (
@@ -603,6 +634,21 @@ class VideoStore extends React.Component {
             else return null;
           })
         )}
+        <div className="paginator-container">
+          {blocksPagination.map((block, iblock) => {
+            let selected = "";
+            if (iblock === indexPagination) selected = "selected";
+            return (
+              <div
+                className={selected + " pag"}
+                key={iblock}
+                onClick={() => this.setIndexPagination(iblock)}
+              >
+                {iblock + 1}
+              </div>
+            );
+          })}
+        </div>
       </div>
     );
   }

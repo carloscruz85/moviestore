@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 import Input from "../components/inputs/input";
 import Textarea from "../components/inputs/textarea";
 import CheckBox from "../components/inputs/checkbox";
+import { FiSave, FiXCircle, FiArrowLeftCircle } from "react-icons/fi";
 
 import { IoIosHeartDislike, IoIosHeart } from "react-icons/io";
 
@@ -74,36 +75,27 @@ class Movie extends React.Component {
                       value={movie.availability}
                       customChange={this.props.handleMovieInput.bind(this)}
                     />
-
-                    <button
-                      className="green-button"
-                      onClick={() => this.props.saveMovie(movie.id)}
-                    >
-                      Save Movie
-                    </button>
-                    <button
-                      className="red-button"
-                      onClick={() => this.props.deleteMovie(movie.id)}
-                    >
-                      Delete Movie
-                    </button>
                   </div>
                 ) : (
                   <div>
-                    <h3>{movie.title.rendered}</h3>
+                    <h3>
+                      {movie.title.rendered} ({this.props.getLikes(movie.id)}
+                      Likes)
+                    </h3>
                     {this.props.adminId !== -1 ? (
                       <div className="color-yellow ">
-                        {this.props.getLikes(movie.id)} <div>Likes</div>
                         {this.props.iLiked(movie.id) ? (
-                          <IoIosHeartDislike
-                            className="color-red"
-                            onClick={() => this.props.like(movie.id)}
-                          />
+                          <button onClick={() => this.props.like(movie.id)}>
+                            {" "}
+                            Dislike
+                            <IoIosHeartDislike />
+                          </button>
                         ) : (
-                          <IoIosHeart
-                            className="color-red"
-                            onClick={() => this.props.like(movie.id)}
-                          />
+                          <button onClick={() => this.props.like(movie.id)}>
+                            {" "}
+                            Like
+                            <IoIosHeart />
+                          </button>
                         )}
                       </div>
                     ) : null}
@@ -117,13 +109,25 @@ class Movie extends React.Component {
                     <p className="card-list">Sale Price: ${movie.sale_price}</p>
                   </div>
                 )}
+                <div className="paginator-container">
+                  {this.props.isAdmin ? (
+                    <FiSave
+                      className="pag big green-button"
+                      onClick={() => this.props.saveMovie(movie.id)}
+                    />
+                  ) : null}
+                  {this.props.isAdmin ? (
+                    <FiXCircle
+                      className="pag big red-button"
+                      onClick={() => this.props.deleteMovie(movie.id)}
+                    />
+                  ) : null}
 
-                <button
-                  className="yellow-button"
-                  onClick={() => this.props.switchDescription(movie.id)}
-                >
-                  Close
-                </button>
+                  <FiArrowLeftCircle
+                    className="pag big yellow-button"
+                    onClick={() => this.props.switchDescription(movie.id)}
+                  />
+                </div>
               </div>
             </div>
           ) : null}
