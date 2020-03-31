@@ -34,7 +34,9 @@ class VideoStore extends React.Component {
       stock: 0,
       rentalPrice: 0,
       salePrice: 0,
-      imageUrl: ""
+      imageUrl: "",
+      log_changes: "",
+      log_users: ""
     };
 
     this.loadVideos = this.loadVideos.bind(this);
@@ -427,7 +429,9 @@ class VideoStore extends React.Component {
       status: "publish",
       show: "false",
       likes: "[]",
-      imageurl: imageUrl
+      imageurl: imageUrl,
+      log_changes: "[]",
+      log_users: "[]"
     };
     // console.log(realData);
 
