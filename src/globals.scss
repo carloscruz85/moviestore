@@ -162,7 +162,8 @@ $breakaux: ("tablet", "pc", "lg") !default;
   @include multi(width, 100%, 80%, 60%, 50%);
 
   input,
-  button {
+  button,
+  textarea {
     background-color: $light-dark;
     border-radius: 0.4rem;
     text-align: center;
@@ -184,6 +185,9 @@ $breakaux: ("tablet", "pc", "lg") !default;
     display: block;
     font-size: 1rem;
     font-weight: bold;
+  }
+  textarea {
+    // height: 40vh;
   }
 }
 
