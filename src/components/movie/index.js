@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import Input from "../../components/inputs/input";
 import Textarea from "../../components/inputs/textarea";
 import CheckBox from "../../components/inputs/checkbox";
-import { FiSave, FiXCircle, FiArrowLeftCircle, FiMenu } from "react-icons/fi";
+import { FiSave, FiXCircle, FiTrash2, FiMenu } from "react-icons/fi";
 // import StringToJson from "../../logic/stringToJson";
 import { IoIosHeartDislike, IoIosHeart } from "react-icons/io";
 
@@ -40,8 +40,60 @@ class Movie extends React.Component {
               <div className="form-container">
                 {this.props.isAdmin ? (
                   <div>
+                    <div>
+                      <Input
+                        label="Title"
+                        type="text"
+                        name={movie.id + "|title"}
+                        value={movie.title.rendered}
+                        customChange={this.props.handleMovieInput.bind(this)}
+                      />
+                      <Textarea
+                        label="Description"
+                        type="text"
+                        name={movie.id + "|description"}
+                        value={movie.description}
+                        customChange={this.props.handleMovieInput.bind(this)}
+                      />
+                      <Input
+                        label="Image Url"
+                        type="text"
+                        name={movie.id + "|imageurl"}
+                        value={movie.imageurl}
+                        customChange={this.props.handleMovieInput.bind(this)}
+                      />
+                      <Input
+                        label="Stock"
+                        type="number"
+                        name={movie.id + "|stock"}
+                        value={movie.stock}
+                        customChange={this.props.handleMovieInput.bind(this)}
+                      />
+                      <Input
+                        label="Rental Price"
+                        type="number"
+                        name={movie.id + "|rental_price"}
+                        value={movie.rental_price}
+                        customChange={this.props.handleMovieInput.bind(this)}
+                      />
+                      <Input
+                        label="Sale Price"
+                        type="number"
+                        name={movie.id + "|sale_price"}
+                        value={movie.sale_price}
+                        customChange={this.props.handleMovieInput.bind(this)}
+                      />
+                      <CheckBox
+                        label="Availability"
+                        type="text"
+                        name={movie.id + "|availability"}
+                        value={movie.availability}
+                        customChange={this.props.handleMovieInput.bind(this)}
+                      />
+                    </div>
                     {this.state.showLogs ? (
                       <div className="logs">
+                        <h3 className="color-red">Movie logs</h3>
                         {log_changes.map((log, ilog) => {
                           return (
                             <div key={ilog} className="log-item">
@@ -53,59 +105,7 @@ class Movie extends React.Component {
                           );
                         })}
                       </div>
-                    ) : (
-                      <div>
-                        <Input
-                          label="Title"
-                          type="text"
-                          name={movie.id + "|title"}
-                          value={movie.title.rendered}
-                          customChange={this.props.handleMovieInput.bind(this)}
-                        />
-                        <Textarea
-                          label="Description"
-                          type="text"
-                          name={movie.id + "|description"}
-                          value={movie.description}
-                          customChange={this.props.handleMovieInput.bind(this)}
-                        />
-                        <Input
-                          label="Image Url"
-                          type="text"
-                          name={movie.id + "|imageurl"}
-                          value={movie.imageurl}
-                          customChange={this.props.handleMovieInput.bind(this)}
-                        />
-                        <Input
-                          label="Stock"
-                          type="number"
-                          name={movie.id + "|stock"}
-                          value={movie.stock}
-                          customChange={this.props.handleMovieInput.bind(this)}
-                        />
-                        <Input
-                          label="Rental Price"
-                          type="number"
-                          name={movie.id + "|rental_price"}
-                          value={movie.rental_price}
-                          customChange={this.props.handleMovieInput.bind(this)}
-                        />
-                        <Input
-                          label="Sale Price"
-                          type="number"
-                          name={movie.id + "|sale_price"}
-                          value={movie.sale_price}
-                          customChange={this.props.handleMovieInput.bind(this)}
-                        />
-                        <CheckBox
-                          label="Availability"
-                          type="text"
-                          name={movie.id + "|availability"}
-                          value={movie.availability}
-                          customChange={this.props.handleMovieInput.bind(this)}
-                        />
-                      </div>
-                    )}
+                    ) : null}
                   </div>
                 ) : (
                   <div>
@@ -148,7 +148,7 @@ class Movie extends React.Component {
                     />
                   ) : null}
                   {this.props.isAdmin ? (
-                    <FiXCircle
+                    <FiTrash2
                       className="pag big red-button"
                       onClick={() => this.props.deleteMovie(movie.id)}
                     />
@@ -161,7 +161,7 @@ class Movie extends React.Component {
                     />
                   ) : null}
 
-                  <FiArrowLeftCircle
+                  <FiXCircle
                     className="pag big yellow-button"
                     onClick={() => this.props.switchDescription(movie.id)}
                   />

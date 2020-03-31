@@ -1,6 +1,7 @@
 @import "../../globals.scss";
 
 .logs {
+  // @include full-full();
   width: 95vw;
   .log-item {
     background-color: $soft-dark;
