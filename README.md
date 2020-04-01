@@ -13,7 +13,7 @@ The REST API is
 http://carloscruz85.com/movies/wp-json
 
 You can donwload a package with the complete site in
-http://carloscruz85.com/carloscruz85.com-movies-20200331-234657-eerfrs.wpress
+http://carloscruz85.com/wp_carloscruz85_service.wpress
 
 You need to have an wordpress site, with the plugin "All-in-One WP Migration" activated
 
