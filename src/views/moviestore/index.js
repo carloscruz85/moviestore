@@ -404,7 +404,6 @@ class VideoStore extends React.Component {
     let movie = blocksPagination[arrow.block][arrow.index];
 
     let likes = JSON.parse(movie.likes);
-    console.log(likes);
 
     if (!likes.includes(this.props.currentUser.id)) {
       likes.push(this.props.currentUser.id);
@@ -497,7 +496,11 @@ class VideoStore extends React.Component {
     let lastLogChanges = JSON.parse(dataMovies.log_changes);
     lastLogChanges.push(toUpdate);
 
-    let realData = { ...prev, log_changes: JSON.stringify(lastLogChanges) };
+    let realData = {
+      ...prev,
+      log_changes: JSON.stringify(lastLogChanges),
+      likes: dataMovies.likes
+    };
     console.log(realData);
 
     //UPDATE STATE
