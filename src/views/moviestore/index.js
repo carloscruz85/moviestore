@@ -47,8 +47,6 @@ class VideoStore extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.createMovie = this.createMovie.bind(this);
     this.showForm = this.showForm.bind(this);
-    // this.changeImage = this.changeImage.bind(this);
-    // this.uploadImage = this.uploadImage.bind(this);
     this.switchDescription = this.switchDescription.bind(this);
     this.handleMovieInput = this.handleMovieInput.bind(this);
     this.saveMovie = this.saveMovie.bind(this);
@@ -95,7 +93,6 @@ class VideoStore extends React.Component {
     };
 
     log_users_aux_prev.push(thisInteraction);
-    // console.log(currentUserLog);
 
     let log_users_aux = JSON.stringify(log_users_aux_prev);
 
@@ -149,14 +146,10 @@ class VideoStore extends React.Component {
     let current_log_users_aux = JSON.parse(dataMovies.log_users_aux);
 
     let currentUserLog = JSON.parse(dataMovies.log_users);
-    // console.log(currentUserLog);
 
     let newUserLog = currentUserLog.filter(i => {
-      // console.log(this.props.currentUser.id, i.userId);
       return i.userId !== userId;
     });
-
-    // console.log(newUserLog);
 
     var d = new Date();
     let thisInteraction = {
@@ -168,9 +161,6 @@ class VideoStore extends React.Component {
     };
 
     current_log_users_aux.push(thisInteraction);
-
-    // currentUserLog.push(thisInteraction);
-    // console.log(currentUserLog);
 
     let log_users = JSON.stringify(newUserLog);
     let log_users_aux = JSON.stringify(current_log_users_aux);
@@ -239,7 +229,6 @@ class VideoStore extends React.Component {
 
     currentUserLog.push(thisInteraction);
     log_users_aux_prev.push(thisInteraction);
-    // console.log(currentUserLog);
 
     let log_users = JSON.stringify(currentUserLog);
     let log_users_aux = JSON.stringify(log_users_aux_prev);
@@ -257,7 +246,6 @@ class VideoStore extends React.Component {
     blocksPagination[arrow.block][arrow.index].log_users = log_users;
     blocksPagination[arrow.block][arrow.index].log_users_aux = log_users_aux;
     blocksPagination[arrow.block][arrow.index].stock = currentStock;
-    // blocksPagination[arrow.block][arrow.index].show = false;
     this.setState({
       blocksPagination: blocksPagination
     });
@@ -407,7 +395,6 @@ class VideoStore extends React.Component {
     let arrow = this.getIndexOfId(i);
     let movie = blocksPagination[arrow.block][arrow.index];
     let likes = JSON.parse(movie.likes);
-    // console.log(likes.length);
     return likes.length;
   }
 
@@ -428,11 +415,7 @@ class VideoStore extends React.Component {
       likes = newLike;
     }
 
-    // console.log(blocksPagination[arrow.block][arrow.index]);
-
     blocksPagination[arrow.block][arrow.index].likes = JSON.stringify(likes);
-
-    // console.log(movie[i].likes);
 
     this.setState({
       blocksPagination: blocksPagination
@@ -456,14 +439,10 @@ class VideoStore extends React.Component {
     let user = cookie.load("user");
     const myHeaders = { Authorization: "Bearer " + user.token };
 
-    // console.table(realData);
-
     axios
       .delete(host, { headers: myHeaders })
       .then(function(response) {
-        // console.log(response);
         self.loadVideos();
-        // self.showForm();
       })
       .catch(function(error) {
         self.setState({
@@ -480,15 +459,10 @@ class VideoStore extends React.Component {
   }
 
   saveMovie(movie) {
-    // console.log("in saveMovie");
-
     const { urlPost, blocksPagination } = this.state;
-    // this.switchDescription(movie);
     let arrow = this.getIndexOfId(movie);
 
     let dataMovies = blocksPagination[arrow.block][arrow.index];
-    // console.clear();
-    // console.table(dataMovies);
 
     var self = this;
     let host = this.props.host + urlPost + "/" + dataMovies.id;
@@ -536,11 +510,7 @@ class VideoStore extends React.Component {
 
     axios
       .post(host, realData, { headers: myHeaders })
-      .then(function(response) {
-        // console.log(response);
-        // self.loadVideos();
-        // self.showForm();
-      })
+      .then(function(response) {})
       .catch(function(error) {
         self.setState({
           showOverlay: false,
@@ -561,8 +531,6 @@ class VideoStore extends React.Component {
     let blocksPagination = this.state.blocksPagination;
 
     let arrow = this.getIndexOfId(data);
-    // console.log(data);
-    // console.log(blocksPagination[arrow.block][arrow.index]);
 
     switch (type) {
       case "checkbox":
@@ -579,16 +547,12 @@ class VideoStore extends React.Component {
         }
     }
 
-    // console.log(blocksPagination[arrow.block][arrow.index]);
-
     this.setState({
       blocksPagination: blocksPagination
     });
   }
 
   getIndexOfId(id) {
-    // console.log("in getIndex", id);
-
     let { blocksPagination } = this.state;
     let arrow = {
       block: 0,
@@ -596,21 +560,11 @@ class VideoStore extends React.Component {
     };
 
     for (let block = 0; block < blocksPagination.length; block++) {
-      // console.log("In Block ", block);
-
       for (var index = 0; index < blocksPagination[block].length; index++) {
-        // console.log(
-        //   "In Block ",
-        //   block,
-        //   "Index ",
-        //   index,
-        //   blocksPagination[block][index].id
-        // );
         let idr = parseInt(id, 10);
         let idf = parseInt(blocksPagination[block][index].id, 10);
 
         if (idr === idf) {
-          // console.log(index, blocksPagination[block][index].id);
           arrow = {
             block: block,
             index: index
@@ -618,12 +572,6 @@ class VideoStore extends React.Component {
         }
       }
     }
-    // console.log(
-    //   "movie to work ",
-    //   blocksPagination[arrow.block][arrow.index].title.rendered
-    // );
-
-    // console.log(id, arrow);
 
     return arrow;
   }
@@ -682,7 +630,6 @@ class VideoStore extends React.Component {
       log_users: "[]",
       log_users_aux: "[]"
     };
-    // console.log(realData);
 
     axios
       .post(host, realData, { headers: myHeaders })
@@ -720,7 +667,6 @@ class VideoStore extends React.Component {
     axios
       .get(url)
       .then(function(response) {
-        // console.log("data received", response);
         let movies = response.data;
         self.setState({
           movies: movies
@@ -734,7 +680,6 @@ class VideoStore extends React.Component {
       })
       .then(function() {
         self.paginate();
-        // self.changeCredentials();
         self.setState({
           showOverlay: false,
           overlayMsg: ""
@@ -847,7 +792,6 @@ class VideoStore extends React.Component {
           </div>
         ) : (
           blocksPagination.map((block, iblock) => {
-            // console.log(block);
             if (iblock === indexPagination)
               return (
                 <div className="block" key={iblock}>
@@ -921,13 +865,5 @@ const mapStateToProps = state => {
     isAdmin: state.isAdmin
   };
 };
-
-// const mapDispatchToProps = dispatch => {
-//   return {
-//     sendLoginDataInner(data) {
-//       dispatch(sendLoginData(data));
-//     }
-//   };
-// };
 
 export default connect(mapStateToProps)(VideoStore);
