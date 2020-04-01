@@ -20,9 +20,9 @@ class UserAdmin extends React.Component {
       showOverlay: false,
       overlayMsg: "",
       userMsg: "",
-      username: "juancito",
-      password: "juancito",
-      email: "juancito@dixp.net",
+      username: "",
+      password: "",
+      email: "",
       showForm: false
     };
 
@@ -129,7 +129,7 @@ class UserAdmin extends React.Component {
         });
       })
       .then(function() {
-        self.changeCredentials();
+        // self.changeCredentials();
         self.setState({
           showOverlay: false,
           overlayMsg: ""
