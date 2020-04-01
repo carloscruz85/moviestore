@@ -39,11 +39,9 @@ class Movie extends React.Component {
       <div>
         <div
           className="movie-card"
-          // style={{ backgroundImage: `url(${movie.imageurl})` }}
+          style={{ backgroundImage: `url(${movie.imageurl})` }}
           onClick={() => this.props.switchDescription(movie.id)}
-        >
-          {this.props.getLikes(movie.id)} {movie.title.rendered}
-        </div>
+        ></div>
         <div>
           {movie.show === "true" ? (
             <div className="movie-description">
@@ -175,8 +173,8 @@ class Movie extends React.Component {
                   </div>
                 ) : (
                   <div>
-                    <h3>
-                      {movie.title.rendered} ({this.props.getLikes(movie.id)}
+                    <h3 className="color-yellow">
+                      {movie.title.rendered} ({this.props.getLikes(movie.id)}{" "}
                       Likes)
                     </h3>
                     {this.props.adminId !== -1 ? (

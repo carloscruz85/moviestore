@@ -399,7 +399,7 @@ class VideoStore extends React.Component {
   }
 
   like(i) {
-    let { blocksPagination, filterByLike } = this.state;
+    let { blocksPagination, filterByLike, urlPost } = this.state;
     let arrow = this.getIndexOfId(i);
     let movie = blocksPagination[arrow.block][arrow.index];
 
@@ -419,7 +419,34 @@ class VideoStore extends React.Component {
     this.setState({
       blocksPagination: blocksPagination
     });
-    this.saveMovie(i);
+
+    //SAVING TO SERVER
+    var self = this;
+    let host = this.props.host + urlPost + "/" + movie.id;
+    let user = cookie.load("user");
+    const myHeaders = { Authorization: "Bearer " + user.token };
+
+    let realData = {
+      likes: JSON.stringify(likes)
+    };
+
+    axios
+      .post(host, realData, { headers: myHeaders })
+      .then(function(response) {})
+      .catch(function(error) {
+        self.setState({
+          showOverlay: false,
+          userMsg: "Error " + error + "Please contact to carloscruz85@gmail.com"
+        });
+      })
+      .then(function() {
+        self.repaginate();
+        self.setState({
+          showOverlay: false,
+          overlayMsg: ""
+        });
+      });
+    //SAVING TO SERVER
 
     if (filterByLike) {
       this.filterByLike();
