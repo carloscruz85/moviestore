@@ -14,13 +14,9 @@ const reducer = (state, action) => {
   }
 };
 
-export default createStore(
-  reducer,
-  {
-    host: "http://carloscruz85.com/movies/",
-    isLogin: false,
-    isAdmin: false,
-    currentUser: []
-  },
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-);
+export default createStore(reducer, {
+  host: "http://carloscruz85.com/movies/",
+  isLogin: false,
+  isAdmin: false,
+  currentUser: []
+});

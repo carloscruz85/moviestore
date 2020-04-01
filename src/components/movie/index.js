@@ -173,8 +173,8 @@ class Movie extends React.Component {
                   </div>
                 ) : (
                   <div>
-                    <h3>
-                      {movie.title.rendered} ({this.props.getLikes(movie.id)}
+                    <h3 className="color-yellow">
+                      {movie.title.rendered} ({this.props.getLikes(movie.id)}{" "}
                       Likes)
                     </h3>
                     {this.props.adminId !== -1 ? (
@@ -218,7 +218,7 @@ class Movie extends React.Component {
                     </div>
                     <div className="card-list">
                       Sale Price: ${movie.sale_price}
-                      {haveIt === 0 ? (
+                      {haveIt === 0 && this.props.isLogin ? (
                         <button
                           onClick={() => {
                             this.props.buy(movie.id);
